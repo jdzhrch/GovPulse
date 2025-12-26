@@ -2,16 +2,24 @@
 GovPulse Impact Analyzer
 ========================
 Performs gap analysis between regulatory signals and internal compliance baseline.
-Generates risk assessments and product remediation recommendations.
+Uses OpenAI GPT-4o for intelligent compliance comparison.
 """
 
 import json
+import os
 import re
 from dataclasses import dataclass, asdict
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
 from typing import Optional
+
+try:
+    from openai import OpenAI
+    OPENAI_AVAILABLE = True
+except ImportError:
+    OPENAI_AVAILABLE = False
+    print("Warning: OpenAI SDK not installed. Run: pip install openai")
 
 from scout_engine import ScoutMission, RegulatorySignal, Domain
 
@@ -83,6 +91,7 @@ class BaselineParser:
 
     def __init__(self, baseline_path: str = "knowledge/internal_baseline.md"):
         self.baseline_path = Path(baseline_path)
+        self.raw_content: str = ""
         self.policies: dict[str, dict] = {}
         self._parse()
 
@@ -91,13 +100,12 @@ class BaselineParser:
         if not self.baseline_path.exists():
             raise FileNotFoundError(f"Baseline not found: {self.baseline_path}")
 
-        content = self.baseline_path.read_text(encoding="utf-8")
+        self.raw_content = self.baseline_path.read_text(encoding="utf-8")
 
         # Extract policy tables using regex
-        # Pattern matches table rows with policy IDs
         policy_pattern = r'\| (MP-\d+|EC-\d+|DS-\d+|CM-\d+) \| ([^|]+) \|([^|]+)\|'
 
-        for match in re.finditer(policy_pattern, content):
+        for match in re.finditer(policy_pattern, self.raw_content):
             policy_id = match.group(1).strip()
             requirement = match.group(2).strip()
             implementation = match.group(3).strip()
@@ -128,6 +136,220 @@ class BaselineParser:
         """Get all policies for a domain."""
         return [p for p in self.policies.values() if p["domain"] == domain]
 
+    def get_baseline_for_prompt(self) -> str:
+        """Return the full baseline content for LLM system prompt."""
+        return self.raw_content
+
+
+class LLMAnalyzer:
+    """
+    OpenAI GPT-4o powered compliance analyzer.
+    Compares regulatory signals against internal baseline using LLM.
+    """
+
+    SYSTEM_PROMPT_TEMPLATE = """你是一名 TikTok 合规审计员，专门负责分析全球监管变化对平台的影响。
+
+## 你的任务
+对比新的监管法规与公司内部合规基准，找出不一致的条款，评估风险等级，并为产品经理提供具体的改动建议。
+
+## 内部合规基准
+以下是 TikTok 当前的全球合规政策基准：
+
+{baseline}
+
+## 风险等级定义
+- P0 (Critical): 存在性威胁 - 可能导致平台禁令、超过1亿美元罚款
+- P1 (High): 重大合规缺口 - 需要立即产品改动
+- P2 (Moderate): 中等风险 - 可在季度内解决
+- P3 (Low): 低风险 - 仅需监控
+
+## 输出格式要求
+你必须严格返回以下 JSON 格式，不要有任何其他文字：
+
+```json
+{{
+  "risk_level": "P0|P1|P2|P3",
+  "risk_rationale": "风险评估理由（中文）",
+  "compliance_gaps": [
+    {{
+      "baseline_policy_id": "政策ID如MP-001",
+      "baseline_requirement": "当前基准要求",
+      "regulatory_requirement": "新法规要求",
+      "gap_description": "差距描述（中文）",
+      "gap_severity": "critical|major|minor",
+      "is_blocking": true/false
+    }}
+  ],
+  "remediations": [
+    {{
+      "title": "改动标题",
+      "description": "详细改动建议（面向产品经理，中文）",
+      "affected_features": ["受影响的功能列表"],
+      "engineering_effort": "S|M|L|XL",
+      "pm_owner_recommendation": "建议负责的PM角色",
+      "acceptance_criteria": ["验收标准1", "验收标准2"]
+    }}
+  ],
+  "business_impact": "业务影响评估（中文）",
+  "recommended_actions": ["建议行动1", "建议行动2", "建议行动3"]
+}}
+```
+"""
+
+    USER_PROMPT_TEMPLATE = """请分析以下监管信号，并与内部基准进行对比：
+
+## 监管信号信息
+- **信号ID**: {signal_id}
+- **市场**: {market}
+- **领域**: {domain}
+- **来源类型**: {source_type}
+- **标题**: {title}
+- **摘要**: {summary}
+- **生效日期**: {effective_date}
+- **来源URL**: {source_url}
+
+## 关键条款
+{key_provisions}
+
+## 原文摘录
+{raw_excerpt}
+
+## 可能受影响的政策ID
+{affected_policies}
+
+请严格按照 JSON 格式输出分析结果。
+"""
+
+    def __init__(self, baseline_path: str = "knowledge/internal_baseline.md"):
+        self.baseline = BaselineParser(baseline_path)
+        self.client = None
+        self._init_client()
+
+    def _init_client(self):
+        """Initialize OpenAI client."""
+        if not OPENAI_AVAILABLE:
+            print("OpenAI SDK not available. Using fallback mode.")
+            return
+
+        api_key = os.environ.get("OPENAI_API_KEY")
+        if not api_key:
+            print("Warning: OPENAI_API_KEY not set. LLM analysis will not work.")
+            return
+
+        self.client = OpenAI(api_key=api_key)
+
+    def analyze_with_llm(self, signal: RegulatorySignal) -> dict:
+        """
+        Use GPT-4o to analyze a regulatory signal against baseline.
+        Returns structured JSON response.
+        """
+        if not self.client:
+            print("OpenAI client not initialized. Using fallback analysis.")
+            return self._fallback_analysis(signal)
+
+        # Build prompts
+        system_prompt = self.SYSTEM_PROMPT_TEMPLATE.format(
+            baseline=self.baseline.get_baseline_for_prompt()
+        )
+
+        user_prompt = self.USER_PROMPT_TEMPLATE.format(
+            signal_id=signal.id,
+            market=signal.market,
+            domain=signal.domain.value,
+            source_type=signal.source_type.value,
+            title=signal.title,
+            summary=signal.summary,
+            effective_date=signal.effective_date or "未指定",
+            source_url=signal.source_url,
+            key_provisions="\n".join(f"- {p}" for p in signal.key_provisions),
+            raw_excerpt=signal.raw_text_excerpt,
+            affected_policies=", ".join(signal.affected_policies)
+        )
+
+        try:
+            response = self.client.chat.completions.create(
+                model="gpt-4o",
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt}
+                ],
+                temperature=0.2,  # Low temperature for consistent analysis
+                response_format={"type": "json_object"}
+            )
+
+            content = response.choices[0].message.content
+            result = json.loads(content)
+
+            print(f"LLM Analysis completed for signal: {signal.id}")
+            return result
+
+        except Exception as e:
+            print(f"LLM analysis failed: {e}")
+            return self._fallback_analysis(signal)
+
+    def _fallback_analysis(self, signal: RegulatorySignal) -> dict:
+        """
+        Fallback rule-based analysis when LLM is not available.
+        """
+        # Simple keyword-based risk assessment
+        signal_text = (signal.summary + " ".join(signal.key_provisions)).lower()
+
+        risk_level = "P3"
+        risk_rationale = "Low risk: monitoring recommended"
+
+        if any(kw in signal_text for kw in ["ban", "prohibit", "suspend", "禁止"]):
+            risk_level = "P0"
+            risk_rationale = "Existential threat detected: regulation contains prohibition language"
+        elif any(kw in signal_text for kw in ["mandatory", "require", "must", "shall", "必须"]):
+            risk_level = "P1"
+            risk_rationale = "Material compliance gap: mandatory requirements detected"
+        elif any(kw in signal_text for kw in ["should", "recommend", "建议"]):
+            risk_level = "P2"
+            risk_rationale = "Moderate risk: recommended changes detected"
+
+        # Generate basic gaps
+        gaps = []
+        for i, policy_id in enumerate(signal.affected_policies[:3]):
+            baseline_policy = self.baseline.get_policy(policy_id)
+            if baseline_policy:
+                gaps.append({
+                    "baseline_policy_id": policy_id,
+                    "baseline_requirement": baseline_policy["requirement"],
+                    "regulatory_requirement": signal.key_provisions[0] if signal.key_provisions else "New requirement",
+                    "gap_description": f"Policy {policy_id} may need updates to comply with new regulation",
+                    "gap_severity": "major" if risk_level in ["P0", "P1"] else "minor",
+                    "is_blocking": risk_level == "P0"
+                })
+
+        # Generate basic remediations
+        remediations = []
+        for gap in gaps:
+            remediations.append({
+                "title": f"Update {gap['baseline_policy_id']} implementation",
+                "description": f"Review and update current implementation to meet new requirements: {gap['regulatory_requirement']}",
+                "affected_features": ["Platform Core"],
+                "engineering_effort": "M",
+                "pm_owner_recommendation": "Platform PM",
+                "acceptance_criteria": [
+                    "Legal review completed",
+                    "Implementation updated",
+                    "Testing verified"
+                ]
+            })
+
+        return {
+            "risk_level": risk_level,
+            "risk_rationale": risk_rationale,
+            "compliance_gaps": gaps,
+            "remediations": remediations,
+            "business_impact": f"Impact assessment for {signal.market} regulation pending detailed review",
+            "recommended_actions": [
+                f"Review {signal.title}",
+                "Schedule cross-functional review",
+                "Update compliance roadmap"
+            ]
+        }
+
 
 class ImpactAnalyzer:
     """
@@ -135,64 +357,87 @@ class ImpactAnalyzer:
     Generates compliance gap analysis and remediation recommendations.
     """
 
-    # Risk level determination rules
-    RISK_RULES = {
-        "ban": RiskLevel.P0,
-        "prohibit": RiskLevel.P0,
-        "suspend": RiskLevel.P0,
-        "immediate": RiskLevel.P0,
-        "mandatory": RiskLevel.P1,
-        "require": RiskLevel.P1,
-        "must": RiskLevel.P1,
-        "shall": RiskLevel.P1,
-        "should": RiskLevel.P2,
-        "recommend": RiskLevel.P2,
-        "may": RiskLevel.P3,
-        "consider": RiskLevel.P3,
-    }
-
-    # Product feature mapping for remediation suggestions
-    FEATURE_MAPPING = {
-        "MP-001": ["Registration Flow", "Age Verification", "Onboarding"],
-        "MP-002": ["Privacy Settings", "Default Configurations"],
-        "MP-010": ["Screen Time Management", "Digital Wellbeing"],
-        "MP-012": ["Recommendation Algorithm", "For You Page"],
-        "MP-020": ["Ad Targeting", "Ad Delivery System"],
-        "MP-030": ["Family Pairing", "Parental Controls"],
-        "EC-001": ["TikTok Shop", "In-App Commerce"],
-        "EC-002": ["Payment Integration", "Checkout Flow"],
-        "DS-010": ["Data Pipeline", "Cross-Border Transfer"],
-        "DS-020": ["Access Control", "Employee Permissions"],
-    }
-
     def __init__(self, baseline_path: str = "knowledge/internal_baseline.md"):
+        self.baseline_path = baseline_path
         self.baseline = BaselineParser(baseline_path)
+        self.llm_analyzer = LLMAnalyzer(baseline_path)
         self.assessments: dict[str, ImpactAssessment] = {}
 
     def analyze_signal(
         self,
         signal: RegulatorySignal,
-        analyst: str = "system"
+        analyst: str = "system",
+        use_llm: bool = True
     ) -> ImpactAssessment:
         """
         Perform comprehensive impact analysis on a regulatory signal.
+        Uses LLM for intelligent analysis when available.
         """
         assessment_id = f"IMPACT-{signal.id}-{datetime.now().strftime('%Y%m%d%H%M%S')}"
 
-        # Identify compliance gaps
-        gaps = self._identify_gaps(signal)
+        if use_llm:
+            # Use LLM-powered analysis
+            llm_result = self.llm_analyzer.analyze_with_llm(signal)
+            return self._build_assessment_from_llm(
+                assessment_id=assessment_id,
+                signal=signal,
+                llm_result=llm_result,
+                analyst=analyst
+            )
+        else:
+            # Use rule-based analysis (legacy)
+            return self._analyze_signal_rules(signal, analyst)
 
-        # Determine risk level
-        risk_level, risk_rationale = self._assess_risk(signal, gaps)
+    def _build_assessment_from_llm(
+        self,
+        assessment_id: str,
+        signal: RegulatorySignal,
+        llm_result: dict,
+        analyst: str
+    ) -> ImpactAssessment:
+        """Build ImpactAssessment from LLM JSON response."""
 
-        # Generate remediations
-        remediations = self._generate_remediations(signal, gaps)
+        # Parse risk level
+        risk_level_str = llm_result.get("risk_level", "P3")
+        try:
+            risk_level = RiskLevel(risk_level_str)
+        except ValueError:
+            risk_level = RiskLevel.P3
 
-        # Compile business impact statement
-        business_impact = self._assess_business_impact(signal, risk_level)
+        # Parse compliance gaps
+        gaps = []
+        for i, gap_data in enumerate(llm_result.get("compliance_gaps", [])):
+            gaps.append(ComplianceGap(
+                gap_id=f"GAP-{signal.id}-{i}",
+                signal_id=signal.id,
+                baseline_policy_id=gap_data.get("baseline_policy_id", "UNKNOWN"),
+                baseline_requirement=gap_data.get("baseline_requirement", ""),
+                regulatory_requirement=gap_data.get("regulatory_requirement", ""),
+                gap_description=gap_data.get("gap_description", ""),
+                gap_severity=gap_data.get("gap_severity", "minor"),
+                is_blocking=gap_data.get("is_blocking", False)
+            ))
 
-        # Generate recommended actions
-        recommended_actions = self._generate_action_items(signal, risk_level, gaps)
+        # Parse remediations
+        remediations = []
+        for i, rem_data in enumerate(llm_result.get("remediations", [])):
+            rem_type_str = rem_data.get("remediation_type", "product_change")
+            try:
+                rem_type = RemediationType(rem_type_str)
+            except ValueError:
+                rem_type = RemediationType.PRODUCT_CHANGE
+
+            remediations.append(ProductRemediation(
+                remediation_id=f"REM-{signal.id}-{i}",
+                gap_id=gaps[i].gap_id if i < len(gaps) else f"GAP-{signal.id}-{i}",
+                remediation_type=rem_type,
+                title=rem_data.get("title", ""),
+                description=rem_data.get("description", ""),
+                affected_features=rem_data.get("affected_features", []),
+                engineering_effort=rem_data.get("engineering_effort", "M"),
+                pm_owner_recommendation=rem_data.get("pm_owner_recommendation", "Platform PM"),
+                acceptance_criteria=rem_data.get("acceptance_criteria", [])
+            ))
 
         assessment = ImpactAssessment(
             assessment_id=assessment_id,
@@ -201,12 +446,12 @@ class ImpactAnalyzer:
             market=signal.market,
             domain=signal.domain.value,
             risk_level=risk_level,
-            risk_rationale=risk_rationale,
+            risk_rationale=llm_result.get("risk_rationale", ""),
             compliance_gaps=gaps,
             remediations=remediations,
             deadline=signal.effective_date,
-            business_impact=business_impact,
-            recommended_actions=recommended_actions,
+            business_impact=llm_result.get("business_impact", ""),
+            recommended_actions=llm_result.get("recommended_actions", []),
             assessed_at=datetime.now().isoformat(),
             assessed_by=analyst
         )
@@ -214,272 +459,28 @@ class ImpactAnalyzer:
         self.assessments[assessment_id] = assessment
         return assessment
 
-    def _identify_gaps(self, signal: RegulatorySignal) -> list[ComplianceGap]:
-        """Identify specific compliance gaps between signal and baseline."""
-        gaps = []
-
-        for policy_id in signal.affected_policies:
-            baseline_policy = self.baseline.get_policy(policy_id)
-            if not baseline_policy:
-                continue
-
-            # Analyze each key provision against baseline
-            for i, provision in enumerate(signal.key_provisions):
-                gap = self._compare_provision(
-                    signal_id=signal.id,
-                    policy_id=policy_id,
-                    baseline=baseline_policy,
-                    provision=provision,
-                    index=i
-                )
-                if gap:
-                    gaps.append(gap)
-
-        return gaps
-
-    def _compare_provision(
-        self,
-        signal_id: str,
-        policy_id: str,
-        baseline: dict,
-        provision: str,
-        index: int
-    ) -> Optional[ComplianceGap]:
-        """Compare a single provision against baseline policy."""
-        # Simulated gap detection logic
-        # In production, this would use NLP/LLM for semantic comparison
-
-        provision_lower = provision.lower()
-        baseline_req = baseline["requirement"].lower()
-
-        # Detect potential conflicts
-        conflict_indicators = [
-            ("opt-out", "default"),
-            ("mandatory", "optional"),
-            ("prohibit", "allow"),
-            ("require", "recommend"),
-            ("all", "some"),
-            ("17", "13"),  # Age threshold changes
-            ("16", "13"),
-            ("separate", "integrate"),
-        ]
-
-        is_conflict = False
-        severity = "minor"
-
-        for new_term, old_term in conflict_indicators:
-            if new_term in provision_lower and old_term in baseline_req:
-                is_conflict = True
-                if new_term in ["prohibit", "mandatory", "require"]:
-                    severity = "critical"
-                elif new_term in ["opt-out", "separate"]:
-                    severity = "major"
-                break
-
-        # Check for stricter age requirements
-        if any(age in provision_lower for age in ["17", "16", "18"]):
-            if "13" in baseline_req or "14" in baseline_req:
-                is_conflict = True
-                severity = "major"
-
-        if not is_conflict:
-            return None
-
-        return ComplianceGap(
-            gap_id=f"GAP-{signal_id}-{policy_id}-{index}",
-            signal_id=signal_id,
-            baseline_policy_id=policy_id,
-            baseline_requirement=baseline["requirement"],
-            regulatory_requirement=provision,
-            gap_description=f"New regulation requires '{provision}' which conflicts with current baseline '{baseline['requirement']}'",
-            gap_severity=severity,
-            is_blocking=severity == "critical"
-        )
-
-    def _assess_risk(
+    def _analyze_signal_rules(
         self,
         signal: RegulatorySignal,
-        gaps: list[ComplianceGap]
-    ) -> tuple[RiskLevel, str]:
-        """Determine overall risk level based on signal content and gaps."""
-        # Check for existential keywords
-        signal_text = (signal.summary + " ".join(signal.key_provisions)).lower()
-
-        for keyword, level in self.RISK_RULES.items():
-            if keyword in signal_text:
-                if level == RiskLevel.P0:
-                    return (
-                        RiskLevel.P0,
-                        f"Existential threat detected: regulation contains '{keyword}' language affecting core platform operations"
-                    )
-
-        # Check gap severity
-        critical_gaps = [g for g in gaps if g.gap_severity == "critical"]
-        major_gaps = [g for g in gaps if g.gap_severity == "major"]
-
-        if critical_gaps:
-            return (
-                RiskLevel.P1,
-                f"Material compliance gap: {len(critical_gaps)} critical conflicts requiring immediate product changes"
-            )
-        elif major_gaps:
-            return (
-                RiskLevel.P2,
-                f"Moderate risk: {len(major_gaps)} major gaps requiring quarterly remediation"
-            )
-        elif gaps:
-            return (
-                RiskLevel.P3,
-                f"Low risk: {len(gaps)} minor gaps for monitoring"
-            )
-        else:
-            return (
-                RiskLevel.P3,
-                "No significant compliance gaps detected; monitoring recommended"
-            )
-
-    def _generate_remediations(
-        self,
-        signal: RegulatorySignal,
-        gaps: list[ComplianceGap]
-    ) -> list[ProductRemediation]:
-        """Generate product remediation recommendations for each gap."""
-        remediations = []
-
-        for gap in gaps:
-            policy_id = gap.baseline_policy_id
-            affected_features = self.FEATURE_MAPPING.get(policy_id, ["Platform Core"])
-
-            # Determine remediation type based on gap
-            if "algorithm" in gap.regulatory_requirement.lower():
-                rem_type = RemediationType.PRODUCT_CHANGE
-                effort = "L"
-            elif "data" in gap.regulatory_requirement.lower():
-                rem_type = RemediationType.INFRASTRUCTURE
-                effort = "XL"
-            elif "consent" in gap.regulatory_requirement.lower():
-                rem_type = RemediationType.PRODUCT_CHANGE
-                effort = "M"
-            else:
-                rem_type = RemediationType.PRODUCT_CHANGE
-                effort = "M"
-
-            remediation = ProductRemediation(
-                remediation_id=f"REM-{gap.gap_id}",
-                gap_id=gap.gap_id,
-                remediation_type=rem_type,
-                title=f"Address {gap.baseline_policy_id} compliance gap",
-                description=self._generate_remediation_description(gap),
-                affected_features=affected_features,
-                engineering_effort=effort,
-                pm_owner_recommendation=self._suggest_pm_owner(policy_id),
-                acceptance_criteria=self._generate_acceptance_criteria(gap)
-            )
-
-            remediations.append(remediation)
-
-        return remediations
-
-    def _generate_remediation_description(self, gap: ComplianceGap) -> str:
-        """Generate human-readable remediation description for PM."""
-        return (
-            f"Current implementation: {gap.baseline_requirement}\n"
-            f"Required change: {gap.regulatory_requirement}\n\n"
-            f"Action: Modify the feature to meet new regulatory requirements. "
-            f"Ensure backwards compatibility where possible and coordinate with "
-            f"Legal team for compliance sign-off before launch."
-        )
-
-    def _suggest_pm_owner(self, policy_id: str) -> str:
-        """Suggest PM owner based on policy domain."""
-        prefix = policy_id.split("-")[0]
-        owners = {
-            "MP": "Trust & Safety PM",
-            "EC": "Commerce PM",
-            "DS": "Privacy PM",
-            "CM": "Content Policy PM"
-        }
-        return owners.get(prefix, "Platform PM")
-
-    def _generate_acceptance_criteria(self, gap: ComplianceGap) -> list[str]:
-        """Generate acceptance criteria for remediation."""
-        return [
-            f"Feature updated to comply with: {gap.regulatory_requirement}",
-            "Legal review completed and signed off",
-            "QA verification in staging environment",
-            "Rollout plan approved for affected market",
-            "Monitoring dashboard updated with compliance metrics"
-        ]
-
-    def _assess_business_impact(
-        self,
-        signal: RegulatorySignal,
-        risk_level: RiskLevel
-    ) -> str:
-        """Generate business impact statement."""
-        impact_templates = {
-            RiskLevel.P0: (
-                f"CRITICAL: {signal.market} market operations at risk. "
-                f"Potential revenue impact: 100% of {signal.market} GMV. "
-                f"Immediate executive escalation required."
-            ),
-            RiskLevel.P1: (
-                f"HIGH: Material product changes required for {signal.market}. "
-                f"Estimated impact to feature roadmap: 2-3 quarters. "
-                f"Cross-functional mobilization needed."
-            ),
-            RiskLevel.P2: (
-                f"MODERATE: Compliance updates needed for {signal.market}. "
-                f"Addressable within normal product cycle. "
-                f"Monitor for enforcement actions."
-            ),
-            RiskLevel.P3: (
-                f"LOW: Monitoring recommended for {signal.market}. "
-                f"No immediate action required. "
-                f"Include in quarterly compliance review."
-            )
-        }
-        return impact_templates[risk_level]
-
-    def _generate_action_items(
-        self,
-        signal: RegulatorySignal,
-        risk_level: RiskLevel,
-        gaps: list[ComplianceGap]
-    ) -> list[str]:
-        """Generate prioritized action items."""
-        actions = []
-
-        if risk_level in [RiskLevel.P0, RiskLevel.P1]:
-            actions.extend([
-                f"Schedule executive briefing on {signal.title}",
-                "Convene cross-functional war room (Policy, Legal, Product, Eng)",
-                f"Draft compliance roadmap with deadline: {signal.effective_date or 'TBD'}",
-            ])
-
-        if gaps:
-            actions.append(
-                f"Create JIRA epic for {len(gaps)} compliance gaps"
-            )
-
-        actions.extend([
-            f"Monitor {signal.market} regulatory developments",
-            "Update internal baseline upon remediation completion",
-            "Schedule follow-up review in 30 days"
-        ])
-
-        return actions
+        analyst: str
+    ) -> ImpactAssessment:
+        """Legacy rule-based analysis (kept for fallback)."""
+        # Use fallback analysis from LLM analyzer
+        result = self.llm_analyzer._fallback_analysis(signal)
+        assessment_id = f"IMPACT-{signal.id}-{datetime.now().strftime('%Y%m%d%H%M%S')}"
+        return self._build_assessment_from_llm(assessment_id, signal, result, analyst)
 
     def analyze_mission(
         self,
         mission: ScoutMission,
-        analyst: str = "system"
+        analyst: str = "system",
+        use_llm: bool = True
     ) -> list[ImpactAssessment]:
         """Analyze all signals from a mission."""
         assessments = []
 
         for signal in mission.signals:
-            assessment = self.analyze_signal(signal, analyst)
+            assessment = self.analyze_signal(signal, analyst, use_llm)
             assessments.append(assessment)
 
         return assessments
@@ -529,7 +530,6 @@ class ImpactAnalyzer:
         p3_count = sum(1 for a in assessments if a.risk_level == RiskLevel.P3)
 
         total_gaps = sum(len(a.compliance_gaps) for a in assessments)
-
         markets = set(a.market for a in assessments)
 
         summary = f"""
@@ -563,6 +563,15 @@ def main():
     """Demo execution with full pipeline."""
     from scout_engine import ScoutEngine
 
+    # Check for API key
+    if not os.environ.get("OPENAI_API_KEY"):
+        print("=" * 60)
+        print("OPENAI_API_KEY not set. Running in fallback mode.")
+        print("Set the environment variable for LLM-powered analysis:")
+        print("  export OPENAI_API_KEY='your-api-key'")
+        print("=" * 60)
+        print()
+
     # Initialize engines
     scout = ScoutEngine()
     analyzer = ImpactAnalyzer()
@@ -578,8 +587,12 @@ def main():
 
     print(f"Mission {mission.mission_id} completed with {len(mission.signals)} signals\n")
 
-    # Analyze all signals
-    assessments = analyzer.analyze_mission(mission, analyst="demo_analyst")
+    # Analyze all signals (use_llm=True will use GPT-4o if available)
+    assessments = analyzer.analyze_mission(
+        mission,
+        analyst="demo_analyst",
+        use_llm=True
+    )
 
     # Print results
     for assessment in assessments:
