@@ -140,6 +140,23 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
 
+          # Generate manifest.json for frontend data loading
+          cd data/history
+          echo '{"files": [' > manifest.json
+          first=true
+          for f in MISSION-*.json IMPACT-*.json; do
+            if [ -f "$f" ]; then
+              if [ "$first" = true ]; then
+                first=false
+              else
+                echo ',' >> manifest.json
+              fi
+              echo "\"$f\"" >> manifest.json
+            fi
+          done
+          echo ']}' >> manifest.json
+          cd ../..
+
           # Add all new files in data/history
           git add data/history/
 

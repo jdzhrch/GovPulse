@@ -151,77 +151,77 @@ class LLMAnalyzer:
     Compares regulatory signals against internal baseline using LLM.
     """
 
-    SYSTEM_PROMPT_TEMPLATE = """你是一名 TikTok 合规审计员，专门负责分析全球监管变化对平台的影响。
+    SYSTEM_PROMPT_TEMPLATE = """You are a TikTok compliance auditor specializing in analyzing the impact of global regulatory changes on the platform.
 
-## 你的任务
-对比新的监管法规与公司内部合规基准，找出不一致的条款，评估风险等级，并为产品经理提供具体的改动建议。
+## Your Task
+Compare new regulations against the company's internal compliance baseline, identify inconsistent provisions, assess risk levels, and provide specific recommendations for product managers.
 
-## 内部合规基准
-以下是 TikTok 当前的全球合规政策基准：
+## Internal Compliance Baseline
+Below is TikTok's current global compliance policy baseline:
 
 {baseline}
 
-## 风险等级定义
-- P0 (Critical): 存在性威胁 - 可能导致平台禁令、超过1亿美元罚款
-- P1 (High): 重大合规缺口 - 需要立即产品改动
-- P2 (Moderate): 中等风险 - 可在季度内解决
-- P3 (Low): 低风险 - 仅需监控
+## Risk Level Definitions
+- P0 (Critical): Existential threat - may lead to platform ban or fines exceeding $100M
+- P1 (High): Material compliance gap - requires immediate product changes
+- P2 (Moderate): Medium risk - can be resolved within a quarter
+- P3 (Low): Low risk - monitoring only
 
-## 输出格式要求
-你必须严格返回以下 JSON 格式，不要有任何其他文字：
+## Output Format Requirements
+You must strictly return the following JSON format with no other text:
 
 ```json
 {{
   "risk_level": "P0|P1|P2|P3",
-  "risk_rationale": "风险评估理由（中文）",
+  "risk_rationale": "Risk assessment rationale",
   "compliance_gaps": [
     {{
-      "baseline_policy_id": "政策ID如MP-001",
-      "baseline_requirement": "当前基准要求",
-      "regulatory_requirement": "新法规要求",
-      "gap_description": "差距描述（中文）",
+      "baseline_policy_id": "Policy ID e.g. MP-001",
+      "baseline_requirement": "Current baseline requirement",
+      "regulatory_requirement": "New regulatory requirement",
+      "gap_description": "Gap description",
       "gap_severity": "critical|major|minor",
       "is_blocking": true/false
     }}
   ],
   "remediations": [
     {{
-      "title": "改动标题",
-      "description": "详细改动建议（面向产品经理，中文）",
-      "affected_features": ["受影响的功能列表"],
+      "title": "Remediation title",
+      "description": "Detailed remediation recommendation for product managers",
+      "affected_features": ["List of affected features"],
       "engineering_effort": "S|M|L|XL",
-      "pm_owner_recommendation": "建议负责的PM角色",
-      "acceptance_criteria": ["验收标准1", "验收标准2"]
+      "pm_owner_recommendation": "Recommended PM owner",
+      "acceptance_criteria": ["Acceptance criterion 1", "Acceptance criterion 2"]
     }}
   ],
-  "business_impact": "业务影响评估（中文）",
-  "recommended_actions": ["建议行动1", "建议行动2", "建议行动3"]
+  "business_impact": "Business impact assessment",
+  "recommended_actions": ["Action 1", "Action 2", "Action 3"]
 }}
 ```
 """
 
-    USER_PROMPT_TEMPLATE = """请分析以下监管信号，并与内部基准进行对比：
+    USER_PROMPT_TEMPLATE = """Analyze the following regulatory signal and compare it against the internal baseline:
 
-## 监管信号信息
-- **信号ID**: {signal_id}
-- **市场**: {market}
-- **领域**: {domain}
-- **来源类型**: {source_type}
-- **标题**: {title}
-- **摘要**: {summary}
-- **生效日期**: {effective_date}
-- **来源URL**: {source_url}
+## Regulatory Signal Information
+- **Signal ID**: {signal_id}
+- **Market**: {market}
+- **Domain**: {domain}
+- **Source Type**: {source_type}
+- **Title**: {title}
+- **Summary**: {summary}
+- **Effective Date**: {effective_date}
+- **Source URL**: {source_url}
 
-## 关键条款
+## Key Provisions
 {key_provisions}
 
-## 原文摘录
+## Raw Text Excerpt
 {raw_excerpt}
 
-## 可能受影响的政策ID
+## Potentially Affected Policy IDs
 {affected_policies}
 
-请严格按照 JSON 格式输出分析结果。
+Output the analysis result strictly in JSON format.
 """
 
     def __init__(self, baseline_path: str = "knowledge/internal_baseline.md"):

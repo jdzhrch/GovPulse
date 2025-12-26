@@ -48,8 +48,24 @@ jobs:
 
       - name: Copy data to build
         run: |
-          mkdir -p frontend/dist/data
-          cp -r data/history frontend/dist/data/ 2>/dev/null || echo "No history data yet"
+          mkdir -p frontend/dist/data/history
+          cp -r data/history/* frontend/dist/data/history/ 2>/dev/null || echo "No history data yet"
+          
+          # Generate manifest.json for frontend data loading
+          cd frontend/dist/data/history
+          echo '{"files": [' > manifest.json
+          first=true
+          for f in MISSION-*.json IMPACT-*.json; do
+            if [ -f "$f" ]; then
+              if [ "$first" = true ]; then
+                first=false
+              else
+                echo ',' >> manifest.json
+              fi
+              echo "\"$f\"" >> manifest.json
+            fi
+          done
+          echo ']}' >> manifest.json
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4

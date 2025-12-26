@@ -8,36 +8,47 @@ import AuditTrail from './pages/AuditTrail'
 import { ImpactAssessment, ScoutMission, RegulatorySignal } from './types'
 import { mockMissions, mockAssessments } from './utils/mockData'
 
-// 从 data/history/ 加载真实数据
+// Load real data from data/history/
 async function loadHistoryData(): Promise<{
   missions: ScoutMission[]
   assessments: ImpactAssessment[]
 }> {
   try {
-    // 尝试获取历史数据目录列表
-    const response = await fetch('/data/history/')
-    if (!response.ok) {
+    // First try to load manifest.json which lists all available files
+    const manifestResponse = await fetch('/GovPulse/data/history/manifest.json')
+    let files: string[] = []
+    
+    if (manifestResponse.ok) {
+      const manifest = await manifestResponse.json()
+      files = manifest.files || []
+      console.log(`Loaded manifest with ${files.length} files`)
+    } else {
+      // Fallback: try to fetch directory listing (works on some servers)
+      const response = await fetch('/GovPulse/data/history/')
+      if (response.ok) {
+        const html = await response.text()
+        const filePattern = /(MISSION-[^"<>\s]+\.json|IMPACT-[^"<>\s]+\.json)/g
+        files = [...new Set(html.match(filePattern) || [])]
+      }
+    }
+
+    if (files.length === 0) {
       console.log('No history data available, using mock data')
       return { missions: [], assessments: [] }
     }
-
-    const html = await response.text()
-    // 解析目录列表中的 JSON 文件
-    const filePattern = /(MISSION-[^"]+\.json|IMPACT-[^"]+\.json)/g
-    const files = html.match(filePattern) || []
 
     const missions: ScoutMission[] = []
     const assessments: ImpactAssessment[] = []
 
     for (const file of files) {
       try {
-        const fileResponse = await fetch(`/data/history/${file}`)
+        const fileResponse = await fetch(`/GovPulse/data/history/${file}`)
         if (!fileResponse.ok) continue
 
         const data = await fileResponse.json()
 
         if (file.startsWith('MISSION-')) {
-          // 转换后端数据格式到前端格式
+          // Convert backend data format to frontend format
           const mission: ScoutMission = {
             mission_id: data.mission_id,
             market: data.market,
@@ -65,7 +76,7 @@ async function loadHistoryData(): Promise<{
       }
     }
 
-    // 按时间倒序排列
+    // Sort by time descending
     missions.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     assessments.sort((a, b) => new Date(b.assessed_at).getTime() - new Date(a.assessed_at).getTime())
 

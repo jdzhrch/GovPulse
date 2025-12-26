@@ -154,30 +154,30 @@ class QueryGenerator:
     Generates precise, market-specific regulatory search queries.
     """
 
-    SYSTEM_PROMPT = """你是一名监管情报分析师，专门追踪全球科技平台监管动态。
+    SYSTEM_PROMPT = """You are a regulatory intelligence analyst specializing in tracking global tech platform regulations.
 
-你的任务是根据给定的市场和政策领域，生成5个精准的搜索查询语句，用于在政府网站和法律数据库中搜索最新的监管变化。
+Your task is to generate 5 precise search queries for a given market and policy domain to search government websites and legal databases for recent regulatory changes.
 
-要求：
-1. 查询语句必须精准、具体
-2. 包含市场特定的法规名称或监管机构
-3. 使用当地语言的官方术语（如适用）
-4. 覆盖：立法草案、已通过法律、监管指引、听证会、法院判决
-5. 时效性：关注最近的监管动态
+Requirements:
+1. Queries must be precise and specific
+2. Include market-specific regulation names or regulatory bodies
+3. Use official terminology in local language where applicable
+4. Cover: draft bills, enacted laws, regulatory guidance, hearings, court rulings
+5. Focus on recent regulatory developments
 
-输出格式：返回 JSON 数组，包含5个搜索查询字符串。
+Output format: Return a JSON array containing 5 search query strings.
 """
 
-    USER_PROMPT_TEMPLATE = """请为以下任务生成搜索查询：
+    USER_PROMPT_TEMPLATE = """Generate search queries for the following mission:
 
-市场：{market} ({market_name})
-政策领域：{domain}
-回溯期：{lookback_days}天
-相关政府网站：{government_sites}
-相关监管机构：{regulators}
-领域关键词：{domain_keywords}
+Market: {market} ({market_name})
+Policy Domain: {domain}
+Lookback Period: {lookback_days} days
+Government Websites: {government_sites}
+Regulatory Bodies: {regulators}
+Domain Keywords: {domain_keywords}
 
-请生成5个精准的搜索查询语句，格式为 JSON 数组。
+Generate 5 precise search queries as a JSON array.
 """
 
     def __init__(self):
@@ -745,32 +745,32 @@ class ScoutEngine:
 
         print(f"[Parser] Processing {len(raw_results)} search results, total {len(combined_content)} chars")
 
-        # 改进的解析 prompt
-        parse_prompt = f"""你是一名监管情报分析师。请仔细分析以下关于 {mission.market} 市场 {mission.domain.value} 领域的搜索结果，提取所有监管信号。
+        # Improved parsing prompt
+        parse_prompt = f"""You are a regulatory intelligence analyst. Analyze the following search results about {mission.market} market {mission.domain.value} domain and extract all regulatory signals.
 
-搜索结果:
+Search Results:
 {combined_content[:20000]}
 
-任务：从上述内容中提取所有监管相关的信号。即使信息不完整，也请尽可能提取。
+Task: Extract all regulation-related signals from the above content. Extract as much as possible even if information is incomplete.
 
-对于每个监管信号，请提供：
-- id: 信号ID，格式为 "{mission.market}-XX-{datetime.now().year}-XXX"，其中 XX 是领域缩写
-- title: 法规或政策的完整标题
-- summary: 2-3句话的摘要，描述这是什么以及其影响
-- source_url: 来源URL（如果有的话）
-- published_date: 发布日期，格式 "YYYY-MM-DD"
-- effective_date: 生效日期（可选），格式 "YYYY-MM-DD" 或 null
-- key_provisions: 主要条款列表（字符串数组）
-- source_type: 来源类型，必须是以下之一：legislation, executive_order, regulatory_guidance, court_ruling, draft_bill
-- confidence_score: 信息可信度，0.0-1.0 之间的数字
+For each regulatory signal, provide:
+- id: Signal ID in format "{mission.market}-XX-{datetime.now().year}-XXX" where XX is domain abbreviation
+- title: Full title of the regulation or policy
+- summary: 2-3 sentence summary describing what it is and its impact
+- source_url: Source URL (if available)
+- published_date: Publication date in "YYYY-MM-DD" format
+- effective_date: Effective date (optional), "YYYY-MM-DD" or null
+- key_provisions: List of key provisions (string array)
+- source_type: Source type, must be one of: legislation, executive_order, regulatory_guidance, court_ruling, draft_bill
+- confidence_score: Information confidence level, number between 0.0-1.0
 
-重要：
-1. 请返回一个 JSON 对象，包含 "signals" 键，值为信号数组
-2. 即使只找到部分信息，也要提取信号
-3. 如果确实没有找到任何监管信息，返回 {{"signals": []}}
-4. 不要编造不存在的信息，但要尽可能从文本中提取真实内容
+Important:
+1. Return a JSON object with "signals" key containing an array of signals
+2. Extract signals even with partial information
+3. If no regulatory information found, return {{"signals": []}}
+4. Do not fabricate information, but extract as much real content as possible
 
-示例输出格式：
+Example output format:
 {{"signals": [
   {{
     "id": "{mission.market}-MP-{datetime.now().year}-001",
@@ -790,7 +790,7 @@ class ScoutEngine:
             response = client.chat.completions.create(
                 model="gpt-4o",
                 messages=[
-                    {"role": "system", "content": "你是一名专业的监管情报分析师。你的任务是从搜索结果中提取结构化的监管信息。请务必提取所有相关信号，即使信息不完整。始终返回有效的 JSON 格式。"},
+                    {"role": "system", "content": "You are a professional regulatory intelligence analyst. Your task is to extract structured regulatory information from search results. Extract all relevant signals even with incomplete information. Always return valid JSON format."},
                     {"role": "user", "content": parse_prompt}
                 ],
                 temperature=0.2,
