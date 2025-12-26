@@ -4,10 +4,8 @@ import Layout from './components/Layout'
 import Dashboard from './pages/Dashboard'
 import MissionLauncher from './pages/MissionLauncher'
 import GapAnalysis from './pages/GapAnalysis'
-import AuditTrail from './pages/AuditTrail'
 import ScanReport from './pages/ScanReport'
 import { ImpactAssessment, ScoutMission, RegulatorySignal } from './types'
-import { mockMissions, mockAssessments } from './utils/mockData'
 
 // Use base URL from Vite config
 const BASE_URL = import.meta.env.BASE_URL || '/'
@@ -46,7 +44,7 @@ async function loadHistoryData(): Promise<{
     }
 
     if (files.length === 0) {
-      console.log('No history data available, using mock data')
+      console.log('No history data available')
       return { missions: [], assessments: [] }
     }
 
@@ -105,37 +103,26 @@ async function loadHistoryData(): Promise<{
 
     return { missions, assessments }
   } catch (e) {
-    console.log('Failed to load history data, using mock data:', e)
+    console.log('Failed to load history data:', e)
     return { missions: [], assessments: [] }
   }
 }
 
 function App() {
-  const [missions, setMissions] = useState<ScoutMission[]>(mockMissions)
-  const [assessments, setAssessments] = useState<ImpactAssessment[]>(mockAssessments)
+  const [missions, setMissions] = useState<ScoutMission[]>([])
+  const [assessments, setAssessments] = useState<ImpactAssessment[]>([])
   const [, setIsLoading] = useState(true)
   const location = useLocation()
 
-  // Function to load and merge data
+  // Function to load data
   const refreshData = useCallback(async () => {
     const { missions: realMissions, assessments: realAssessments } = await loadHistoryData()
-    if (realMissions.length > 0 || realAssessments.length > 0) {
-      // Merge real data with mock data, then sort by date descending
-      const mergedMissions = [...realMissions, ...mockMissions].sort(
-        (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-      )
-      const mergedAssessments = [...realAssessments, ...mockAssessments].sort(
-        (a, b) => new Date(b.assessed_at).getTime() - new Date(a.assessed_at).getTime()
-      )
-      setMissions(mergedMissions)
-      setAssessments(mergedAssessments)
-      console.log('Loaded data:', { 
-        realMissions: realMissions.length, 
-        realAssessments: realAssessments.length,
-        totalMissions: mergedMissions.length,
-        totalAssessments: mergedAssessments.length
-      })
-    }
+    setMissions(realMissions)
+    setAssessments(realAssessments)
+    console.log('Loaded data:', { 
+      missions: realMissions.length, 
+      assessments: realAssessments.length
+    })
     setIsLoading(false)
   }, [])
 
@@ -146,19 +133,11 @@ function App() {
 
   // Refresh data when navigating to dashboard or analysis pages (to pick up new results)
   useEffect(() => {
-    if (location.pathname === '/' || location.pathname.startsWith('/analysis') || location.pathname === '/audit') {
+    if (location.pathname === '/' || location.pathname.startsWith('/analysis') || location.pathname.startsWith('/reports')) {
       refreshData()
     }
   }, [location.pathname, refreshData])
   const [selectedAssessment, setSelectedAssessment] = useState<ImpactAssessment | null>(null)
-
-  const handleMissionCreate = (mission: ScoutMission) => {
-    setMissions(prev => [mission, ...prev])
-  }
-
-  const handleAssessmentCreate = (assessment: ImpactAssessment) => {
-    setAssessments(prev => [assessment, ...prev])
-  }
 
   const handlePushToPM = (assessmentId: string) => {
     setAssessments(prev =>
@@ -174,15 +153,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Dashboard missions={missions} assessments={assessments} />} />
-        <Route
-          path="launch"
-          element={
-            <MissionLauncher
-              onMissionCreate={handleMissionCreate}
-              onAssessmentCreate={handleAssessmentCreate}
-            />
-          }
-        />
+        <Route path="launch" element={<MissionLauncher />} />
         <Route
           path="reports"
           element={
@@ -223,12 +194,6 @@ function App() {
               onSelectAssessment={setSelectedAssessment}
               onPushToPM={handlePushToPM}
             />
-          }
-        />
-        <Route
-          path="audit"
-          element={
-            <AuditTrail missions={missions} assessments={assessments} onPushToPM={handlePushToPM} />
           }
         />
       </Route>

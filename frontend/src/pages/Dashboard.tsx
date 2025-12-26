@@ -171,7 +171,7 @@ export default function Dashboard({ missions, assessments }: DashboardProps) {
         <div className="card">
           <div className="card-header flex items-center justify-between">
             <h2 className="text-lg font-semibold text-slate-900">Recent Scans</h2>
-            <Link to="/audit" className="text-sm text-govpulse-600 hover:text-govpulse-700 font-medium">
+            <Link to="/reports" className="text-sm text-govpulse-600 hover:text-govpulse-700 font-medium">
               View all
             </Link>
           </div>
@@ -207,30 +207,6 @@ export default function Dashboard({ missions, assessments }: DashboardProps) {
               )
             })}
           </div>
-        </div>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="card p-6">
-        <h2 className="text-lg font-semibold text-slate-900 mb-4">Quick Launch</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[
-            { market: 'US', event: 'TikTok Ban Updates', domain: 'all' },
-            { market: 'ID', event: 'E-Commerce Regulations', domain: 'ecommerce' },
-            { market: 'EU', event: 'DSA Compliance', domain: 'minor_protection' },
-            { market: 'UK', event: 'Online Safety Act', domain: 'content_moderation' },
-          ].map((quick) => (
-            <Link
-              key={`${quick.market}-${quick.domain}`}
-              to={`/launch?market=${quick.market}&domain=${quick.domain}`}
-              className="p-4 border border-slate-200 rounded-lg hover:border-govpulse-500 hover:bg-govpulse-50 transition-colors group"
-            >
-              <p className="font-medium text-slate-900 group-hover:text-govpulse-700">
-                {quick.market}
-              </p>
-              <p className="text-sm text-slate-500 mt-1">{quick.event}</p>
-            </Link>
-          ))}
         </div>
       </div>
     </div>

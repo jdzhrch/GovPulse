@@ -3,7 +3,6 @@ import {
   LayoutDashboard,
   Search,
   FileCheck,
-  History,
   Activity,
   ClipboardList
 } from 'lucide-react'
@@ -14,7 +13,6 @@ const navigation = [
   { name: 'New Scan', to: '/launch', icon: Search },
   { name: 'Scan Reports', to: '/reports', icon: ClipboardList },
   { name: 'Policy Details', to: '/analysis', icon: FileCheck },
-  { name: 'History', to: '/audit', icon: History },
 ]
 
 export default function Layout() {

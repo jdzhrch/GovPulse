@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import {
   FileCheck,
@@ -16,7 +16,9 @@ import {
   Target,
   Wrench,
   FileText,
-  Send
+  Send,
+  Filter,
+  X
 } from 'lucide-react'
 import clsx from 'clsx'
 import { ScoutMission, ImpactAssessment, RISK_COLORS, MARKETS } from '../types'
@@ -76,6 +78,46 @@ export default function ScanReport({ missions, assessments, onPushToPM }: ScanRe
   const { missionId } = useParams()
   const navigate = useNavigate()
   const [expandedPolicies, setExpandedPolicies] = useState<Set<string>>(new Set())
+  
+  // Filter states
+  const [selectedMarket, setSelectedMarket] = useState<string>('all')
+  const [dateRange, setDateRange] = useState<string>('all') // 'all', '7d', '30d', '90d'
+  
+  // Get unique markets from missions
+  const availableMarkets = useMemo(() => {
+    const marketSet = new Set(missions.map(m => m.market))
+    return Array.from(marketSet).sort()
+  }, [missions])
+  
+  // Filter missions based on selected filters
+  const filteredMissions = useMemo(() => {
+    return missions.filter(m => {
+      // Market filter
+      if (selectedMarket !== 'all' && m.market !== selectedMarket) {
+        return false
+      }
+      
+      // Date range filter
+      if (dateRange !== 'all') {
+        const missionDate = new Date(m.created_at)
+        const now = new Date()
+        const daysAgo = parseInt(dateRange)
+        const cutoffDate = new Date(now.getTime() - daysAgo * 24 * 60 * 60 * 1000)
+        if (missionDate < cutoffDate) {
+          return false
+        }
+      }
+      
+      return true
+    })
+  }, [missions, selectedMarket, dateRange])
+  
+  const hasActiveFilters = selectedMarket !== 'all' || dateRange !== 'all'
+  
+  const clearFilters = () => {
+    setSelectedMarket('all')
+    setDateRange('all')
+  }
 
   // Find the mission
   const mission = missions.find(m => m.mission_id === missionId)
@@ -129,8 +171,71 @@ export default function ScanReport({ missions, assessments, onPushToPM }: ScanRe
           </p>
         </div>
 
+        {/* Filters */}
+        <div className="card p-4">
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Filter className="w-4 h-4 text-slate-500" />
+              <span className="text-sm font-medium text-slate-700">Filters:</span>
+            </div>
+            
+            {/* Market Filter */}
+            <div className="flex items-center gap-2">
+              <label htmlFor="market-filter" className="text-sm text-slate-600">Market:</label>
+              <select
+                id="market-filter"
+                value={selectedMarket}
+                onChange={(e) => setSelectedMarket(e.target.value)}
+                className="text-sm border border-slate-300 rounded-md px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-govpulse-500 focus:border-govpulse-500"
+              >
+                <option value="all">All Markets</option>
+                {availableMarkets.map(code => {
+                  const market = MARKETS.find(m => m.code === code)
+                  return (
+                    <option key={code} value={code}>
+                      {market?.flag} {market?.name || code}
+                    </option>
+                  )
+                })}
+              </select>
+            </div>
+            
+            {/* Date Range Filter */}
+            <div className="flex items-center gap-2">
+              <label htmlFor="date-filter" className="text-sm text-slate-600">Time Range:</label>
+              <select
+                id="date-filter"
+                value={dateRange}
+                onChange={(e) => setDateRange(e.target.value)}
+                className="text-sm border border-slate-300 rounded-md px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-govpulse-500 focus:border-govpulse-500"
+              >
+                <option value="all">All Time</option>
+                <option value="7">Last 7 Days</option>
+                <option value="30">Last 30 Days</option>
+                <option value="90">Last 90 Days</option>
+              </select>
+            </div>
+            
+            {/* Clear Filters */}
+            {hasActiveFilters && (
+              <button
+                onClick={clearFilters}
+                className="flex items-center gap-1 text-sm text-govpulse-600 hover:text-govpulse-700"
+              >
+                <X className="w-4 h-4" />
+                Clear Filters
+              </button>
+            )}
+            
+            {/* Results Count */}
+            <div className="ml-auto text-sm text-slate-500">
+              {filteredMissions.length} of {missions.length} reports
+            </div>
+          </div>
+        </div>
+
         <div className="grid gap-4">
-          {missions.map((m) => {
+          {filteredMissions.map((m) => {
             const market = MARKETS.find(mk => mk.code === m.market)
             const DomainIcon = domainIcons[m.domain] || Globe
             const missionAssess = assessments.filter(a => 
@@ -196,6 +301,17 @@ export default function ScanReport({ missions, assessments, onPushToPM }: ScanRe
               </Link>
             )
           })}
+          
+          {filteredMissions.length === 0 && missions.length > 0 && (
+            <div className="card p-12 text-center">
+              <Filter className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-slate-900 mb-2">No matching reports</h3>
+              <p className="text-slate-600 mb-4">Try adjusting your filters to see more results</p>
+              <button onClick={clearFilters} className="btn-secondary">
+                Clear Filters
+              </button>
+            </div>
+          )}
           
           {missions.length === 0 && (
             <div className="card p-12 text-center">

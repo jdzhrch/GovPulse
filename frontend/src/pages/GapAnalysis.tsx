@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import {
   FileCheck,
@@ -11,10 +11,12 @@ import {
   ChevronRight,
   ArrowRight,
   Target,
-  Shield
+  Shield,
+  Filter,
+  X
 } from 'lucide-react'
 import clsx from 'clsx'
-import { ImpactAssessment, ComplianceGap, ProductRemediation, RISK_COLORS } from '../types'
+import { ImpactAssessment, ComplianceGap, ProductRemediation, RISK_COLORS, MARKETS } from '../types'
 import RiskBadge from '../components/RiskBadge'
 import { formatDistanceToNow, format } from 'date-fns'
 
@@ -58,6 +60,53 @@ export default function GapAnalysis({
   onPushToPM
 }: GapAnalysisProps) {
   const { assessmentId } = useParams()
+  
+  // Filter states
+  const [selectedMarket, setSelectedMarket] = useState<string>('all')
+  const [selectedRisk, setSelectedRisk] = useState<string>('all')
+  const [dateRange, setDateRange] = useState<string>('all')
+  
+  // Get unique markets from assessments
+  const availableMarkets = useMemo(() => {
+    const marketSet = new Set(assessments.map(a => a.market))
+    return Array.from(marketSet).sort()
+  }, [assessments])
+  
+  // Filter assessments based on selected filters
+  const filteredAssessments = useMemo(() => {
+    return assessments.filter(a => {
+      // Market filter
+      if (selectedMarket !== 'all' && a.market !== selectedMarket) {
+        return false
+      }
+      
+      // Risk level filter
+      if (selectedRisk !== 'all' && a.risk_level !== selectedRisk) {
+        return false
+      }
+      
+      // Date range filter
+      if (dateRange !== 'all') {
+        const assessDate = new Date(a.assessed_at)
+        const now = new Date()
+        const daysAgo = parseInt(dateRange)
+        const cutoffDate = new Date(now.getTime() - daysAgo * 24 * 60 * 60 * 1000)
+        if (assessDate < cutoffDate) {
+          return false
+        }
+      }
+      
+      return true
+    })
+  }, [assessments, selectedMarket, selectedRisk, dateRange])
+  
+  const hasActiveFilters = selectedMarket !== 'all' || selectedRisk !== 'all' || dateRange !== 'all'
+  
+  const clearFilters = () => {
+    setSelectedMarket('all')
+    setSelectedRisk('all')
+    setDateRange('all')
+  }
 
   useEffect(() => {
     if (assessmentId) {
@@ -79,12 +128,92 @@ export default function GapAnalysis({
           </p>
         </div>
 
+        {/* Filters */}
+        <div className="card p-4">
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Filter className="w-4 h-4 text-slate-500" />
+              <span className="text-sm font-medium text-slate-700">Filters:</span>
+            </div>
+            
+            {/* Market Filter */}
+            <div className="flex items-center gap-2">
+              <label htmlFor="market-filter" className="text-sm text-slate-600">Market:</label>
+              <select
+                id="market-filter"
+                value={selectedMarket}
+                onChange={(e) => setSelectedMarket(e.target.value)}
+                className="text-sm border border-slate-300 rounded-md px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-govpulse-500 focus:border-govpulse-500"
+              >
+                <option value="all">All Markets</option>
+                {availableMarkets.map(code => {
+                  const market = MARKETS.find(m => m.code === code)
+                  return (
+                    <option key={code} value={code}>
+                      {market?.flag} {market?.name || code}
+                    </option>
+                  )
+                })}
+              </select>
+            </div>
+            
+            {/* Risk Level Filter */}
+            <div className="flex items-center gap-2">
+              <label htmlFor="risk-filter" className="text-sm text-slate-600">Risk:</label>
+              <select
+                id="risk-filter"
+                value={selectedRisk}
+                onChange={(e) => setSelectedRisk(e.target.value)}
+                className="text-sm border border-slate-300 rounded-md px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-govpulse-500 focus:border-govpulse-500"
+              >
+                <option value="all">All Levels</option>
+                <option value="P0">🔴 P0 - Critical</option>
+                <option value="P1">🟠 P1 - High</option>
+                <option value="P2">🟡 P2 - Moderate</option>
+                <option value="P3">🟢 P3 - Low</option>
+              </select>
+            </div>
+            
+            {/* Date Range Filter */}
+            <div className="flex items-center gap-2">
+              <label htmlFor="date-filter" className="text-sm text-slate-600">Time Range:</label>
+              <select
+                id="date-filter"
+                value={dateRange}
+                onChange={(e) => setDateRange(e.target.value)}
+                className="text-sm border border-slate-300 rounded-md px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-govpulse-500 focus:border-govpulse-500"
+              >
+                <option value="all">All Time</option>
+                <option value="7">Last 7 Days</option>
+                <option value="30">Last 30 Days</option>
+                <option value="90">Last 90 Days</option>
+              </select>
+            </div>
+            
+            {/* Clear Filters */}
+            {hasActiveFilters && (
+              <button
+                onClick={clearFilters}
+                className="flex items-center gap-1 text-sm text-govpulse-600 hover:text-govpulse-700"
+              >
+                <X className="w-4 h-4" />
+                Clear Filters
+              </button>
+            )}
+            
+            {/* Results Count */}
+            <div className="ml-auto text-sm text-slate-500">
+              {filteredAssessments.length} of {assessments.length} reports
+            </div>
+          </div>
+        </div>
+
         <div className="card">
           <div className="card-header">
             <h2 className="text-lg font-semibold text-slate-900">Select a Report</h2>
           </div>
           <div className="divide-y divide-slate-200">
-            {assessments.map((assessment) => (
+            {filteredAssessments.map((assessment) => (
               <button
                 key={assessment.assessment_id}
                 onClick={() => onSelectAssessment(assessment)}
@@ -121,6 +250,27 @@ export default function GapAnalysis({
                 </div>
               </button>
             ))}
+            
+            {/* Empty state - no matching results */}
+            {filteredAssessments.length === 0 && assessments.length > 0 && (
+              <div className="p-12 text-center">
+                <Filter className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-slate-900 mb-2">No matching reports</h3>
+                <p className="text-slate-600 mb-4">Try adjusting your filters to see more results</p>
+                <button onClick={clearFilters} className="btn-secondary">
+                  Clear Filters
+                </button>
+              </div>
+            )}
+            
+            {/* Empty state - no data at all */}
+            {assessments.length === 0 && (
+              <div className="p-12 text-center">
+                <FileCheck className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-slate-900 mb-2">No impact reports yet</h3>
+                <p className="text-slate-600">Run a scan to generate impact assessments</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

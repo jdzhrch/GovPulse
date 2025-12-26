@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useSearchParams, useNavigate } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import {
   Rocket,
   Globe,
@@ -11,20 +11,10 @@ import {
   CheckCircle,
   ExternalLink,
   Github,
-  AlertCircle,
-  Play,
-  RefreshCw,
-  FileText
+  AlertCircle
 } from 'lucide-react'
 import clsx from 'clsx'
-import { Domain, MARKETS, DOMAINS, ScoutMission, ImpactAssessment } from '../types'
-import { createMockMission, createMockAssessment } from '../utils/mockData'
-import RiskBadge from '../components/RiskBadge'
-
-interface MissionLauncherProps {
-  onMissionCreate: (mission: ScoutMission) => void
-  onAssessmentCreate: (assessment: ImpactAssessment) => void
-}
+import { Domain, MARKETS, DOMAINS } from '../types'
 
 const domainIcons: Record<string, React.ElementType> = {
   all: Globe,
@@ -51,7 +41,6 @@ const lookbackOptions = [
 ]
 
 type LaunchPhase = 'config' | 'running' | 'complete' | 'error'
-type LaunchMode = 'demo' | 'live'
 
 // GitHub Actions configuration
 const GITHUB_CONFIG = {
@@ -226,12 +215,8 @@ async function triggerGitHubWorkflow(params: {
   }
 }
 
-export default function MissionLauncher({
-  onMissionCreate,
-  onAssessmentCreate
-}: MissionLauncherProps) {
+export default function MissionLauncher() {
   const [searchParams] = useSearchParams()
-  const navigate = useNavigate()
 
   const [selectedMarket, setSelectedMarket] = useState(searchParams.get('market') || '')
   const [selectedDomain, setSelectedDomain] = useState<Domain>(
@@ -240,9 +225,6 @@ export default function MissionLauncher({
   const [lookbackDays, setLookbackDays] = useState(90)
   const [triggerEvent, setTriggerEvent] = useState('')
   const [phase, setPhase] = useState<LaunchPhase>('config')
-  const [launchMode, setLaunchMode] = useState<LaunchMode>('demo')
-  const [missionResult, setMissionResult] = useState<ScoutMission | null>(null)
-  const [assessments, setAssessments] = useState<ImpactAssessment[]>([])
   const [errorMessage, setErrorMessage] = useState('')
   
   // Progress tracking state
@@ -310,46 +292,24 @@ export default function MissionLauncher({
   }, [workflowRunId])
 
   useEffect(() => {
-    if (phase !== 'running' || launchMode !== 'live') return
+    if (phase !== 'running') return
 
     const interval = setInterval(pollWorkflowStatus, 10000)
     return () => clearInterval(interval)
-  }, [phase, launchMode, pollWorkflowStatus])
+  }, [phase, pollWorkflowStatus])
 
-  const handleLaunchDemo = async () => {
+  const handleLaunch = async () => {
     if (!selectedMarket) return
 
-    setPhase('running')
-    setProgress(0)
-    setProgressMessage('Initializing policy scan...')
-
-    // Simulate progress
-    for (let i = 0; i <= 100; i += 10) {
-      await new Promise(resolve => setTimeout(resolve, 300))
-      setProgress(i)
-      if (i < 30) setProgressMessage('Scanning regulatory databases...')
-      else if (i < 60) setProgressMessage('Identifying policy changes...')
-      else if (i < 90) setProgressMessage('Analyzing compliance impact...')
-      else setProgressMessage('Preparing your report...')
+    if (!isGitHubConfigured) {
+      setErrorMessage('GitHub integration is not configured. Please set up VITE_GITHUB_TOKEN and VITE_GITHUB_REPO_OWNER in your environment.')
+      setPhase('error')
+      return
     }
 
-    const mission = createMockMission(selectedMarket, selectedDomain, lookbackDays, 'current_user')
-    setMissionResult(mission)
-    onMissionCreate(mission)
-
-    const newAssessments = mission.signals.map(signal => createMockAssessment(signal, 'current_user'))
-    setAssessments(newAssessments)
-    newAssessments.forEach(a => onAssessmentCreate(a))
-
-    setPhase('complete')
-  }
-
-  const handleLaunchLive = async () => {
-    if (!selectedMarket) return
-
     setPhase('running')
     setProgress(0)
-    setProgressMessage('Starting live policy scan...')
+    setProgressMessage('Starting policy scan...')
     setErrorMessage('')
 
     const result = await triggerGitHubWorkflow({
@@ -379,32 +339,12 @@ export default function MissionLauncher({
     }
   }
 
-  const handleLaunch = async () => {
-    if (launchMode === 'live') {
-      await handleLaunchLive()
-    } else {
-      await handleLaunchDemo()
-    }
-  }
-
-  const handleViewResults = () => {
-    if (missionResult) {
-      // Navigate to the scan report for this mission
-      navigate(`/reports/${missionResult.mission_id}`)
-    } else {
-      // For live mode, go to the reports list (data will be loaded from server)
-      navigate('/reports')
-    }
-  }
-
   const handleNewScan = () => {
     setPhase('config')
     setSelectedMarket('')
     setSelectedDomain('all')
     setLookbackDays(90)
     setTriggerEvent('')
-    setMissionResult(null)
-    setAssessments([])
     setErrorMessage('')
     setProgress(0)
     setProgressMessage('')
@@ -451,79 +391,30 @@ export default function MissionLauncher({
           </p>
         </div>
 
-        {/* Scan Mode Selection */}
-        <div className="card">
-          <div className="card-header">
-            <h2 className="text-lg font-semibold text-slate-900">Scan Mode</h2>
-          </div>
-          <div className="card-body">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Demo Mode */}
-              <button
-                onClick={() => setLaunchMode('demo')}
-                className={clsx(
-                  'p-4 rounded-lg border-2 text-left transition-all',
-                  launchMode === 'demo'
-                    ? 'border-govpulse-500 bg-govpulse-50'
-                    : 'border-slate-200 hover:border-slate-300'
-                )}
-              >
-                <div className="flex items-center gap-3 mb-2">
-                  <Play className={clsx(
-                    'w-6 h-6',
-                    launchMode === 'demo' ? 'text-govpulse-600' : 'text-slate-400'
-                  )} />
-                  <span className="font-medium text-slate-900">Quick Preview</span>
+        {/* GitHub Status Notice */}
+        {!isGitHubConfigured && (
+          <div className="card border-amber-200 bg-amber-50">
+            <div className="card-body">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-sm text-amber-800 font-medium">Setup Required</p>
+                  <p className="text-sm text-amber-700 mt-1">
+                    Live scanning requires GitHub integration. Please configure VITE_GITHUB_TOKEN and VITE_GITHUB_REPO_OWNER, or run scans directly from{' '}
+                    <a 
+                      href={`https://github.com/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/actions`}
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="text-amber-900 underline hover:no-underline"
+                    >
+                      GitHub Actions
+                    </a>.
+                  </p>
                 </div>
-                <p className="text-sm text-slate-600">
-                  See how it works with sample data. Results appear instantly.
-                </p>
-              </button>
-
-              {/* Live Mode */}
-              <button
-                onClick={() => setLaunchMode('live')}
-                disabled={!isGitHubConfigured}
-                className={clsx(
-                  'p-4 rounded-lg border-2 text-left transition-all',
-                  launchMode === 'live'
-                    ? 'border-govpulse-500 bg-govpulse-50'
-                    : 'border-slate-200 hover:border-slate-300',
-                  !isGitHubConfigured && 'opacity-50 cursor-not-allowed'
-                )}
-              >
-                <div className="flex items-center gap-3 mb-2">
-                  <RefreshCw className={clsx(
-                    'w-6 h-6',
-                    launchMode === 'live' ? 'text-govpulse-600' : 'text-slate-400'
-                  )} />
-                  <span className="font-medium text-slate-900">Live Scan</span>
-                  {!isGitHubConfigured && (
-                    <span className="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded">
-                      Setup required
-                    </span>
-                  )}
-                </div>
-                <p className="text-sm text-slate-600">
-                  Real-time analysis of current regulatory landscape. Takes 2-5 minutes.
-                </p>
-              </button>
+              </div>
             </div>
-            {!isGitHubConfigured && (
-              <p className="text-xs text-slate-500 mt-3">
-                Live scanning requires additional setup. You can also run scans directly from{' '}
-                <a 
-                  href={`https://github.com/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/actions`}
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="text-govpulse-600 hover:underline"
-                >
-                  GitHub Actions
-                </a>.
-              </p>
-            )}
           </div>
-        </div>
+        )}
 
         {/* Scan Parameters */}
         <div className="card">
@@ -644,7 +535,7 @@ export default function MissionLauncher({
                   <strong>Date Range:</strong> Policies from the past {lookbackDays} days (published or updated)
                 </p>
                 <p>
-                  <strong>Mode:</strong> {launchMode === 'live' ? 'Live Scan' : 'Quick Preview'}
+                  <strong>Estimated Time:</strong> 2-5 minutes
                 </p>
               </div>
             </div>
@@ -655,7 +546,7 @@ export default function MissionLauncher({
         <div className="flex justify-end gap-3">
           <button
             onClick={handleLaunch}
-            disabled={!selectedMarket}
+            disabled={!selectedMarket || !isGitHubConfigured}
             className="btn-primary text-lg px-8 py-3"
           >
             <Rocket className="w-5 h-5" />
@@ -734,141 +625,50 @@ export default function MissionLauncher({
   }
 
   // Complete Phase
-  // For live mode, show a different completion screen since we don't have the results locally
-  if (launchMode === 'live') {
-    return (
-      <div className="max-w-2xl mx-auto">
-        <div className="card p-8 text-center">
-          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <CheckCircle className="w-8 h-8 text-green-600" />
-          </div>
-          <h2 className="text-2xl font-bold text-slate-900 mb-2">Scan Complete!</h2>
-          <p className="text-slate-600 mb-6">
-            Your policy scan for {MARKETS.find(m => m.code === selectedMarket)?.name} has finished. 
-            The results are being deployed and will be available shortly.
-          </p>
-          
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
-            <p className="text-sm text-amber-800">
-              <strong>Note:</strong> It may take 1-2 minutes for the new reports to appear on the dashboard 
-              as the deployment is completing in the background.
-            </p>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <button
-              onClick={() => window.location.href = '/GovPulse/reports'}
-              className="btn-primary"
-            >
-              View Scan Reports
-            </button>
-            <button onClick={handleNewScan} className="btn-secondary">
-              Start Another Scan
-            </button>
-          </div>
-
-          {workflowRunUrl && (
-            <div className="mt-6 pt-6 border-t border-slate-200">
-              <a
-                href={workflowRunUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm text-govpulse-600 hover:text-govpulse-700"
-              >
-                <Github className="w-4 h-4" />
-                View workflow details
-                <ExternalLink className="w-4 h-4" />
-              </a>
-            </div>
-          )}
-        </div>
-      </div>
-    )
-  }
-
-  // Demo mode complete phase
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      {/* Success Header */}
-      <div className="card p-8 border-green-200 bg-green-50">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
-            <CheckCircle className="w-6 h-6 text-green-600" />
-          </div>
-          <div>
-            <h2 className="text-xl font-bold text-green-900">Scan Complete</h2>
-            <p className="text-green-700">
-              Found {missionResult?.signals.length || 0} policy changes requiring attention
-            </p>
-          </div>
+    <div className="max-w-2xl mx-auto">
+      <div className="card p-8 text-center">
+        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+          <CheckCircle className="w-8 h-8 text-green-600" />
         </div>
-      </div>
-
-      {/* Results Summary */}
-      {assessments.length > 0 && (
-        <div className="card">
-          <div className="card-header">
-            <h2 className="text-lg font-semibold text-slate-900">Impact Summary</h2>
-          </div>
-          <div className="divide-y divide-slate-200">
-            {assessments.map((assessment) => (
-              <div key={assessment.assessment_id} className="p-4">
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <RiskBadge level={assessment.risk_level} size="sm" />
-                      <span className="text-sm text-slate-500">{assessment.market}</span>
-                    </div>
-                    <h3 className="font-medium text-slate-900">{assessment.signal_title}</h3>
-                    <p className="text-sm text-slate-600 mt-1 line-clamp-2">{assessment.risk_rationale}</p>
-                    <div className="flex items-center gap-4 mt-3 text-sm">
-                      <span className="flex items-center gap-1 text-slate-500">
-                        <FileText className="w-4 h-4" />
-                        {assessment.compliance_gaps.length} action items
-                      </span>
-                      {assessment.deadline && (
-                        <span className="flex items-center gap-1 text-orange-600">
-                          <Calendar className="w-4 h-4" />
-                          Due: {assessment.deadline}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => navigate(`/analysis/${assessment.assessment_id}`)}
-                    className="flex items-center gap-1 text-govpulse-600 hover:text-govpulse-700 text-sm whitespace-nowrap"
-                  >
-                    View details
-                    <ExternalLink className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+        <h2 className="text-2xl font-bold text-slate-900 mb-2">Scan Complete!</h2>
+        <p className="text-slate-600 mb-6">
+          Your policy scan for {MARKETS.find(m => m.code === selectedMarket)?.name} has finished. 
+          The results are being deployed and will be available shortly.
+        </p>
+        
+        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
+          <p className="text-sm text-amber-800">
+            <strong>Note:</strong> It may take 1-2 minutes for the new reports to appear on the dashboard 
+            as the deployment is completing in the background.
+          </p>
         </div>
-      )}
 
-      {assessments.length === 0 && (
-        <div className="card">
-          <div className="card-body text-center py-12">
-            <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-slate-900 mb-2">No Action Required</h3>
-            <p className="text-slate-600">
-              No significant regulatory changes found for your selected criteria.
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* Actions */}
-      <div className="flex items-center justify-between">
-        <button onClick={handleNewScan} className="btn-secondary">
-          New Scan
-        </button>
-        {assessments.length > 0 && (
-          <button onClick={handleViewResults} className="btn-primary">
-            View Full Report
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <button
+            onClick={() => window.location.href = '/GovPulse/reports'}
+            className="btn-primary"
+          >
+            View Scan Reports
           </button>
+          <button onClick={handleNewScan} className="btn-secondary">
+            Start Another Scan
+          </button>
+        </div>
+
+        {workflowRunUrl && (
+          <div className="mt-6 pt-6 border-t border-slate-200">
+            <a
+              href={workflowRunUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm text-govpulse-600 hover:text-govpulse-700"
+            >
+              <Github className="w-4 h-4" />
+              View workflow details
+              <ExternalLink className="w-4 h-4" />
+            </a>
+          </div>
         )}
       </div>
     </div>
