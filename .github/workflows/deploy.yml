@@ -41,7 +41,6 @@ jobs:
       - name: Build
         working-directory: frontend
         run: npm run build
-        # 注入环境变量，让 Vite 构建时能把这些值填入代码
         env:
           VITE_GITHUB_TOKEN: ${{ secrets.VITE_GITHUB_TOKEN }}
           VITE_GITHUB_REPO_OWNER: ${{ github.repository_owner }}
