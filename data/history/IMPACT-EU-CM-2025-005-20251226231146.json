@@ -1,0 +1,49 @@
+{
+  "assessment_id": "IMPACT-EU-CM-2025-005-20251226231146",
+  "signal_id": "EU-CM-2025-005",
+  "signal_title": "Consultation on Protecting Media Service Providers on Online Platforms",
+  "market": "EU",
+  "domain": "content_moderation",
+  "risk_level": "P2",
+  "risk_rationale": "The draft bill introduces a requirement for platforms to notify media providers before content removal and allows a 24-hour response window. This is a moderate risk as it requires procedural changes but does not pose an existential threat or immediate high-impact compliance gap.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-EU-CM-2025-005-0",
+      "signal_id": "EU-CM-2025-005",
+      "baseline_policy_id": "CM-032",
+      "baseline_requirement": "Content takedown requests: NetzDG: 24h (illegal), 7d (borderline)",
+      "regulatory_requirement": "Platforms must notify media providers before content removal with a 24-hour response window.",
+      "gap_description": "The baseline does not currently require notification to media providers before content removal, nor does it allow a 24-hour response window.",
+      "gap_severity": "major",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-EU-CM-2025-005-0",
+      "gap_id": "GAP-EU-CM-2025-005-0",
+      "remediation_type": "product_change",
+      "title": "Implement Media Provider Notification System",
+      "description": "Develop a notification system to inform media providers of potential content removal, allowing them a 24-hour window to respond before action is taken.",
+      "affected_features": [
+        "Content Moderation System",
+        "Notification System"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Content Moderation PM",
+      "acceptance_criteria": [
+        "Media providers receive notifications before content removal.",
+        "Media providers have a 24-hour window to respond to notifications."
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "The requirement to notify media providers and allow a response window could delay content moderation processes, potentially impacting the platform's ability to quickly address harmful content.",
+  "recommended_actions": [
+    "Assess the technical feasibility of implementing a notification system for media providers.",
+    "Engage with EU regulators to clarify the scope and applicability of the new requirements.",
+    "Prepare a communication plan for media providers to explain the new notification process."
+  ],
+  "assessed_at": "2025-12-26T23:11:52.288983",
+  "assessed_by": "github_actions"
+}

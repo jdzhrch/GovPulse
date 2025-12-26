@@ -1,0 +1,75 @@
+{
+  "assessment_id": "IMPACT-EU-CM-2025-002-20251226231129",
+  "signal_id": "EU-CM-2025-002",
+  "signal_title": "Draft Guidelines on Protection of Minors Online under the Digital Services Act (DSA)",
+  "market": "EU",
+  "domain": "content_moderation",
+  "risk_level": "P1",
+  "risk_rationale": "The draft guidelines under the DSA propose new requirements for age verification and content recommendation systems specifically for minors, which may necessitate immediate product changes to comply with EU regulations.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-EU-CM-2025-002-0",
+      "signal_id": "EU-CM-2025-002",
+      "baseline_policy_id": "MP-012",
+      "baseline_requirement": "Reduced personalization for <16",
+      "regulatory_requirement": "Improved content recommendation systems for minors",
+      "gap_description": "The current baseline requires reduced personalization for minors under 16, but the new guidelines may require further improvements to content recommendation systems to better shield minors from harmful content.",
+      "gap_severity": "major",
+      "is_blocking": true
+    },
+    {
+      "gap_id": "GAP-EU-CM-2025-002-1",
+      "signal_id": "EU-CM-2025-002",
+      "baseline_policy_id": "MP-013",
+      "baseline_requirement": "Restricted Mode available; auto-enabled for <13 flagged accounts",
+      "regulatory_requirement": "Age verification mechanisms",
+      "gap_description": "The baseline does not currently include specific age verification mechanisms, which are now required by the new guidelines.",
+      "gap_severity": "major",
+      "is_blocking": true
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-EU-CM-2025-002-0",
+      "gap_id": "GAP-EU-CM-2025-002-0",
+      "remediation_type": "product_change",
+      "title": "Enhance Content Recommendation Systems",
+      "description": "Develop and implement improved content recommendation algorithms that further restrict exposure to harmful content for minors, in line with the new EU guidelines.",
+      "affected_features": [
+        "Content Recommendation System"
+      ],
+      "engineering_effort": "L",
+      "pm_owner_recommendation": "EU Product Compliance Manager",
+      "acceptance_criteria": [
+        "Content recommendation systems are updated to comply with EU guidelines",
+        "Testing shows reduced exposure to harmful content for minors"
+      ]
+    },
+    {
+      "remediation_id": "REM-EU-CM-2025-002-1",
+      "gap_id": "GAP-EU-CM-2025-002-1",
+      "remediation_type": "product_change",
+      "title": "Implement Age Verification Mechanisms",
+      "description": "Introduce robust age verification mechanisms to ensure compliance with the new EU guidelines on protecting minors online.",
+      "affected_features": [
+        "User Registration",
+        "Age Verification"
+      ],
+      "engineering_effort": "XL",
+      "pm_owner_recommendation": "EU Product Compliance Manager",
+      "acceptance_criteria": [
+        "Age verification mechanisms are implemented and operational",
+        "Compliance with EU guidelines is verified through testing"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Failure to comply with the new EU guidelines could result in significant fines and restrictions on operations within the EU market, impacting user growth and engagement.",
+  "recommended_actions": [
+    "Initiate a project to enhance content recommendation systems for minors",
+    "Develop and implement age verification mechanisms",
+    "Engage with EU regulators to ensure compliance with draft guidelines"
+  ],
+  "assessed_at": "2025-12-26T23:11:35.394478",
+  "assessed_by": "github_actions"
+}

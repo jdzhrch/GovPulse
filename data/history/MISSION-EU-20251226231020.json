@@ -1,0 +1,126 @@
+{
+  "mission_id": "MISSION-EU-20251226231020",
+  "market": "EU",
+  "domain": "content_moderation",
+  "lookback_days": 365,
+  "created_at": "2025-12-26T23:10:20.394420",
+  "created_by": "github_actions",
+  "status": "completed",
+  "generated_queries": [
+    "site:eur-lex.europa.eu \"content moderation\" AND \"European Commission\" AND \"draft bill\" AND date:[2022-10-01 TO 2023-10-01]",
+    "site:ec.europa.eu \"harmful content\" AND \"enacted law\" AND \"platform liability\" AND date:[2022-10-01 TO 2023-10-01]",
+    "site:edpb.europa.eu \"misinformation\" AND \"regulatory guidance\" AND \"European Data Protection Board\" AND date:[2022-10-01 TO 2023-10-01]",
+    "site:eur-lex.europa.eu \"illegal content\" AND \"court ruling\" AND \"content moderation\" AND date:[2022-10-01 TO 2023-10-01]",
+    "site:ec.europa.eu \"content moderation\" AND \"hearing\" AND \"National DPAs\" AND date:[2022-10-01 TO 2023-10-01]"
+  ],
+  "signals": [
+    {
+      "id": "EU-CM-2025-001",
+      "market": "EU",
+      "domain": "content_moderation",
+      "source_type": "draft_bill",
+      "title": "Code of Practice on Marking and Labelling AI-Generated Content",
+      "summary": "The European Commission released a draft Code of Practice to ensure AI-generated content is marked and labelled, aligning with Article 50 of the AI Act. This aims to enhance transparency and accountability in the use of AI-generated content.",
+      "source_url": "https://digital-strategy.ec.europa.eu/en/news/commission-publishes-first-draft-code-practice-marking-and-labelling-ai-generated-content?utm_source=openai",
+      "published_date": "2025-12-17",
+      "effective_date": null,
+      "key_provisions": [
+        "Providers must mark AI-generated content.",
+        "Users must label deepfakes and AI-generated texts on public interest matters."
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "EU-CM-2025-002",
+      "market": "EU",
+      "domain": "content_moderation",
+      "source_type": "draft_bill",
+      "title": "Draft Guidelines on Protection of Minors Online under the Digital Services Act (DSA)",
+      "summary": "The European Commission initiated a public consultation on guidelines to protect minors online, focusing on age verification and content recommendation systems to shield minors from harmful content.",
+      "source_url": "https://digital-strategy.ec.europa.eu/en/news/commission-publishes-draft-guidelines-protection-minors-online-under-digital-services-act?utm_source=openai",
+      "published_date": "2025-05-13",
+      "effective_date": null,
+      "key_provisions": [
+        "Age verification mechanisms.",
+        "Improved content recommendation systems for minors."
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "EU-CM-2024-003",
+      "market": "EU",
+      "domain": "content_moderation",
+      "source_type": "executive_order",
+      "title": "Harmonisation of Transparency Reporting Rules under the DSA",
+      "summary": "The European Commission adopted an Implementing Regulation to standardize transparency reporting by intermediary service providers under the DSA, ensuring uniformity in reporting practices.",
+      "source_url": "https://digital-strategy.ec.europa.eu/en/news/commission-harmonises-transparency-reporting-rules-under-digital-services-act?utm_source=openai",
+      "published_date": "2024-11-04",
+      "effective_date": null,
+      "key_provisions": [
+        "Uniform reporting templates and periods.",
+        "Reports must detail content moderation practices."
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "EU-CM-2023-004",
+      "market": "EU",
+      "domain": "content_moderation",
+      "source_type": "executive_order",
+      "title": "Formal Proceedings Against X (formerly Twitter) Under the DSA",
+      "summary": "The European Commission initiated proceedings to assess X's compliance with the DSA, focusing on risk management, content moderation, and transparency.",
+      "source_url": "https://digital-strategy.ec.europa.eu/en/news/commission-opens-formal-proceedings-against-x-under-digital-services-act?utm_source=openai",
+      "published_date": "2023-12-18",
+      "effective_date": null,
+      "key_provisions": [
+        "Assessment of compliance with DSA obligations.",
+        "Evaluation of transparency in content moderation."
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "EU-CM-2025-005",
+      "market": "EU",
+      "domain": "content_moderation",
+      "source_type": "draft_bill",
+      "title": "Consultation on Protecting Media Service Providers on Online Platforms",
+      "summary": "The European Commission sought feedback on guidelines to protect media providers from unwarranted content removal by large platforms, as outlined in the European Media Freedom Act.",
+      "source_url": "https://digital-strategy.ec.europa.eu/en/consultations/consultation-concerning-commission-guidelines-implementation-declaration-functionality-media?utm_source=openai",
+      "published_date": "2025-06-23",
+      "effective_date": null,
+      "key_provisions": [
+        "Platforms must notify media providers before content removal.",
+        "Media providers have 24 hours to respond."
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "EU-CM-2025-006",
+      "market": "EU",
+      "domain": "content_moderation",
+      "source_type": "regulatory_guidance",
+      "title": "Revised Code of Conduct on Countering Illegal Hate Speech Online",
+      "summary": "The updated Code of Conduct was integrated into the DSA framework to enhance the handling of illegal hate speech by online platforms, improving transparency and accountability.",
+      "source_url": "https://digital-strategy.ec.europa.eu/en/library/code-conduct-countering-illegal-hate-speech-online?utm_source=openai",
+      "published_date": "2025-01-20",
+      "effective_date": null,
+      "key_provisions": [
+        "Strengthened measures for detecting illegal hate speech.",
+        "Enhanced transparency and accountability for platforms."
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    }
+  ]
+}

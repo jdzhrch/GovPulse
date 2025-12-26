@@ -1,0 +1,59 @@
+{
+  "assessment_id": "IMPACT-EU-CM-2023-004-20251226231141",
+  "signal_id": "EU-CM-2023-004",
+  "signal_title": "Formal Proceedings Against X (formerly Twitter) Under the DSA",
+  "market": "EU",
+  "domain": "content_moderation",
+  "risk_level": "P2",
+  "risk_rationale": "The regulatory signal indicates a formal proceeding under the DSA focusing on content moderation and transparency, which aligns with TikTok's existing obligations under the DSA transparency report (CM-010) and Community Guidelines report (CM-011). The risk is moderate as it involves an assessment of compliance rather than immediate enforcement action.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-EU-CM-2023-004-0",
+      "signal_id": "EU-CM-2023-004",
+      "baseline_policy_id": "CM-010",
+      "baseline_requirement": "DSA transparency report - Biannual (EU)",
+      "regulatory_requirement": "Assessment of compliance with DSA obligations",
+      "gap_description": "Potential gap in the frequency or detail of transparency reporting as required by the DSA.",
+      "gap_severity": "minor",
+      "is_blocking": false
+    },
+    {
+      "gap_id": "GAP-EU-CM-2023-004-1",
+      "signal_id": "EU-CM-2023-004",
+      "baseline_policy_id": "CM-011",
+      "baseline_requirement": "Community Guidelines report - Quarterly global",
+      "regulatory_requirement": "Evaluation of transparency in content moderation",
+      "gap_description": "Potential gap in the transparency of content moderation practices as evaluated under the DSA.",
+      "gap_severity": "minor",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-EU-CM-2023-004-0",
+      "gap_id": "GAP-EU-CM-2023-004-0",
+      "remediation_type": "product_change",
+      "title": "Enhance Transparency Reporting",
+      "description": "Review and enhance the detail and frequency of transparency reports to ensure full compliance with DSA requirements.",
+      "affected_features": [
+        "Transparency Reports",
+        "Content Moderation Practices"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "EU Policy Compliance Manager",
+      "acceptance_criteria": [
+        "Updated transparency reports meet DSA requirements",
+        "Reports are submitted within required timelines"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Moderate impact due to potential need for increased transparency and reporting efforts, which may require additional resources.",
+  "recommended_actions": [
+    "Conduct a detailed review of current transparency reporting practices",
+    "Engage with EU regulators to clarify specific DSA requirements",
+    "Prepare to adjust reporting practices to align with DSA obligations"
+  ],
+  "assessed_at": "2025-12-26T23:11:46.267003",
+  "assessed_by": "github_actions"
+}

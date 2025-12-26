@@ -1,0 +1,50 @@
+{
+  "assessment_id": "IMPACT-EU-CM-2025-001-20251226231123",
+  "signal_id": "EU-CM-2025-001",
+  "signal_title": "Code of Practice on Marking and Labelling AI-Generated Content",
+  "market": "EU",
+  "domain": "content_moderation",
+  "risk_level": "P2",
+  "risk_rationale": "The draft bill introduces new requirements for marking and labeling AI-generated content, which is not currently addressed in the TikTok Global Compliance Baseline. This presents a moderate risk as it requires implementation of new features but does not pose an existential threat or require immediate changes.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-EU-CM-2025-001-0",
+      "signal_id": "EU-CM-2025-001",
+      "baseline_policy_id": "CM-003",
+      "baseline_requirement": "Misinformation during elections: Prebunking partnerships, fact-check labels",
+      "regulatory_requirement": "Providers must mark AI-generated content. Users must label deepfakes and AI-generated texts on public interest matters.",
+      "gap_description": "The baseline does not currently require marking and labeling of AI-generated content, which is a new requirement introduced by the EU draft bill.",
+      "gap_severity": "major",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-EU-CM-2025-001-0",
+      "gap_id": "GAP-EU-CM-2025-001-0",
+      "remediation_type": "product_change",
+      "title": "Implement AI-Generated Content Marking",
+      "description": "Develop a system to automatically mark AI-generated content and provide tools for users to label deepfakes and AI-generated texts, especially in public interest matters.",
+      "affected_features": [
+        "Content creation tools",
+        "Content moderation systems"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Content Moderation PM",
+      "acceptance_criteria": [
+        "AI-generated content is automatically marked",
+        "Users can label deepfakes and AI-generated texts",
+        "Compliance with EU Code of Practice"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "The implementation of these requirements will enhance transparency and trust among EU users, potentially increasing user engagement and compliance with EU regulations.",
+  "recommended_actions": [
+    "Initiate a project to develop AI content marking features",
+    "Engage with EU regulators to ensure alignment with the draft Code of Practice",
+    "Monitor the progress of the draft bill to anticipate further changes"
+  ],
+  "assessed_at": "2025-12-26T23:11:29.559472",
+  "assessed_by": "github_actions"
+}
