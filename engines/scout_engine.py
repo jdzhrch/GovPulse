@@ -315,6 +315,9 @@ def fetch_real_world_data(queries: list[str], market: str) -> list[dict]:
     results = []
     market_info = MARKET_INFO.get(market, {"name": market})
     market_name = market_info.get("name", market)
+    # 获取政府网站列表作为参考，但不强制限制
+    gov_sites = market_info.get("government_sites", [])
+    regulators = market_info.get("regulators", [])
 
     print(f"[WebSearch] Fetching real-world data for {market_name} with {len(queries)} queries...")
 
@@ -322,23 +325,41 @@ def fetch_real_world_data(queries: list[str], market: str) -> list[dict]:
         try:
             print(f"  [{i}/{len(queries)}] Searching: {query[:60]}...")
 
+            # 构建更灵活的搜索 prompt，不强制限制到特定网站
+            # 这样可以找到更多相关结果，包括新闻报道、分析文章等
+            search_prompt = f"""Search for recent regulatory news and policy updates related to:
+
+Query: {query}
+
+Market/Region: {market_name}
+
+Search broadly for:
+1. Official government announcements and press releases
+2. New legislation, regulations, or bills (proposed or enacted)
+3. Regulatory enforcement actions and guidance
+4. Policy proposals, drafts, and consultations
+5. Reputable news coverage of regulatory developments
+6. Legal analysis and expert commentary
+
+Preferred sources (but not limited to): {', '.join(gov_sites[:3]) if gov_sites else 'government and regulatory websites'}
+Key regulators to watch: {', '.join(regulators[:3]) if regulators else 'relevant regulatory bodies'}
+
+IMPORTANT: Return the most relevant and recent regulatory developments. Include:
+- Specific names of laws, regulations, or bills
+- Exact dates (when available)
+- Official source URLs
+- Key provisions or requirements
+- Affected industries or sectors
+
+If direct government sources aren't indexed, authoritative news sources and legal publications are acceptable."""
+
             # 检查是否支持 Responses API
             if hasattr(client, 'responses'):
                 # 使用 OpenAI Responses API + web_search_preview
                 response = client.responses.create(
                     model="gpt-4o",
                     tools=[{"type": "web_search_preview"}],
-                    input=f"""Search for recent regulatory news and policy updates:
-
-Query: {query}
-
-Focus on:
-- Official government announcements
-- New legislation or regulations
-- Regulatory enforcement actions
-- Policy proposals and drafts
-
-Return the most relevant and recent regulatory developments with specific details like dates, law names, and sources."""
+                    input=search_prompt
                 )
 
                 # 提取结果
@@ -368,17 +389,7 @@ Return the most relevant and recent regulatory developments with specific detail
                     model="gpt-4o-search-preview",
                     messages=[{
                         "role": "user",
-                        "content": f"""Search for recent regulatory news and policy updates:
-
-Query: {query}
-
-Focus on:
-- Official government announcements
-- New legislation or regulations  
-- Regulatory enforcement actions
-- Policy proposals and drafts
-
-Return the most relevant and recent regulatory developments with specific details like dates, law names, and sources."""
+                        "content": search_prompt
                     }]
                 )
                 content = response.choices[0].message.content
