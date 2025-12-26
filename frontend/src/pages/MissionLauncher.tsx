@@ -239,14 +239,13 @@ export default function MissionLauncher({
     if (run.status === 'completed') {
       if (run.conclusion === 'success') {
         setProgress(100)
-        setProgressMessage('Analysis complete! Loading results...')
+        setProgressMessage('Analysis complete! Deploying results...')
         
-        // Wait a moment then navigate to view results
+        // Wait for deploy job to complete (it takes about 1-2 minutes)
+        // Then show completion page
         setTimeout(() => {
           setPhase('complete')
-          // Reload page to fetch new data, or navigate to dashboard
-          window.location.href = '/GovPulse/'
-        }, 2000)
+        }, 3000)
       } else {
         setErrorMessage(`Scan ended with status: ${run.conclusion}`)
         setPhase('error')
@@ -681,6 +680,59 @@ export default function MissionLauncher({
   }
 
   // Complete Phase
+  // For live mode, show a different completion screen since we don't have the results locally
+  if (launchMode === 'live') {
+    return (
+      <div className="max-w-2xl mx-auto">
+        <div className="card p-8 text-center">
+          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <CheckCircle className="w-8 h-8 text-green-600" />
+          </div>
+          <h2 className="text-2xl font-bold text-slate-900 mb-2">Scan Complete!</h2>
+          <p className="text-slate-600 mb-6">
+            Your policy scan for {MARKETS.find(m => m.code === selectedMarket)?.name} has finished. 
+            The results are being deployed and will be available shortly.
+          </p>
+          
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
+            <p className="text-sm text-amber-800">
+              <strong>Note:</strong> It may take 1-2 minutes for the new reports to appear on the dashboard 
+              as the deployment is completing in the background.
+            </p>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <button
+              onClick={() => window.location.href = '/GovPulse/'}
+              className="btn-primary"
+            >
+              Go to Dashboard
+            </button>
+            <button onClick={handleNewScan} className="btn-secondary">
+              Start Another Scan
+            </button>
+          </div>
+
+          {workflowRunUrl && (
+            <div className="mt-6 pt-6 border-t border-slate-200">
+              <a
+                href={workflowRunUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-sm text-govpulse-600 hover:text-govpulse-700"
+              >
+                <Github className="w-4 h-4" />
+                View workflow details
+                <ExternalLink className="w-4 h-4" />
+              </a>
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  // Demo mode complete phase
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       {/* Success Header */}

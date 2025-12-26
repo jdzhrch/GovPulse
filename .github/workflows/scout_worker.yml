@@ -191,6 +191,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          # Fetch the latest commit including the one just pushed by scout-mission
+          ref: main
+          fetch-depth: 0
+
+      - name: Pull latest changes
+        run: |
+          git pull origin main
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -210,7 +218,9 @@ jobs:
       - name: Copy mission data to build
         run: |
           mkdir -p frontend/dist/data
-          cp -r data/history frontend/dist/data/ 2>/dev/null || true
+          cp -r data/history frontend/dist/data/
+          echo "Copied data files:"
+          ls -la frontend/dist/data/history/
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
