@@ -5,7 +5,6 @@ import {
   CheckCircle,
   Send,
   Rocket,
-  Filter,
   Search,
   Calendar,
   ChevronDown,
@@ -18,9 +17,9 @@ import {
   Database
 } from 'lucide-react'
 import clsx from 'clsx'
-import { ScoutMission, ImpactAssessment, RISK_COLORS, MARKETS, DOMAINS } from '../types'
+import { ScoutMission, ImpactAssessment, MARKETS } from '../types'
 import RiskBadge from '../components/RiskBadge'
-import { format, formatDistanceToNow, isAfter, subDays } from 'date-fns'
+import { format, formatDistanceToNow } from 'date-fns'
 
 interface AuditTrailProps {
   missions: ScoutMission[]
@@ -230,7 +229,7 @@ function TimelineView({
 
           {/* Events */}
           <div className="space-y-6">
-            {events.map((event, index) => {
+            {events.map((event) => {
               const Icon = getEventIcon(event.type)
               const colorClass = getEventColor(event.type)
 
@@ -296,8 +295,6 @@ function TimelineView({
 }
 
 function MissionSummary({ mission }: { mission: ScoutMission }) {
-  const DomainIcon = domainIcons[mission.domain] || Globe
-
   return (
     <div>
       <p className="font-medium text-slate-900 flex items-center gap-2">

@@ -4,7 +4,6 @@ import {
   GitCompare,
   AlertTriangle,
   CheckCircle,
-  ExternalLink,
   Send,
   Clock,
   FileText,
