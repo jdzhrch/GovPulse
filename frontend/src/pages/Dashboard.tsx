@@ -115,7 +115,7 @@ export default function Dashboard({ missions, assessments }: DashboardProps) {
         <div className="lg:col-span-2 card">
           <div className="card-header flex items-center justify-between">
             <h2 className="text-lg font-semibold text-slate-900">Recent Impact Reports</h2>
-            <Link to="/reports" className="text-sm text-govpulse-600 hover:text-govpulse-700 font-medium">
+            <Link to="/analysis" className="text-sm text-govpulse-600 hover:text-govpulse-700 font-medium">
               View all
             </Link>
           </div>
@@ -125,7 +125,7 @@ export default function Dashboard({ missions, assessments }: DashboardProps) {
               return (
                 <Link
                   key={assessment.assessment_id}
-                  to={`/reports/${assessment.assessment_id}`}
+                  to={`/analysis/${assessment.assessment_id}`}
                   className="block p-4 hover:bg-slate-50 transition-colors"
                 >
                   <div className="flex items-start gap-4">
@@ -171,7 +171,7 @@ export default function Dashboard({ missions, assessments }: DashboardProps) {
         <div className="card">
           <div className="card-header flex items-center justify-between">
             <h2 className="text-lg font-semibold text-slate-900">Recent Scans</h2>
-            <Link to="/reports" className="text-sm text-govpulse-600 hover:text-govpulse-700 font-medium">
+            <Link to="/audit" className="text-sm text-govpulse-600 hover:text-govpulse-700 font-medium">
               View all
             </Link>
           </div>
