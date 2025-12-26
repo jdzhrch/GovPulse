@@ -1,0 +1,61 @@
+{
+  "assessment_id": "IMPACT-BR-PL-2024-006-20251226055419",
+  "signal_id": "BR-PL-2024-006",
+  "signal_title": "Extensão das Medidas Protetivas da Lei Maria da Penha para o Estatuto da Criança e do Adolescente",
+  "market": "BR",
+  "domain": "all",
+  "risk_level": "P2",
+  "risk_rationale": "The draft bill extends protective measures to minors under 14, which may require adjustments in TikTok's minor protection standards, particularly around content and interaction safeguards for this age group.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-BR-PL-2024-006-0",
+      "signal_id": "BR-PL-2024-006",
+      "baseline_policy_id": "MP-001",
+      "baseline_requirement": "Minimum registration age is 13 years.",
+      "regulatory_requirement": "Protective measures for minors under 14 years.",
+      "gap_description": "The draft bill suggests enhanced protective measures for minors under 14, which may necessitate stricter controls or additional safeguards for users aged 13.",
+      "gap_severity": "major",
+      "is_blocking": false
+    },
+    {
+      "gap_id": "GAP-BR-PL-2024-006-1",
+      "signal_id": "BR-PL-2024-006",
+      "baseline_policy_id": "MP-002",
+      "baseline_requirement": "Account privacy for 13-15 years is private by default with no opt-out allowed.",
+      "regulatory_requirement": "Protective measures for minors under 14 years.",
+      "gap_description": "The bill may require additional privacy or protective measures for users under 14, beyond current privacy settings.",
+      "gap_severity": "major",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-BR-PL-2024-006-0",
+      "gap_id": "GAP-BR-PL-2024-006-0",
+      "remediation_type": "product_change",
+      "title": "Enhance Protective Measures for Users Under 14",
+      "description": "Implement additional privacy and safety features specifically for users under 14, such as stricter content filtering and interaction limitations.",
+      "affected_features": [
+        "Account privacy settings",
+        "Content filtering",
+        "Interaction controls"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Minor Protection PM",
+      "acceptance_criteria": [
+        "Additional privacy settings are available and enforced for users under 14.",
+        "Content filtering is enhanced to prevent exposure to inappropriate content for this age group.",
+        "Interaction controls are tightened to limit potential risks."
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "The changes may require moderate adjustments to the platform's minor protection features, potentially impacting user engagement metrics for the affected age group.",
+  "recommended_actions": [
+    "Conduct a detailed impact assessment to understand the specific requirements of the draft bill.",
+    "Engage with Brazilian legal experts to ensure compliance with the new protective measures.",
+    "Develop and implement additional safety features for users under 14 to align with the draft bill's requirements."
+  ],
+  "assessed_at": "2025-12-26T05:54:25.207959",
+  "assessed_by": "github_actions"
+}

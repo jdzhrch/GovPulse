@@ -1,0 +1,49 @@
+{
+  "assessment_id": "IMPACT-BR-LNCC-2025-009-20251226055435",
+  "signal_id": "BR-LNCC-2025-009",
+  "signal_title": "Publicação de Orientações sobre Identificação e Mapeamento de Dados Pessoais pelo LNCC",
+  "market": "BR",
+  "domain": "all",
+  "risk_level": "P2",
+  "risk_rationale": "The regulatory guidance emphasizes compliance with the LGPD, which aligns with existing data protection and privacy requirements. However, the focus on personal data identification and mapping may require additional measures to ensure full compliance.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-BR-LNCC-2025-009-0",
+      "signal_id": "BR-LNCC-2025-009",
+      "baseline_policy_id": "DS-013",
+      "baseline_requirement": "Annual transparency report on government access",
+      "regulatory_requirement": "Identification and mapping of personal data",
+      "gap_description": "The baseline does not explicitly cover detailed identification and mapping of personal data as emphasized by the new guidance.",
+      "gap_severity": "major",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-BR-LNCC-2025-009-0",
+      "gap_id": "GAP-BR-LNCC-2025-009-0",
+      "remediation_type": "product_change",
+      "title": "Implement Personal Data Mapping Procedures",
+      "description": "Develop and implement procedures for the identification and mapping of personal data to ensure compliance with LGPD as per the new guidance.",
+      "affected_features": [
+        "Data management systems",
+        "Privacy compliance workflows"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Data Privacy PM",
+      "acceptance_criteria": [
+        "Procedures for data mapping are documented and implemented",
+        "Compliance with LGPD data identification requirements is verified"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Moderate impact due to potential need for additional data management processes and compliance verification efforts.",
+  "recommended_actions": [
+    "Conduct a gap analysis to identify current data mapping capabilities",
+    "Develop a project plan for implementing data mapping procedures",
+    "Engage with legal and compliance teams to ensure alignment with LGPD requirements"
+  ],
+  "assessed_at": "2025-12-26T05:54:38.815657",
+  "assessed_by": "github_actions"
+}
