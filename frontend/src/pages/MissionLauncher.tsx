@@ -139,6 +139,42 @@ async function getWorkflowRunById(runId: number): Promise<WorkflowRun | null> {
 }
 
 /**
+ * Get workflow jobs to track progress of individual jobs
+ */
+async function getWorkflowJobs(runId: number): Promise<{scoutCompleted: boolean, deployCompleted: boolean, allCompleted: boolean}> {
+  const token = import.meta.env.VITE_GITHUB_TOKEN
+  if (!token || !GITHUB_CONFIG.owner) return { scoutCompleted: false, deployCompleted: false, allCompleted: false }
+
+  try {
+    const response = await fetch(
+      `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/actions/runs/${runId}/jobs`,
+      {
+        headers: {
+          'Accept': 'application/vnd.github.v3+json',
+          'Authorization': `Bearer ${token}`,
+        },
+      }
+    )
+    
+    if (!response.ok) return { scoutCompleted: false, deployCompleted: false, allCompleted: false }
+    
+    const data = await response.json()
+    const jobs = data.jobs || []
+    
+    const scoutJob = jobs.find((j: { name: string }) => j.name === 'scout-mission')
+    const deployJob = jobs.find((j: { name: string }) => j.name === 'deploy-dashboard')
+    
+    return {
+      scoutCompleted: scoutJob?.status === 'completed' && scoutJob?.conclusion === 'success',
+      deployCompleted: deployJob?.status === 'completed' && deployJob?.conclusion === 'success',
+      allCompleted: jobs.length > 0 && jobs.every((j: { status: string }) => j.status === 'completed')
+    }
+  } catch {
+    return { scoutCompleted: false, deployCompleted: false, allCompleted: false }
+  }
+}
+
+/**
  * Trigger GitHub Actions workflow
  */
 async function triggerGitHubWorkflow(params: {
@@ -236,24 +272,40 @@ export default function MissionLauncher({
     const run = await getWorkflowRunById(workflowRunId)
     if (!run) return
 
+    // Get job-level status for more accurate progress
+    const jobs = await getWorkflowJobs(workflowRunId)
+
     if (run.status === 'completed') {
       if (run.conclusion === 'success') {
         setProgress(100)
-        setProgressMessage('Analysis complete! Deploying results...')
-        
-        // Wait for deploy job to complete (it takes about 1-2 minutes)
-        // Then show completion page
+        setProgressMessage('Complete! Your results are ready.')
+        // Small delay then show completion page
         setTimeout(() => {
           setPhase('complete')
-        }, 3000)
+        }, 2000)
       } else {
         setErrorMessage(`Scan ended with status: ${run.conclusion}`)
         setPhase('error')
       }
     } else if (run.status === 'in_progress') {
-      // Increment progress while running (cap at 90%)
-      setProgress(prev => Math.min(prev + 5, 90))
-      setProgressMessage('Analyzing regulatory sources...')
+      // Track progress based on which jobs have completed
+      if (jobs.deployCompleted) {
+        setProgress(95)
+        setProgressMessage('Finalizing deployment...')
+      } else if (jobs.scoutCompleted) {
+        setProgress(80)
+        setProgressMessage('Analysis complete. Publishing results...')
+      } else {
+        // Scout job still running - increment gradually
+        setProgress(prev => {
+          if (prev < 70) return Math.min(prev + 8, 70)
+          return prev
+        })
+        setProgressMessage('Scanning regulatory sources...')
+      }
+    } else if (run.status === 'queued') {
+      setProgress(5)
+      setProgressMessage('Scan queued, waiting to start...')
     }
   }, [workflowRunId])
 
