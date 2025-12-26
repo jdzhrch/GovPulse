@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import {
   History,
   CheckCircle,
-  Send,
   Search,
   Calendar,
   ChevronDown,
