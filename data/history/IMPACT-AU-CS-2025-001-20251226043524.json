@@ -1,0 +1,59 @@
+{
+  "assessment_id": "IMPACT-AU-CS-2025-001-20251226043524",
+  "signal_id": "AU-CS-2025-001",
+  "signal_title": "Online Safety Amendment (Social Media Minimum Age) Act 2024",
+  "market": "AU",
+  "domain": "all",
+  "risk_level": "P1",
+  "risk_rationale": "The new Australian legislation mandates a minimum age of 16 for social media accounts, conflicting with TikTok's current minimum registration age of 13. This represents a material compliance gap requiring immediate product changes to avoid potential fines or restrictions in the Australian market.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-AU-CS-2025-001-0",
+      "signal_id": "AU-CS-2025-001",
+      "baseline_policy_id": "MP-001",
+      "baseline_requirement": "Minimum registration age is 13 years globally.",
+      "regulatory_requirement": "Prevent individuals under 16 from creating accounts.",
+      "gap_description": "The new legislation requires a higher minimum age for account creation than TikTok's current policy.",
+      "gap_severity": "major",
+      "is_blocking": true
+    },
+    {
+      "gap_id": "GAP-AU-CS-2025-001-1",
+      "signal_id": "AU-CS-2025-001",
+      "baseline_policy_id": "MP-001",
+      "baseline_requirement": "No specific age verification measures mandated.",
+      "regulatory_requirement": "Requires age verification measures.",
+      "gap_description": "The legislation mandates age verification measures which are not currently specified in TikTok's baseline.",
+      "gap_severity": "major",
+      "is_blocking": true
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-AU-CS-2025-001-0",
+      "gap_id": "GAP-AU-CS-2025-001-0",
+      "remediation_type": "product_change",
+      "title": "Implement Age Verification for Australian Users",
+      "description": "Develop and integrate an age verification system for users in Australia to comply with the new minimum age requirement of 16.",
+      "affected_features": [
+        "User Registration",
+        "Account Creation"
+      ],
+      "engineering_effort": "L",
+      "pm_owner_recommendation": "Regional Product Manager for Australia",
+      "acceptance_criteria": [
+        "Age verification system is implemented and operational for all new Australian accounts.",
+        "Users under 16 are prevented from creating accounts in Australia."
+      ]
+    }
+  ],
+  "deadline": "2025-12-10",
+  "business_impact": "Failure to comply with the new legislation could result in significant fines or restrictions on TikTok's operations in Australia, impacting user growth and market presence.",
+  "recommended_actions": [
+    "Initiate development of an age verification system tailored for the Australian market.",
+    "Update the registration process to enforce a minimum age of 16 for Australian users.",
+    "Engage with Australian regulatory bodies to ensure compliance and address any potential concerns."
+  ],
+  "assessed_at": "2025-12-26T04:35:30.753568",
+  "assessed_by": "github_actions"
+}

@@ -1,0 +1,49 @@
+{
+  "assessment_id": "IMPACT-AU-CS-2025-006-20251226043606",
+  "signal_id": "AU-CS-2025-006",
+  "signal_title": "Online Safety (Designated Internet Services—Class 1A and Class 1B Material) Industry Standard 2024",
+  "market": "AU",
+  "domain": "all",
+  "risk_level": "P1",
+  "risk_rationale": "The new Australian legislation mandates safety standards to prevent access to unsuitable content for children, which may require immediate product changes to ensure compliance with local regulations.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-AU-CS-2025-006-0",
+      "signal_id": "AU-CS-2025-006",
+      "baseline_policy_id": "MP-014",
+      "baseline_requirement": "No mature content surfaced to minors",
+      "regulatory_requirement": "Mandatory safety standards for internet services to prevent access to unsuitable content for children",
+      "gap_description": "The current baseline requires no mature content to be surfaced to minors, but the new legislation may require additional safety measures or standards to be implemented.",
+      "gap_severity": "major",
+      "is_blocking": true
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-AU-CS-2025-006-0",
+      "gap_id": "GAP-AU-CS-2025-006-0",
+      "remediation_type": "product_change",
+      "title": "Enhance Content Filtering Mechanisms",
+      "description": "Implement additional content filtering mechanisms to comply with the new Australian safety standards, ensuring that all unsuitable content is effectively blocked for minors.",
+      "affected_features": [
+        "Content Filtering",
+        "Algorithm Personalization"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Regional Product Manager for Australia",
+      "acceptance_criteria": [
+        "All content flagged as unsuitable is blocked for users under 18 in Australia",
+        "Regular audits and updates to filtering mechanisms to ensure compliance"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Failure to comply with the new legislation could result in fines or restrictions on operations in Australia, impacting user trust and market presence.",
+  "recommended_actions": [
+    "Conduct a detailed gap analysis to identify specific content categories considered unsuitable under the new legislation.",
+    "Engage with Australian regulatory bodies to clarify compliance expectations and timelines.",
+    "Develop and deploy enhanced content filtering solutions tailored to the Australian market."
+  ],
+  "assessed_at": "2025-12-26T04:36:12.383031",
+  "assessed_by": "github_actions"
+}

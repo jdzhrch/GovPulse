@@ -1,0 +1,49 @@
+{
+  "assessment_id": "IMPACT-AU-CS-2025-005-20251226043541",
+  "signal_id": "AU-CS-2025-005",
+  "signal_title": "X Corp v eSafety",
+  "market": "AU",
+  "domain": "all",
+  "risk_level": "P2",
+  "risk_rationale": "The court ruling in Australia enhances the eSafety Commissioner's authority to inquire about online safety practices, specifically concerning terrorist and violent extremist content. This aligns with TikTok's existing content moderation policies but may require additional transparency and reporting to comply with local expectations.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-AU-CS-2025-005-0",
+      "signal_id": "AU-CS-2025-005",
+      "baseline_policy_id": "CM-002",
+      "baseline_requirement": "Terrorism content detection using GIFCT hash-sharing membership.",
+      "regulatory_requirement": "Enhanced inquiry powers for the eSafety Commissioner regarding terrorist and violent extremist material.",
+      "gap_description": "The ruling may necessitate more detailed reporting or cooperation with the eSafety Commissioner beyond current global practices.",
+      "gap_severity": "major",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-AU-CS-2025-005-0",
+      "gap_id": "GAP-AU-CS-2025-005-0",
+      "remediation_type": "product_change",
+      "title": "Enhanced Reporting and Cooperation with eSafety Commissioner",
+      "description": "Develop a protocol for responding to inquiries from the eSafety Commissioner, ensuring transparency and cooperation in line with the court ruling.",
+      "affected_features": [
+        "Content Moderation",
+        "Transparency Reporting"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Regional Policy Lead for Australia",
+      "acceptance_criteria": [
+        "Protocol for responding to eSafety inquiries is documented and approved.",
+        "Training for relevant teams on new reporting requirements is completed."
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "The ruling may increase operational overhead in Australia due to additional reporting and compliance requirements. However, it does not pose an immediate existential threat to operations.",
+  "recommended_actions": [
+    "Develop and implement a protocol for responding to eSafety Commissioner inquiries.",
+    "Train content moderation and legal teams on new requirements.",
+    "Monitor for further regulatory developments in Australia."
+  ],
+  "assessed_at": "2025-12-26T04:35:47.970196",
+  "assessed_by": "github_actions"
+}

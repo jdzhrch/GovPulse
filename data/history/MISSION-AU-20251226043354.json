@@ -1,0 +1,180 @@
+{
+  "mission_id": "MISSION-AU-20251226043354",
+  "market": "AU",
+  "domain": "all",
+  "lookback_days": 90,
+  "created_at": "2025-12-26T04:33:54.058489",
+  "created_by": "github_actions",
+  "status": "completed",
+  "generated_queries": [
+    "site:legislation.gov.au children safety draft bill OR enacted law OR regulatory guidance OR hearing OR court ruling",
+    "site:oaic.gov.au data localization draft bill OR enacted law OR regulatory guidance OR hearing OR court ruling",
+    "site:esafety.gov.au minor protection draft bill OR enacted law OR regulatory guidance OR hearing OR court ruling",
+    "site:accc.gov.au e-commerce regulation OR social commerce draft bill OR enacted law OR regulatory guidance OR hearing OR court ruling",
+    "site:esafety.gov.au OR site:oaic.gov.au OR site:accc.gov.au recent regulatory developments children safety OR minor protection OR data localization"
+  ],
+  "signals": [
+    {
+      "id": "AU-CS-2025-001",
+      "market": "AU",
+      "domain": "all",
+      "source_type": "legislation",
+      "title": "Online Safety Amendment (Social Media Minimum Age) Act 2024",
+      "summary": "This legislation mandates that social media platforms prevent individuals under 16 from creating accounts and requires age verification measures. It aims to enhance online safety for children.",
+      "source_url": "https://www.esafety.gov.au/about-us/industry-regulation/social-media-age-restrictions?utm_source=openai",
+      "published_date": "2024-12-10",
+      "effective_date": "2025-12-10",
+      "key_provisions": [
+        "Mandates age restrictions for social media accounts",
+        "Requires age verification measures"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.95
+    },
+    {
+      "id": "AU-CS-2025-002",
+      "market": "AU",
+      "domain": "all",
+      "source_type": "legislation",
+      "title": "Privacy and Other Legislation Amendment Act 2024",
+      "summary": "This act mandates the development of a Children's Online Privacy Code to ensure compliance with Australian Privacy Principles for online services accessed by children.",
+      "source_url": "https://www.oaic.gov.au/privacy/privacy-registers/privacy-codes/childrens-online-privacy-code?utm_source=openai",
+      "published_date": "2024-12-10",
+      "effective_date": null,
+      "key_provisions": [
+        "Development of Children's Online Privacy Code",
+        "Compliance with Australian Privacy Principles"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "AU-CS-2025-003",
+      "market": "AU",
+      "domain": "all",
+      "source_type": "regulatory_guidance",
+      "title": "Industry Standards for Tackling Harmful Online Content",
+      "summary": "These standards require tech companies to address harmful online content, including child sexual abuse material, and apply to storage and communication services.",
+      "source_url": "https://www.esafety.gov.au/newsroom/media-releases/new-world-first-standards-set-new-rules-for-how-tech-giants-must-tackle-worst-of-the-worst-online-content?utm_source=openai",
+      "published_date": "2024-12-19",
+      "effective_date": "2024-12-22",
+      "key_provisions": [
+        "Address harmful online content",
+        "Applies to storage and communication services"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "AU-CS-2025-004",
+      "market": "AU",
+      "domain": "all",
+      "source_type": "regulatory_guidance",
+      "title": "Global Online Safety Regulators Network",
+      "summary": "This initiative involves collaboration between regulators from multiple countries to coordinate global efforts in online safety, sharing information and best practices.",
+      "source_url": "https://www.esafety.gov.au/newsroom/media-releases/regulators-collaborate-through-new-global-network-counter-online-harm?utm_source=openai",
+      "published_date": "2022-11-15",
+      "effective_date": null,
+      "key_provisions": [
+        "Collaboration between international regulators",
+        "Sharing information and best practices"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.8
+    },
+    {
+      "id": "AU-CS-2025-005",
+      "market": "AU",
+      "domain": "all",
+      "source_type": "court_ruling",
+      "title": "X Corp v eSafety",
+      "summary": "This court ruling confirmed the eSafety Commissioner's power to ask questions related to online safety expectations, including topics like terrorist and violent extremist material.",
+      "source_url": "https://www.esafety.gov.au/industry/legal-proceedings-involving-esafety?utm_source=openai",
+      "published_date": null,
+      "effective_date": null,
+      "key_provisions": [
+        "Commissioner's power to ask specific questions",
+        "Focus on terrorist and violent extremist material"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.75
+    },
+    {
+      "id": "AU-DL-2025-001",
+      "market": "AU",
+      "domain": "all",
+      "source_type": "legislation",
+      "title": "Privacy and Other Legislation Amendment Act 2024 (POLA Act)",
+      "summary": "This act enhances privacy protections and enforcement powers, introducing a statutory tort for serious invasions of privacy.",
+      "source_url": "https://www.oaic.gov.au/about-the-OAIC/our-regulatory-approach/privacy-regulatory-action-policy",
+      "published_date": "2024-12-10",
+      "effective_date": null,
+      "key_provisions": [
+        "Enhanced privacy protections",
+        "Statutory tort for serious invasions of privacy"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "AU-DL-2025-002",
+      "market": "AU",
+      "domain": "all",
+      "source_type": "legislation",
+      "title": "Digital ID Act 2024",
+      "summary": "This act regulates digital identity systems to ensure privacy and security, establishing standards for biometric information handling.",
+      "source_url": "https://www.oaic.gov.au/privacy/privacy-assessments-and-decisions/privacy-assessments/digital-id-assessment-2-mygovid-destruction-of-biometric-information",
+      "published_date": "2024-10-01",
+      "effective_date": null,
+      "key_provisions": [
+        "Regulation of digital identity systems",
+        "Standards for biometric information"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "AU-DL-2025-003",
+      "market": "AU",
+      "domain": "all",
+      "source_type": "draft_bill",
+      "title": "Mandatory Guardrails for AI in High-Risk Settings",
+      "summary": "This proposal introduces mandatory safeguards for AI applications in high-risk environments, focusing on transparency and data quality.",
+      "source_url": "https://www.oaic.gov.au/engage-with-us/submissions/disr-proposals-paper-for-introducing-mandatory-guardrails-for-ai-in-high-risk-settings",
+      "published_date": "2024-10-03",
+      "effective_date": null,
+      "key_provisions": [
+        "Mandatory safeguards for AI",
+        "Focus on transparency and data quality"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.8
+    },
+    {
+      "id": "AU-CS-2025-006",
+      "market": "AU",
+      "domain": "all",
+      "source_type": "legislation",
+      "title": "Online Safety (Designated Internet Services—Class 1A and Class 1B Material) Industry Standard 2024",
+      "summary": "This standard establishes mandatory safety measures for internet services to prevent access to unsuitable content for children.",
+      "source_url": "https://www.legislation.gov.au/F2024L00710/asmade?utm_source=openai",
+      "published_date": "2024-06-21",
+      "effective_date": null,
+      "key_provisions": [
+        "Mandatory safety standards for internet services",
+        "Prevention of access to unsuitable content"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    }
+  ]
+}

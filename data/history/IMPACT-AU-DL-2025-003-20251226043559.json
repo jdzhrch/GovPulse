@@ -1,0 +1,59 @@
+{
+  "assessment_id": "IMPACT-AU-DL-2025-003-20251226043559",
+  "signal_id": "AU-DL-2025-003",
+  "signal_title": "Mandatory Guardrails for AI in High-Risk Settings",
+  "market": "AU",
+  "domain": "all",
+  "risk_level": "P2",
+  "risk_rationale": "The draft bill introduces mandatory safeguards for AI applications, focusing on transparency and data quality. This aligns with TikTok's existing compliance focus on transparency and data management but may require additional measures specific to AI applications in high-risk settings.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-AU-DL-2025-003-0",
+      "signal_id": "AU-DL-2025-003",
+      "baseline_policy_id": "DS-022",
+      "baseline_requirement": "Algorithm transparency; Regulator access upon formal request",
+      "regulatory_requirement": "Mandatory safeguards for AI with a focus on transparency",
+      "gap_description": "The draft bill may require more proactive transparency measures and safeguards specific to AI applications in high-risk settings beyond current regulator access provisions.",
+      "gap_severity": "major",
+      "is_blocking": false
+    },
+    {
+      "gap_id": "GAP-AU-DL-2025-003-1",
+      "signal_id": "AU-DL-2025-003",
+      "baseline_policy_id": "DS-021",
+      "baseline_requirement": "Source code audits; Third-party review",
+      "regulatory_requirement": "Mandatory safeguards for AI with a focus on data quality",
+      "gap_description": "The draft bill may necessitate enhanced data quality measures and audits specific to AI applications, which are not explicitly covered in the current baseline.",
+      "gap_severity": "major",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-AU-DL-2025-003-0",
+      "gap_id": "GAP-AU-DL-2025-003-0",
+      "remediation_type": "product_change",
+      "title": "Enhance AI Transparency and Data Quality Safeguards",
+      "description": "Develop and implement additional transparency and data quality safeguards for AI applications, particularly in high-risk settings, to comply with the proposed Australian regulations.",
+      "affected_features": [
+        "AI algorithms",
+        "Data management systems"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "AI Compliance Lead",
+      "acceptance_criteria": [
+        "Implementation of enhanced transparency measures for AI applications",
+        "Establishment of data quality assurance processes specific to AI"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Medium impact due to potential need for additional compliance measures specific to AI applications, which may require resource allocation and process adjustments.",
+  "recommended_actions": [
+    "Conduct a detailed impact assessment of the draft bill on current AI applications.",
+    "Engage with Australian regulators to clarify specific requirements for AI transparency and data quality.",
+    "Develop a compliance roadmap to address identified gaps in AI transparency and data quality safeguards."
+  ],
+  "assessed_at": "2025-12-26T04:36:06.192327",
+  "assessed_by": "github_actions"
+}
