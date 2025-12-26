@@ -1,0 +1,49 @@
+{
+  "assessment_id": "IMPACT-JP-EC-2025-002-20251226065540",
+  "signal_id": "JP-EC-2025-002",
+  "signal_title": "サプライチェーン全体での支払の適正化に関する要請",
+  "market": "JP",
+  "domain": "all",
+  "risk_level": "P2",
+  "risk_rationale": "The regulatory change in Japan prohibits the use of promissory notes for payments across the supply chain, which may impact TikTok's e-commerce and payment operations in Japan. This presents a moderate risk that can be resolved within a quarter by adjusting payment processes.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-JP-EC-2025-002-0",
+      "signal_id": "JP-EC-2025-002",
+      "baseline_policy_id": "EC-010",
+      "baseline_requirement": "Currency conversion transparency with real-time FX disclosure at checkout",
+      "regulatory_requirement": "Prohibition of promissory notes for payments",
+      "gap_description": "The current baseline does not address the prohibition of promissory notes, which may be used in some payment processes.",
+      "gap_severity": "major",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-JP-EC-2025-002-0",
+      "gap_id": "GAP-JP-EC-2025-002-0",
+      "remediation_type": "product_change",
+      "title": "Update Payment Processes to Comply with JP Regulatory Changes",
+      "description": "Ensure that all payment processes in Japan comply with the new regulation prohibiting the use of promissory notes. This may involve updating contracts and payment systems to eliminate the use of promissory notes.",
+      "affected_features": [
+        "Payment processing",
+        "Merchant contracts"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Payments Product Manager",
+      "acceptance_criteria": [
+        "All payment processes in Japan are reviewed and updated to eliminate the use of promissory notes.",
+        "Contracts with merchants in Japan are revised to reflect the new payment requirements."
+      ]
+    }
+  ],
+  "deadline": "2026-01-01",
+  "business_impact": "The prohibition of promissory notes may require changes to existing payment agreements and systems, potentially affecting cash flow and merchant relationships in Japan.",
+  "recommended_actions": [
+    "Conduct a comprehensive review of all payment processes in Japan to identify any use of promissory notes.",
+    "Engage with legal and compliance teams to update contracts and ensure compliance with the new regulation.",
+    "Communicate changes to affected merchants and partners in Japan to ensure smooth transition."
+  ],
+  "assessed_at": "2025-12-26T06:55:45.054312",
+  "assessed_by": "github_actions"
+}

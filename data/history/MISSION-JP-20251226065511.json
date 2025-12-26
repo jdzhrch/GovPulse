@@ -1,0 +1,89 @@
+{
+  "mission_id": "MISSION-JP-20251226065511",
+  "market": "JP",
+  "domain": "all",
+  "lookback_days": 90,
+  "created_at": "2025-12-26T06:55:11.399132",
+  "created_by": "github_actions",
+  "status": "completed",
+  "generated_queries": [
+    [
+      "site:e-gov.go.jp 子供の安全 規制案 OR 法案 OR ガイダンス OR 公聴会 OR 裁判所判決",
+      "site:caa.go.jp 未成年者保護 電子商取引 規制 OR 法律 OR ガイダンス",
+      "site:soumu.go.jp ソーシャルコマース 規制案 OR 法案 OR ガイダンス OR 公聴会 OR 裁判所判決",
+      "site:e-gov.go.jp データローカライゼーション 個人情報保護委員会 規制 OR 法律",
+      "site:meti.go.jp 電子商取引 規制案 OR 法案 OR ガイダンス OR 公聴会 OR 裁判所判決"
+    ]
+  ],
+  "signals": [
+    {
+      "id": "JP-PI-2025-001",
+      "market": "JP",
+      "domain": "all",
+      "source_type": "regulatory_guidance",
+      "title": "第337回 個人情報保護委員会会議",
+      "summary": "個人情報保護委員会は、2025年11月5日に第337回会議を開催し、個人情報保護に関する議論を行いました。具体的なデータローカライゼーションに関する規制や法律の更新情報は確認できませんでした。",
+      "source_url": "https://data.e-gov.go.jp/data/dataset/ppc_20251106_0001?utm_source=openai",
+      "published_date": "2025-11-05",
+      "effective_date": null,
+      "key_provisions": [
+        "個人情報保護に関する議論"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.7
+    },
+    {
+      "id": "JP-EC-2024-001",
+      "market": "JP",
+      "domain": "all",
+      "source_type": "regulatory_guidance",
+      "title": "令和5年度電子商取引に関する市場調査の結果",
+      "summary": "経済産業省は、2024年9月25日に日本国内のBtoC電子商取引市場規模が24.8兆円に達し、前年比9.23%増加したことを報告しました。",
+      "source_url": "https://www.meti.go.jp/press/2024/09/20240925001/20240925001.html?utm_source=openai",
+      "published_date": "2024-09-25",
+      "effective_date": null,
+      "key_provisions": [
+        "BtoC電子商取引市場規模の報告"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.8
+    },
+    {
+      "id": "JP-EC-2025-002",
+      "market": "JP",
+      "domain": "all",
+      "source_type": "regulatory_guidance",
+      "title": "サプライチェーン全体での支払の適正化に関する要請",
+      "summary": "経済産業省は、2025年11月11日にサプライチェーン全体での支払の適正化について事業者団体等に要請を行いました。これは、2026年1月1日から施行される改正下請法により、手形を交付する支払が一律に禁止されることを受けたものです。",
+      "source_url": "https://www.meti.go.jp/press/2025/11/20251111007/20251111007.html?utm_source=openai",
+      "published_date": "2025-11-11",
+      "effective_date": "2026-01-01",
+      "key_provisions": [
+        "手形を交付する支払の禁止"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "JP-EC-2022-001",
+      "market": "JP",
+      "domain": "all",
+      "source_type": "regulatory_guidance",
+      "title": "電子商取引及び情報財取引等に関する準則の改訂",
+      "summary": "2022年4月1日に、電子商取引及び情報財取引等に関する準則が改訂され、著作権法の改正やブロックチェーン技術を用いた価値移転に関する裁判例の反映が行われました。",
+      "source_url": "https://www.meti.go.jp/press/2022/04/20220401004/20220401004.html?utm_source=openai",
+      "published_date": "2022-04-01",
+      "effective_date": null,
+      "key_provisions": [
+        "著作権法の改正",
+        "ブロックチェーン技術を用いた価値移転に関する裁判例の反映"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    }
+  ]
+}
