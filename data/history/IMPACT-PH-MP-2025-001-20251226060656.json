@@ -1,0 +1,49 @@
+{
+  "assessment_id": "IMPACT-PH-MP-2025-001-20251226060656",
+  "signal_id": "PH-MP-2025-001",
+  "signal_title": "Republic Act No. 11648",
+  "market": "PH",
+  "domain": "all",
+  "risk_level": "P3",
+  "risk_rationale": "The regulatory signal from Republic Act No. 11648 in the Philippines increases the age for determining statutory rape, which may indirectly affect TikTok's minor protection standards. However, the current baseline already includes robust protections for minors, and the regulation does not directly mandate changes to platform operations.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-PH-MP-2025-001-0",
+      "signal_id": "PH-MP-2025-001",
+      "baseline_policy_id": "MP-001",
+      "baseline_requirement": "Minimum registration age is 13 years.",
+      "regulatory_requirement": "Increased age for determining statutory rape.",
+      "gap_description": "The regulation increases the age for determining statutory rape, which may imply a need for stricter age verification processes, but does not directly conflict with the current minimum registration age.",
+      "gap_severity": "minor",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-PH-MP-2025-001-0",
+      "gap_id": "GAP-PH-MP-2025-001-0",
+      "remediation_type": "product_change",
+      "title": "Review Age Verification Processes",
+      "description": "Evaluate and enhance age verification processes to ensure compliance with increased statutory rape age protections.",
+      "affected_features": [
+        "Age verification",
+        "Minor protection policies"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Minor Protection PM",
+      "acceptance_criteria": [
+        "Enhanced age verification process implemented",
+        "Compliance with local statutory rape age requirements"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Minimal business impact expected as the regulation does not directly affect platform operations but may require minor adjustments to age verification processes.",
+  "recommended_actions": [
+    "Conduct a legal review of Republic Act No. 11648 to determine specific implications for TikTok.",
+    "Enhance age verification processes to align with increased statutory rape age protections.",
+    "Monitor for any further regulatory guidance or enforcement actions related to this legislation."
+  ],
+  "assessed_at": "2025-12-26T06:07:02.138270",
+  "assessed_by": "github_actions"
+}

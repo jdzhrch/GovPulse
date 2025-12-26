@@ -1,0 +1,68 @@
+{
+  "assessment_id": "IMPACT-PH-MP-2025-002-20251226060702",
+  "signal_id": "PH-MP-2025-002",
+  "signal_title": "Department of Education (DepEd) Memorandum No. 064, s. 2025",
+  "market": "PH",
+  "domain": "all",
+  "risk_level": "P3",
+  "risk_rationale": "The regulatory signal from the Department of Education in the Philippines focuses on child protection policies within schools, which indirectly relates to TikTok's minor protection standards. However, it does not directly impose new requirements on TikTok's platform operations.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-PH-MP-2025-002-0",
+      "signal_id": "PH-MP-2025-002",
+      "baseline_policy_id": "MP-001",
+      "baseline_requirement": "Minimum registration age of 13 years",
+      "regulatory_requirement": "Mandates schools to draft child protection policies",
+      "gap_description": "The regulatory requirement focuses on schools, not directly affecting TikTok's age-gating policies.",
+      "gap_severity": "minor",
+      "is_blocking": false
+    },
+    {
+      "gap_id": "GAP-PH-MP-2025-002-1",
+      "signal_id": "PH-MP-2025-002",
+      "baseline_policy_id": "MP-010",
+      "baseline_requirement": "Screen time management for minors",
+      "regulatory_requirement": "Establish referral systems for child protection",
+      "gap_description": "The requirement for referral systems is school-focused and does not directly impact TikTok's screen time management policies.",
+      "gap_severity": "minor",
+      "is_blocking": false
+    },
+    {
+      "gap_id": "GAP-PH-MP-2025-002-2",
+      "signal_id": "PH-MP-2025-002",
+      "baseline_policy_id": "MP-020",
+      "baseline_requirement": "Prohibition of personalized ads to minors",
+      "regulatory_requirement": "Coordinate with law enforcement for child protection",
+      "gap_description": "Coordination with law enforcement is a school responsibility and does not directly affect TikTok's advertising policies.",
+      "gap_severity": "minor",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-PH-MP-2025-002-0",
+      "gap_id": "GAP-PH-MP-2025-002-0",
+      "remediation_type": "product_change",
+      "title": "Monitor Regulatory Developments in PH",
+      "description": "Continue monitoring any further developments or specific regulations that may directly impact TikTok's operations in the Philippines.",
+      "affected_features": [
+        "Minor Protection Standards"
+      ],
+      "engineering_effort": "S",
+      "pm_owner_recommendation": "Regional Policy Lead for PH",
+      "acceptance_criteria": [
+        "No immediate changes required",
+        "Regular updates on regulatory changes"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Minimal immediate impact on TikTok's operations as the memorandum primarily targets educational institutions.",
+  "recommended_actions": [
+    "Monitor for any further regulatory changes in PH",
+    "Engage with local educational authorities to understand potential future impacts",
+    "Ensure current minor protection standards are communicated effectively in PH"
+  ],
+  "assessed_at": "2025-12-26T06:07:08.358272",
+  "assessed_by": "github_actions"
+}
