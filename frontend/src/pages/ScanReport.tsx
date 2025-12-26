@@ -25,6 +25,14 @@ import { ScoutMission, ImpactAssessment, RISK_COLORS, MARKETS } from '../types'
 import RiskBadge from '../components/RiskBadge'
 import { format } from 'date-fns'
 
+// Helper to parse UTC timestamp correctly
+// Backend saves timestamps without timezone info but they are UTC
+const parseUTCDate = (timestamp: string): Date => {
+  // If timestamp doesn't have timezone info, treat as UTC by appending Z
+  const dateStr = timestamp.endsWith('Z') || timestamp.includes('+') ? timestamp : timestamp + 'Z'
+  return new Date(dateStr)
+}
+
 interface ScanReportProps {
   missions: ScoutMission[]
   assessments: ImpactAssessment[]
@@ -240,7 +248,7 @@ export default function ScanReport({ missions, assessments, onPushToPM }: ScanRe
             const DomainIcon = domainIcons[m.domain] || Globe
             const missionAssess = assessments.filter(a => 
               a.market === m.market && 
-              Math.abs(new Date(a.assessed_at).getTime() - new Date(m.created_at).getTime()) < 3600000
+              Math.abs(parseUTCDate(a.assessed_at).getTime() - parseUTCDate(m.created_at).getTime()) < 3600000
             )
             const highestRisk = missionAssess.reduce((max, a) => {
               const riskOrder = ['P0', 'P1', 'P2', 'P3']
@@ -248,7 +256,7 @@ export default function ScanReport({ missions, assessments, onPushToPM }: ScanRe
             }, 'P3' as 'P0' | 'P1' | 'P2' | 'P3')
 
             // Calculate date range for this scan
-            const scanDate = new Date(m.created_at)
+            const scanDate = parseUTCDate(m.created_at)
             const rangeStartDate = new Date(scanDate)
             rangeStartDate.setDate(rangeStartDate.getDate() - m.lookback_days)
 
@@ -339,7 +347,7 @@ export default function ScanReport({ missions, assessments, onPushToPM }: ScanRe
   const totalRemediations = relatedAssessments.reduce((sum, a) => sum + a.remediations.length, 0)
 
   // Calculate scan date range
-  const scanDate = new Date(mission.created_at)
+  const scanDate = parseUTCDate(mission.created_at)
   const rangeStartDate = new Date(scanDate)
   rangeStartDate.setDate(rangeStartDate.getDate() - mission.lookback_days)
 

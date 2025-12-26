@@ -20,6 +20,12 @@ import { ImpactAssessment, ComplianceGap, ProductRemediation, RISK_COLORS, MARKE
 import RiskBadge from '../components/RiskBadge'
 import { formatDistanceToNow, format } from 'date-fns'
 
+// Helper to parse UTC timestamp correctly
+const parseUTCDate = (timestamp: string): Date => {
+  const dateStr = timestamp.endsWith('Z') || timestamp.includes('+') ? timestamp : timestamp + 'Z'
+  return new Date(dateStr)
+}
+
 interface GapAnalysisProps {
   assessments: ImpactAssessment[]
   selectedAssessment: ImpactAssessment | null
@@ -87,7 +93,7 @@ export default function GapAnalysis({
       
       // Date range filter
       if (dateRange !== 'all') {
-        const assessDate = new Date(a.assessed_at)
+        const assessDate = parseUTCDate(a.assessed_at)
         const now = new Date()
         const daysAgo = parseInt(dateRange)
         const cutoffDate = new Date(now.getTime() - daysAgo * 24 * 60 * 60 * 1000)
@@ -295,7 +301,7 @@ export default function GapAnalysis({
             <RiskBadge level={selectedAssessment.risk_level} />
             <span className="text-slate-500">{selectedAssessment.market}</span>
             <span className="text-slate-500">
-              Analyzed {formatDistanceToNow(new Date(selectedAssessment.assessed_at), { addSuffix: true })}
+              Analyzed {formatDistanceToNow(parseUTCDate(selectedAssessment.assessed_at), { addSuffix: true })}
             </span>
           </div>
         </div>
@@ -305,7 +311,7 @@ export default function GapAnalysis({
               <CheckCircle className="w-5 h-5" />
               Reviewed
               <span className="text-sm text-green-500">
-                {selectedAssessment.pushed_at && format(new Date(selectedAssessment.pushed_at), 'MMM d, HH:mm')}
+                {selectedAssessment.pushed_at && format(parseUTCDate(selectedAssessment.pushed_at), 'MMM d, HH:mm')}
               </span>
             </span>
           ) : (
@@ -335,7 +341,7 @@ export default function GapAnalysis({
           <p className="mt-1 text-slate-900 flex items-center gap-2">
             <Clock className="w-4 h-4 text-slate-400" />
             {selectedAssessment.deadline
-              ? format(new Date(selectedAssessment.deadline), 'MMMM d, yyyy')
+              ? format(parseUTCDate(selectedAssessment.deadline), 'MMMM d, yyyy')
               : 'No fixed deadline'}
           </p>
         </div>

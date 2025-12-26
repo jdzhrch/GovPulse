@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 import {
   Rocket,
   Globe,
@@ -217,6 +217,7 @@ async function triggerGitHubWorkflow(params: {
 
 export default function MissionLauncher() {
   const [searchParams] = useSearchParams()
+  const navigate = useNavigate()
 
   const [selectedMarket, setSelectedMarket] = useState(searchParams.get('market') || '')
   const [selectedDomain, setSelectedDomain] = useState<Domain>(
@@ -260,11 +261,11 @@ export default function MissionLauncher() {
     if (run.status === 'completed') {
       if (run.conclusion === 'success') {
         setProgress(100)
-        setProgressMessage('Complete! Your results are ready.')
-        // Small delay then show completion page
+        setProgressMessage('Complete! Redirecting to results...')
+        // Navigate directly to scan reports after a brief delay
         setTimeout(() => {
-          setPhase('complete')
-        }, 2000)
+          navigate('/reports')
+        }, 1500)
       } else {
         setErrorMessage(`Scan ended with status: ${run.conclusion}`)
         setPhase('error')
@@ -272,11 +273,12 @@ export default function MissionLauncher() {
     } else if (run.status === 'in_progress') {
       // Track progress based on which jobs have completed
       if (jobs.deployCompleted) {
-        setProgress(95)
-        setProgressMessage('Finalizing deployment...')
+        setProgress(98)
+        setProgressMessage('Almost done...')
       } else if (jobs.scoutCompleted) {
-        setProgress(80)
-        setProgressMessage('Analysis complete. Publishing results...')
+        // Scout completed, deploy should be fast - show higher progress
+        setProgress(prev => Math.max(prev, 90))
+        setProgressMessage('Publishing results...')
       } else {
         // Scout job still running - increment gradually
         setProgress(prev => {
@@ -289,12 +291,13 @@ export default function MissionLauncher() {
       setProgress(5)
       setProgressMessage('Scan queued, waiting to start...')
     }
-  }, [workflowRunId])
+  }, [workflowRunId, navigate])
 
   useEffect(() => {
     if (phase !== 'running') return
 
-    const interval = setInterval(pollWorkflowStatus, 10000)
+    // Poll more frequently (every 5 seconds) to catch completion faster
+    const interval = setInterval(pollWorkflowStatus, 5000)
     return () => clearInterval(interval)
   }, [phase, pollWorkflowStatus])
 

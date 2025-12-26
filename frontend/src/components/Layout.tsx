@@ -1,4 +1,5 @@
-import { Outlet, NavLink } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Outlet, NavLink, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard,
   Search,
@@ -16,6 +17,13 @@ const navigation = [
 ]
 
 export default function Layout() {
+  const location = useLocation()
+
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [location.pathname])
+
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Top header */}

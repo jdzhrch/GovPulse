@@ -15,6 +15,12 @@ import { ScoutMission, ImpactAssessment, RISK_COLORS } from '../types'
 import RiskBadge from '../components/RiskBadge'
 import { formatDistanceToNow } from 'date-fns'
 
+// Helper to parse UTC timestamp correctly
+const parseUTCDate = (timestamp: string): Date => {
+  const dateStr = timestamp.endsWith('Z') || timestamp.includes('+') ? timestamp : timestamp + 'Z'
+  return new Date(dateStr)
+}
+
 interface DashboardProps {
   missions: ScoutMission[]
   assessments: ImpactAssessment[]
@@ -153,7 +159,7 @@ export default function Dashboard({ missions, assessments }: DashboardProps) {
                       <div className="flex items-center gap-4 mt-2 text-xs text-slate-500">
                         <span className="flex items-center gap-1">
                           <Clock className="w-3 h-3" />
-                          {formatDistanceToNow(new Date(assessment.assessed_at), { addSuffix: true })}
+                          {formatDistanceToNow(parseUTCDate(assessment.assessed_at), { addSuffix: true })}
                         </span>
                         <span>{assessment.compliance_gaps.length} action items</span>
                         <span>{assessment.remediations.length} recommendations</span>
