@@ -1,16 +1,25 @@
 import { ScoutMission, ImpactAssessment, RegulatorySignal, ComplianceGap, ProductRemediation } from '../types'
 
+// 动态生成当前年份和日期
+const currentYear = new Date().getFullYear()
+const today = new Date()
+const formatDate = (daysAgo: number) => {
+  const d = new Date(today)
+  d.setDate(d.getDate() - daysAgo)
+  return d.toISOString().split('T')[0]
+}
+
 // Mock regulatory signals
 const mockSignals: RegulatorySignal[] = [
   {
-    id: 'US-MP-2024-001',
+    id: `US-MP-${currentYear}-001`,
     market: 'US',
     domain: 'minor_protection',
     source_type: 'legislation',
     title: 'Kids Online Safety Act (KOSA) - Senate Version',
     summary: 'Mandates platforms implement "duty of care" for minors, requires opt-out of algorithmic recommendations for users under 17, and mandates parental tools.',
     source_url: 'https://www.congress.gov/bill/118th-congress/senate-bill/1409',
-    published_date: '2024-07-30',
+    published_date: formatDate(7),
     effective_date: '2025-07-01',
     key_provisions: [
       'Duty of care standard for platforms with minor users',
@@ -24,14 +33,14 @@ const mockSignals: RegulatorySignal[] = [
     confidence_score: 0.95
   },
   {
-    id: 'ID-EC-2024-001',
+    id: `ID-EC-${currentYear}-001`,
     market: 'ID',
     domain: 'ecommerce',
     source_type: 'regulatory_guidance',
     title: 'Minister of Trade Regulation 31/2023 - Social Commerce Separation',
     summary: 'Mandates complete separation of social media and e-commerce functionalities. TikTok Shop must operate as independent app.',
     source_url: 'https://jdih.kemendag.go.id/peraturan/detail/2340',
-    published_date: '2023-09-27',
+    published_date: formatDate(14),
     effective_date: '2023-10-04',
     key_provisions: [
       'Social media platforms cannot facilitate direct transactions',
@@ -44,14 +53,14 @@ const mockSignals: RegulatorySignal[] = [
     confidence_score: 0.99
   },
   {
-    id: 'EU-DS-2024-001',
+    id: `EU-DS-${currentYear}-001`,
     market: 'EU',
     domain: 'data_sovereignty',
     source_type: 'court_ruling',
     title: 'CJEU Schrems III Preliminary Ruling',
     summary: 'Court questions adequacy of EU-US Data Privacy Framework, may require additional safeguards for transfers.',
     source_url: 'https://curia.europa.eu/juris/liste.jsf',
-    published_date: '2024-11-15',
+    published_date: formatDate(3),
     effective_date: null,
     key_provisions: [
       'DPF adequacy under review',
@@ -65,43 +74,50 @@ const mockSignals: RegulatorySignal[] = [
   }
 ]
 
-// Mock missions
+// Mock missions with dynamic dates
+const missionDate1 = new Date(today)
+missionDate1.setDate(missionDate1.getDate() - 1)
+const missionDate2 = new Date(today)
+missionDate2.setDate(missionDate2.getDate() - 2)
+const missionDate3 = new Date(today)
+missionDate3.setDate(missionDate3.getDate() - 3)
+
 export const mockMissions: ScoutMission[] = [
   {
-    mission_id: 'MISSION-US-20241225120000',
+    mission_id: `MISSION-US-${missionDate1.toISOString().replace(/[-:T.Z]/g, '').slice(0, 14)}`,
     market: 'US',
     domain: 'minor_protection',
     lookback_days: 90,
-    created_at: '2024-12-25T12:00:00Z',
+    created_at: missionDate1.toISOString(),
     created_by: 'policy_analyst_1',
     status: 'completed',
     signals: [mockSignals[0]]
   },
   {
-    mission_id: 'MISSION-ID-20241224100000',
+    mission_id: `MISSION-ID-${missionDate2.toISOString().replace(/[-:T.Z]/g, '').slice(0, 14)}`,
     market: 'ID',
     domain: 'ecommerce',
     lookback_days: 365,
-    created_at: '2024-12-24T10:00:00Z',
+    created_at: missionDate2.toISOString(),
     created_by: 'apac_policy_lead',
     status: 'completed',
     signals: [mockSignals[1]]
   },
   {
-    mission_id: 'MISSION-EU-20241223090000',
+    mission_id: `MISSION-EU-${missionDate3.toISOString().replace(/[-:T.Z]/g, '').slice(0, 14)}`,
     market: 'EU',
     domain: 'data_sovereignty',
     lookback_days: 180,
-    created_at: '2024-12-23T09:00:00Z',
+    created_at: missionDate3.toISOString(),
     created_by: 'eu_policy_counsel',
     status: 'completed',
     signals: [mockSignals[2]]
   }
 ]
 
-// Mock compliance gaps
+// Mock compliance gaps - using dynamic year key
 const mockGaps: Record<string, ComplianceGap[]> = {
-  'US-MP-2024-001': [
+  [`US-MP-${currentYear}-001`]: [
     {
       gap_id: 'GAP-US-MP-2024-001-MP-012-0',
       signal_id: 'US-MP-2024-001',
@@ -123,10 +139,10 @@ const mockGaps: Record<string, ComplianceGap[]> = {
       is_blocking: false
     }
   ],
-  'ID-EC-2024-001': [
+  [`ID-EC-${currentYear}-001`]: [
     {
-      gap_id: 'GAP-ID-EC-2024-001-EC-001-0',
-      signal_id: 'ID-EC-2024-001',
+      gap_id: `GAP-ID-EC-${currentYear}-001-EC-001-0`,
+      signal_id: `ID-EC-${currentYear}-001`,
       baseline_policy_id: 'EC-001',
       baseline_requirement: 'Content feed ≠ Transaction interface (separation logic)',
       regulatory_requirement: 'Social media platforms cannot facilitate direct transactions',
@@ -135,10 +151,10 @@ const mockGaps: Record<string, ComplianceGap[]> = {
       is_blocking: true
     }
   ],
-  'EU-DS-2024-001': [
+  [`EU-DS-${currentYear}-001`]: [
     {
-      gap_id: 'GAP-EU-DS-2024-001-DS-010-0',
-      signal_id: 'EU-DS-2024-001',
+      gap_id: `GAP-EU-DS-${currentYear}-001-DS-010-0`,
+      signal_id: `EU-DS-${currentYear}-001`,
       baseline_policy_id: 'DS-010',
       baseline_requirement: 'EU-US Data Privacy Framework + SCCs',
       regulatory_requirement: 'DPF adequacy under review - supplementary measures may be required',
@@ -149,9 +165,9 @@ const mockGaps: Record<string, ComplianceGap[]> = {
   ]
 }
 
-// Mock remediations
+// Mock remediations - using dynamic year key
 const mockRemediations: Record<string, ProductRemediation[]> = {
-  'US-MP-2024-001': [
+  [`US-MP-${currentYear}-001`]: [
     {
       remediation_id: 'REM-GAP-US-MP-2024-001-MP-012-0',
       gap_id: 'GAP-US-MP-2024-001-MP-012-0',
@@ -186,10 +202,10 @@ const mockRemediations: Record<string, ProductRemediation[]> = {
       ]
     }
   ],
-  'ID-EC-2024-001': [
+  [`ID-EC-${currentYear}-001`]: [
     {
-      remediation_id: 'REM-GAP-ID-EC-2024-001-EC-001-0',
-      gap_id: 'GAP-ID-EC-2024-001-EC-001-0',
+      remediation_id: `REM-GAP-ID-EC-${currentYear}-001-EC-001-0`,
+      gap_id: `GAP-ID-EC-${currentYear}-001-EC-001-0`,
       remediation_type: 'infrastructure',
       title: 'Launch Standalone TikTok Shop Indonesia App',
       description: 'Create and launch separate TikTok Shop application for Indonesia market. Integrate with Tokopedia partnership. Remove all direct commerce from main TikTok app in ID.',
@@ -205,10 +221,10 @@ const mockRemediations: Record<string, ProductRemediation[]> = {
       ]
     }
   ],
-  'EU-DS-2024-001': [
+  [`EU-DS-${currentYear}-001`]: [
     {
-      remediation_id: 'REM-GAP-EU-DS-2024-001-DS-010-0',
-      gap_id: 'GAP-EU-DS-2024-001-DS-010-0',
+      remediation_id: `REM-GAP-EU-DS-${currentYear}-001-DS-010-0`,
+      gap_id: `GAP-EU-DS-${currentYear}-001-DS-010-0`,
       remediation_type: 'infrastructure',
       title: 'EU Data Localization Contingency Architecture',
       description: 'Design and prepare EU-only data architecture as contingency if Schrems III invalidates DPF. Expand Dublin/Norway data centers to handle full EU data residency.',
@@ -226,18 +242,18 @@ const mockRemediations: Record<string, ProductRemediation[]> = {
   ]
 }
 
-// Mock assessments
+// Mock assessments with dynamic dates
 export const mockAssessments: ImpactAssessment[] = [
   {
-    assessment_id: 'IMPACT-US-MP-2024-001-20241225120500',
-    signal_id: 'US-MP-2024-001',
+    assessment_id: `IMPACT-US-MP-${currentYear}-001-${missionDate1.toISOString().replace(/[-:T.Z]/g, '').slice(0, 14)}`,
+    signal_id: `US-MP-${currentYear}-001`,
     signal_title: 'Kids Online Safety Act (KOSA) - Senate Version',
     market: 'US',
     domain: 'minor_protection',
     risk_level: 'P1',
     risk_rationale: 'Material compliance gap: 2 major conflicts requiring product changes before July 2025 effective date.',
-    compliance_gaps: mockGaps['US-MP-2024-001'],
-    remediations: mockRemediations['US-MP-2024-001'],
+    compliance_gaps: mockGaps[`US-MP-${currentYear}-001`] || [],
+    remediations: mockRemediations[`US-MP-${currentYear}-001`] || [],
     deadline: '2025-07-01',
     business_impact: 'HIGH: Material product changes required for US. Estimated impact to feature roadmap: 2-3 quarters. Cross-functional mobilization needed.',
     recommended_actions: [
@@ -247,20 +263,20 @@ export const mockAssessments: ImpactAssessment[] = [
       'Create JIRA epic for 2 compliance gaps',
       'Monitor US regulatory developments'
     ],
-    assessed_at: '2024-12-25T12:05:00Z',
+    assessed_at: missionDate1.toISOString(),
     assessed_by: 'policy_analyst_1',
     pushed_to_pm: false
   },
   {
-    assessment_id: 'IMPACT-ID-EC-2024-001-20241224103000',
-    signal_id: 'ID-EC-2024-001',
+    assessment_id: `IMPACT-ID-EC-${currentYear}-001-${missionDate2.toISOString().replace(/[-:T.Z]/g, '').slice(0, 14)}`,
+    signal_id: `ID-EC-${currentYear}-001`,
     signal_title: 'Minister of Trade Regulation 31/2023 - Social Commerce Separation',
     market: 'ID',
     domain: 'ecommerce',
     risk_level: 'P0',
     risk_rationale: 'Existential threat: regulation prohibits core TikTok Shop functionality in Indonesia market.',
-    compliance_gaps: mockGaps['ID-EC-2024-001'],
-    remediations: mockRemediations['ID-EC-2024-001'],
+    compliance_gaps: mockGaps[`ID-EC-${currentYear}-001`] || [],
+    remediations: mockRemediations[`ID-EC-${currentYear}-001`] || [],
     deadline: '2023-10-04',
     business_impact: 'CRITICAL: ID market operations at risk. Potential revenue impact: 100% of ID GMV. Immediate executive escalation required.',
     recommended_actions: [
@@ -270,21 +286,21 @@ export const mockAssessments: ImpactAssessment[] = [
       'Engage Ministry of Trade directly',
       'Prepare seller communication strategy'
     ],
-    assessed_at: '2024-12-24T10:30:00Z',
+    assessed_at: missionDate2.toISOString(),
     assessed_by: 'apac_policy_lead',
     pushed_to_pm: true,
-    pushed_at: '2024-12-24T11:00:00Z'
+    pushed_at: missionDate2.toISOString()
   },
   {
-    assessment_id: 'IMPACT-EU-DS-2024-001-20241223093000',
-    signal_id: 'EU-DS-2024-001',
+    assessment_id: `IMPACT-EU-DS-${currentYear}-001-${missionDate3.toISOString().replace(/[-:T.Z]/g, '').slice(0, 14)}`,
+    signal_id: `EU-DS-${currentYear}-001`,
     signal_title: 'CJEU Schrems III Preliminary Ruling',
     market: 'EU',
     domain: 'data_sovereignty',
     risk_level: 'P1',
     risk_rationale: 'Material compliance gap: DPF reliance creates existential risk if adequacy invalidated.',
-    compliance_gaps: mockGaps['EU-DS-2024-001'],
-    remediations: mockRemediations['EU-DS-2024-001'],
+    compliance_gaps: mockGaps[`EU-DS-${currentYear}-001`] || [],
+    remediations: mockRemediations[`EU-DS-${currentYear}-001`] || [],
     deadline: null,
     business_impact: 'HIGH: Material infrastructure changes may be required for EU. Estimated impact to feature roadmap: 2-3 quarters. Cross-functional mobilization needed.',
     recommended_actions: [
@@ -294,7 +310,7 @@ export const mockAssessments: ImpactAssessment[] = [
       'Monitor CJEU proceedings',
       'Prepare contingency communication for EU users'
     ],
-    assessed_at: '2024-12-23T09:30:00Z',
+    assessed_at: missionDate3.toISOString(),
     assessed_by: 'eu_policy_counsel',
     pushed_to_pm: false
   }

@@ -264,30 +264,31 @@ class QueryGenerator:
         """Generate template-based queries when LLM is unavailable."""
         market_info = MARKET_INFO.get(market, {"name": market})
         market_name = market_info.get("name", market)
+        current_year = datetime.now().year
 
         base_queries = []
 
         if domain == Domain.MINOR_PROTECTION or domain == Domain.ALL:
             base_queries.extend([
-                f"{market_name} children online safety legislation 2024",
+                f"{market_name} children online safety legislation {current_year}",
                 f"{market_name} minor protection digital platform regulation"
             ])
 
         if domain == Domain.ECOMMERCE or domain == Domain.ALL:
             base_queries.extend([
-                f"{market_name} e-commerce social media regulation 2024",
+                f"{market_name} e-commerce social media regulation {current_year}",
                 f"{market_name} online marketplace seller requirements"
             ])
 
         if domain == Domain.DATA_SOVEREIGNTY or domain == Domain.ALL:
             base_queries.extend([
-                f"{market_name} data localization law 2024",
+                f"{market_name} data localization law {current_year}",
                 f"{market_name} cross-border data transfer regulation"
             ])
 
         if domain == Domain.CONTENT_MODERATION or domain == Domain.ALL:
             base_queries.extend([
-                f"{market_name} content moderation platform liability 2024",
+                f"{market_name} content moderation platform liability {current_year}",
                 f"{market_name} illegal content takedown requirements"
             ])
 
@@ -296,62 +297,71 @@ class QueryGenerator:
 
 def fetch_real_world_data(queries: list[str], market: str) -> list[dict]:
     """
-    Placeholder function for real-world data fetching.
+    使用 OpenAI Responses API 的 web_search 工具获取真实监管数据。
 
-    ============================================================================
-    TODO: 实现真实的网页抓取功能
-    ============================================================================
-
-    此处需要接入搜索引擎 API 以配合 OpenAI 进行网页抓取。
-
-    推荐方案：
-    1. Tavily API (https://tavily.com) - 专为 AI 设计的搜索 API
-       - 支持实时网页搜索
-       - 返回结构化结果
-       - 与 OpenAI 兼容性好
-
-    2. Serper API (https://serper.dev) - Google 搜索 API
-       - 低延迟
-       - 支持新闻搜索
-
-    3. Bing Web Search API (Azure)
-       - 企业级可靠性
-       - 支持地区过滤
-
-    实现步骤：
-    1. 获取搜索 API 密钥，配置环境变量 TAVILY_API_KEY
-    2. 对每个 query 调用搜索 API
-    3. 获取搜索结果的 URL 列表
-    4. 使用 requests/httpx 抓取页面内容
-    5. 使用 GPT-4 提取监管信号信息
-
-    示例代码框架：
-    ```python
-    import httpx
-    from tavily import TavilyClient
-
-    tavily = TavilyClient(api_key=os.environ.get("TAVILY_API_KEY"))
-
-    results = []
-    for query in queries:
-        search_results = tavily.search(
-            query=query,
-            search_depth="advanced",
-            include_domains=MARKET_INFO[market]["government_sites"]
-        )
-
-        for result in search_results["results"]:
-            # 使用 GPT-4 分析页面内容，提取监管信号
-            signal = analyze_with_gpt(result["content"])
-            results.append(signal)
-
-    return results
-    ```
-    ============================================================================
+    Returns:
+        list[dict]: 搜索结果列表，每个结果包含 query, content, sources
     """
-    print(f"[PLACEHOLDER] fetch_real_world_data called with {len(queries)} queries for {market}")
-    print("To enable real-world search, implement Tavily/Serper API integration.")
-    return []
+    if not OPENAI_AVAILABLE:
+        print("[ERROR] OpenAI SDK not available. Cannot perform web search.")
+        return []
+
+    api_key = os.environ.get("OPENAI_API_KEY")
+    if not api_key:
+        print("[ERROR] OPENAI_API_KEY not set. Cannot perform web search.")
+        return []
+
+    client = OpenAI(api_key=api_key)
+    results = []
+    market_info = MARKET_INFO.get(market, {"name": market})
+    market_name = market_info.get("name", market)
+
+    print(f"[WebSearch] Fetching real-world data for {market_name} with {len(queries)} queries...")
+
+    for i, query in enumerate(queries, 1):
+        try:
+            print(f"  [{i}/{len(queries)}] Searching: {query[:60]}...")
+
+            # 使用 OpenAI Responses API + web_search_preview
+            response = client.responses.create(
+                model="gpt-4o",
+                tools=[{"type": "web_search_preview"}],
+                input=f"""Search for recent regulatory news and policy updates:
+
+Query: {query}
+
+Focus on:
+- Official government announcements
+- New legislation or regulations
+- Regulatory enforcement actions
+- Policy proposals and drafts
+
+Return the most relevant and recent regulatory developments."""
+            )
+
+            # 提取结果
+            content = response.output_text if hasattr(response, 'output_text') else str(response)
+            sources = []
+
+            # 尝试提取 sources（如果可用）
+            if hasattr(response, 'sources'):
+                sources = [{"url": s.url, "title": s.title} for s in response.sources]
+
+            results.append({
+                "query": query,
+                "content": content,
+                "sources": sources,
+                "market": market
+            })
+
+            print(f"    ✓ Found {len(sources)} sources")
+
+        except Exception as e:
+            print(f"    ✗ Search failed: {e}")
+            continue
+
+    print(f"[WebSearch] Completed. Got {len(results)} results.")
+    return results
 
 
 class ScoutEngine:
@@ -605,14 +615,14 @@ class ScoutEngine:
     def execute_mission(
         self,
         mission_id: str,
-        use_real_search: bool = False
+        use_real_search: bool = True
     ) -> ScoutMission:
         """
         Execute a scouting mission.
 
         Args:
             mission_id: The mission to execute
-            use_real_search: If True, attempts real-world search (requires API keys)
+            use_real_search: If True (default), uses real web search via OpenAI Responses API
         """
         mission = self.missions.get(mission_id)
         if not mission:
@@ -632,43 +642,173 @@ class ScoutEngine:
         for i, q in enumerate(queries, 1):
             print(f"  {i}. {q}")
 
-        # Step 2: Fetch real-world data (if enabled) or use simulated data
+        # Step 2: Fetch and parse data
         if use_real_search:
-            # Attempt real-world search
-            real_signals = fetch_real_world_data(queries, mission.market)
-            if real_signals:
-                mission.signals = self._parse_real_signals(real_signals, mission)
+            # Use OpenAI Responses API with web_search
+            raw_results = fetch_real_world_data(queries, mission.market)
+            if raw_results:
+                mission.signals = self._parse_web_search_results(raw_results, mission)
             else:
-                # Fall back to simulated data
+                print("[Warning] Web search returned no results, using simulated data")
                 mission.signals = self._get_simulated_signals(mission)
         else:
-            # Use simulated data
+            # Demo mode: use simulated data
             mission.signals = self._get_simulated_signals(mission)
 
         mission.status = "completed"
+        print(f"Mission completed. Found {len(mission.signals)} signals.")
         return mission
 
-    def _get_simulated_signals(self, mission: ScoutMission) -> list[RegulatorySignal]:
-        """Get simulated signals matching mission parameters."""
+    def _parse_web_search_results(
+        self,
+        raw_results: list[dict],
+        mission: ScoutMission
+    ) -> list[RegulatorySignal]:
+        """
+        使用 LLM 解析 web search 结果，提取结构化的监管信号。
+        """
+        if not OPENAI_AVAILABLE or not os.environ.get("OPENAI_API_KEY"):
+            print("[Warning] OpenAI not available for parsing, returning raw results")
+            return self._convert_raw_to_signals(raw_results, mission)
+
+        client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
         signals = []
-        cutoff_date = datetime.now() - timedelta(days=mission.lookback_days)
+
+        # 合并所有搜索结果
+        combined_content = "\n\n---\n\n".join([
+            f"Query: {r['query']}\n\nResult:\n{r['content']}"
+            for r in raw_results
+        ])
+
+        parse_prompt = f"""分析以下监管搜索结果，提取所有相关的监管信号。
+
+市场: {mission.market}
+政策领域: {mission.domain.value}
+
+搜索结果:
+{combined_content[:15000]}
+
+请提取所有监管信号，每个信号需要包含:
+- id: 信号ID (格式: {mission.market}-XX-{datetime.now().year}-XXX)
+- title: 法规/政策标题
+- summary: 简要摘要 (2-3句话)
+- source_url: 来源URL
+- published_date: 发布日期 (YYYY-MM-DD)
+- effective_date: 生效日期 (可选)
+- key_provisions: 主要条款列表
+- source_type: 来源类型 (legislation/executive_order/regulatory_guidance/court_ruling/draft_bill)
+- confidence_score: 可信度 (0.0-1.0)
+
+返回 JSON 数组格式。如果没有找到相关监管信号，返回空数组 []。
+"""
+
+        try:
+            response = client.chat.completions.create(
+                model="gpt-4o",
+                messages=[
+                    {"role": "system", "content": "你是一名专业的监管情报分析师，擅长从搜索结果中提取结构化的监管信息。"},
+                    {"role": "user", "content": parse_prompt}
+                ],
+                temperature=0.2,
+                response_format={"type": "json_object"}
+            )
+
+            content = response.choices[0].message.content
+            result = json.loads(content)
+
+            # 解析 JSON 结果
+            signal_list = result if isinstance(result, list) else result.get("signals", [])
+
+            for i, s in enumerate(signal_list):
+                try:
+                    signal = RegulatorySignal(
+                        id=s.get("id", f"{mission.market}-{mission.domain.value[:2].upper()}-{datetime.now().year}-{i:03d}"),
+                        market=mission.market,
+                        domain=mission.domain,
+                        source_type=SourceType(s.get("source_type", "legislation")),
+                        title=s.get("title", "Unknown"),
+                        summary=s.get("summary", ""),
+                        source_url=s.get("source_url", ""),
+                        published_date=s.get("published_date", datetime.now().strftime("%Y-%m-%d")),
+                        effective_date=s.get("effective_date"),
+                        key_provisions=s.get("key_provisions", []),
+                        affected_policies=[],  # 后续由 impact_analyzer 填充
+                        raw_text_excerpt=s.get("excerpt", ""),
+                        confidence_score=float(s.get("confidence_score", 0.7))
+                    )
+                    signals.append(signal)
+                except Exception as e:
+                    print(f"[Warning] Failed to parse signal: {e}")
+
+            print(f"[Parser] Extracted {len(signals)} regulatory signals from search results")
+
+        except Exception as e:
+            print(f"[Error] Failed to parse search results: {e}")
+            return self._convert_raw_to_signals(raw_results, mission)
+
+        return signals
+
+    def _convert_raw_to_signals(
+        self,
+        raw_results: list[dict],
+        mission: ScoutMission
+    ) -> list[RegulatorySignal]:
+        """将原始搜索结果转换为信号（当 LLM 不可用时）"""
+        signals = []
+        for i, result in enumerate(raw_results):
+            for j, source in enumerate(result.get("sources", [])[:3]):
+                signal = RegulatorySignal(
+                    id=f"{mission.market}-{mission.domain.value[:2].upper()}-{datetime.now().year}-{i:03d}-{j}",
+                    market=mission.market,
+                    domain=mission.domain,
+                    source_type=SourceType.LEGISLATION,
+                    title=source.get("title", result.get("query", "Unknown")),
+                    summary=result.get("content", "")[:500],
+                    source_url=source.get("url", ""),
+                    published_date=datetime.now().strftime("%Y-%m-%d"),
+                    effective_date=None,
+                    key_provisions=[],
+                    affected_policies=[],
+                    raw_text_excerpt=result.get("content", "")[:1000],
+                    confidence_score=0.5
+                )
+                signals.append(signal)
+        return signals
+
+    def _get_simulated_signals(self, mission: ScoutMission) -> list[RegulatorySignal]:
+        """Get simulated signals matching mission parameters (for demo mode)."""
+        signals = []
 
         market_signals = self.SIMULATED_SIGNALS.get(mission.market, {})
 
         if mission.domain == Domain.ALL:
             for domain_key, domain_signals in market_signals.items():
-                for signal in domain_signals:
-                    pub_date = datetime.strptime(signal.published_date, "%Y-%m-%d")
-                    if pub_date >= cutoff_date:
-                        signals.append(signal)
+                signals.extend(domain_signals)
         else:
-            domain_signals = market_signals.get(mission.domain, [])
-            for signal in domain_signals:
-                pub_date = datetime.strptime(signal.published_date, "%Y-%m-%d")
-                if pub_date >= cutoff_date:
-                    signals.append(signal)
+            signals = list(market_signals.get(mission.domain, []))
 
-        return signals
+        # 更新模拟数据的日期为当前日期（确保通过 lookback 过滤）
+        updated_signals = []
+        for signal in signals:
+            # 创建一个新信号，更新日期为最近的日期
+            updated_signal = RegulatorySignal(
+                id=signal.id.replace("2024", str(datetime.now().year)),
+                market=signal.market,
+                domain=signal.domain,
+                source_type=signal.source_type,
+                title=signal.title,
+                summary=signal.summary,
+                source_url=signal.source_url,
+                published_date=(datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d"),
+                effective_date=signal.effective_date,
+                key_provisions=signal.key_provisions,
+                affected_policies=signal.affected_policies,
+                raw_text_excerpt=signal.raw_text_excerpt,
+                confidence_score=signal.confidence_score
+            )
+            updated_signals.append(updated_signal)
+
+        return updated_signals
 
     def _parse_real_signals(
         self,

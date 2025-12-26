@@ -50,7 +50,7 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          pip install -q requests python-dateutil
+          pip install -q requests python-dateutil openai
 
       - name: Run Scout Mission
         id: scout
@@ -121,15 +121,18 @@ jobs:
                   f.write(summary)
               print(f'Summary saved to: {summary_path}')
 
-              # Output for GitHub Actions
-              print(f'::set-output name=mission_id::{mission.mission_id}')
-              print(f'::set-output name=signal_count::{len(mission.signals)}')
-              print(f'::set-output name=assessment_count::{len(assessments)}')
+              # Output for GitHub Actions (new format)
+              import subprocess
+              with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+                  f.write(f'mission_id={mission.mission_id}\n')
+                  f.write(f'signal_count={len(mission.signals)}\n')
+                  f.write(f'assessment_count={len(assessments)}\n')
           else:
               print('No signals detected for this mission.')
-              print('::set-output name=mission_id::' + mission.mission_id)
-              print('::set-output name=signal_count::0')
-              print('::set-output name=assessment_count::0')
+              with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+                  f.write(f'mission_id={mission.mission_id}\n')
+                  f.write('signal_count=0\n')
+                  f.write('assessment_count=0\n')
           "
 
       - name: Commit results to repository

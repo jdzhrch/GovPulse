@@ -228,13 +228,16 @@ class LLMAnalyzer:
     def _init_client(self):
         """Initialize OpenAI client."""
         if not OPENAI_AVAILABLE:
-            print("OpenAI SDK not available. Using fallback mode.")
-            return
+            raise RuntimeError(
+                "OpenAI SDK not available. Install with: pip install openai"
+            )
 
         api_key = os.environ.get("OPENAI_API_KEY")
         if not api_key:
-            print("Warning: OPENAI_API_KEY not set. LLM analysis will not work.")
-            return
+            raise RuntimeError(
+                "OPENAI_API_KEY environment variable not set. "
+                "LLM analysis is required for production."
+            )
 
         self.client = OpenAI(api_key=api_key)
 
@@ -244,8 +247,7 @@ class LLMAnalyzer:
         Returns structured JSON response.
         """
         if not self.client:
-            print("OpenAI client not initialized. Using fallback analysis.")
-            return self._fallback_analysis(signal)
+            raise RuntimeError("OpenAI client not initialized. Check API key configuration.")
 
         # Build prompts
         system_prompt = self.SYSTEM_PROMPT_TEMPLATE.format(
@@ -285,7 +287,7 @@ class LLMAnalyzer:
 
         except Exception as e:
             print(f"LLM analysis failed: {e}")
-            return self._fallback_analysis(signal)
+            raise RuntimeError(f"LLM analysis failed for signal {signal.id}: {e}")
 
     def _fallback_analysis(self, signal: RegulatorySignal) -> dict:
         """
