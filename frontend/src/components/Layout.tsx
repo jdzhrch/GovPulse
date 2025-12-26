@@ -1,18 +1,18 @@
 import { Outlet, NavLink } from 'react-router-dom'
 import {
   LayoutDashboard,
-  Rocket,
-  GitCompare,
+  Search,
+  FileCheck,
   History,
   Activity
 } from 'lucide-react'
 import clsx from 'clsx'
 
 const navigation = [
-  { name: 'Dashboard', to: '/', icon: LayoutDashboard },
-  { name: 'Launch Mission', to: '/launch', icon: Rocket },
-  { name: 'Gap Analysis', to: '/analysis', icon: GitCompare },
-  { name: 'Audit Trail', to: '/audit', icon: History },
+  { name: 'Overview', to: '/', icon: LayoutDashboard },
+  { name: 'New Scan', to: '/launch', icon: Search },
+  { name: 'Impact Reports', to: '/analysis', icon: FileCheck },
+  { name: 'History', to: '/audit', icon: History },
 ]
 
 export default function Layout() {
@@ -29,7 +29,7 @@ export default function Layout() {
               </div>
               <div>
                 <h1 className="text-xl font-bold text-slate-900">GovPulse</h1>
-                <p className="text-xs text-slate-500">Regulatory Impact Platform</p>
+                <p className="text-xs text-slate-500">Policy Monitoring Platform</p>
               </div>
             </div>
 
@@ -94,7 +94,7 @@ export default function Layout() {
       <footer className="border-t border-slate-200 bg-white mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between text-sm text-slate-500">
-            <p>GovPulse v1.0 - Regulatory Impact Assessment Platform</p>
+            <p>GovPulse v1.0 - Policy Monitoring Platform</p>
             <p>Public Policy & Government Relations</p>
           </div>
         </div>

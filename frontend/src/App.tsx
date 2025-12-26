@@ -8,6 +8,9 @@ import AuditTrail from './pages/AuditTrail'
 import { ImpactAssessment, ScoutMission, RegulatorySignal } from './types'
 import { mockMissions, mockAssessments } from './utils/mockData'
 
+// Use base URL from Vite config
+const BASE_URL = import.meta.env.BASE_URL || '/'
+
 // Load real data from data/history/
 async function loadHistoryData(): Promise<{
   missions: ScoutMission[]
@@ -15,16 +18,19 @@ async function loadHistoryData(): Promise<{
 }> {
   try {
     // First try to load manifest.json which lists all available files
-    const manifestResponse = await fetch('/GovPulse/data/history/manifest.json')
+    const manifestUrl = `${BASE_URL}data/history/manifest.json`
+    console.log('Fetching manifest from:', manifestUrl)
+    const manifestResponse = await fetch(manifestUrl)
     let files: string[] = []
     
     if (manifestResponse.ok) {
       const manifest = await manifestResponse.json()
       files = manifest.files || []
-      console.log(`Loaded manifest with ${files.length} files`)
+      console.log(`Loaded manifest with ${files.length} files:`, files)
     } else {
+      console.log('Manifest not found or error:', manifestResponse.status)
       // Fallback: try to fetch directory listing (works on some servers)
-      const response = await fetch('/GovPulse/data/history/')
+      const response = await fetch(`${BASE_URL}data/history/`)
       if (response.ok) {
         const html = await response.text()
         const filePattern = /(MISSION-[^"<>\s]+\.json|IMPACT-[^"<>\s]+\.json)/g
@@ -42,7 +48,7 @@ async function loadHistoryData(): Promise<{
 
     for (const file of files) {
       try {
-        const fileResponse = await fetch(`/GovPulse/data/history/${file}`)
+        const fileResponse = await fetch(`${BASE_URL}data/history/${file}`)
         if (!fileResponse.ok) continue
 
         const data = await fileResponse.json()

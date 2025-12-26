@@ -4,7 +4,6 @@ import {
   History,
   CheckCircle,
   Send,
-  Rocket,
   Search,
   Calendar,
   ChevronDown,
@@ -14,7 +13,8 @@ import {
   Globe,
   Shield,
   ShoppingCart,
-  Database
+  Database,
+  FileText
 } from 'lucide-react'
 import clsx from 'clsx'
 import { ScoutMission, ImpactAssessment, MARKETS } from '../types'
@@ -27,8 +27,17 @@ interface AuditTrailProps {
   onPushToPM: (assessmentId: string) => void
 }
 
-type ViewMode = 'timeline' | 'missions' | 'assessments'
-type FilterStatus = 'all' | 'pending' | 'pushed'
+type ViewMode = 'timeline' | 'scans' | 'reports'
+type FilterStatus = 'all' | 'pending' | 'reviewed'
+
+// User-friendly labels for domains
+const DOMAIN_LABELS: Record<string, string> = {
+  all: 'All Policy Areas',
+  minor_protection: 'Youth Safety',
+  ecommerce: 'Digital Commerce',
+  data_sovereignty: 'Data & Privacy',
+  content_moderation: 'Content Policy',
+}
 
 const domainIcons: Record<string, React.ElementType> = {
   minor_protection: Shield,
@@ -47,7 +56,7 @@ export default function AuditTrail({ missions, assessments, onPushToPM }: AuditT
   // Filter assessments
   const filteredAssessments = assessments.filter((a) => {
     if (filterStatus === 'pending' && a.pushed_to_pm) return false
-    if (filterStatus === 'pushed' && !a.pushed_to_pm) return false
+    if (filterStatus === 'reviewed' && !a.pushed_to_pm) return false
     if (filterMarket !== 'all' && a.market !== filterMarket) return false
     if (searchQuery && !a.signal_title.toLowerCase().includes(searchQuery.toLowerCase())) return false
     return true
@@ -56,13 +65,13 @@ export default function AuditTrail({ missions, assessments, onPushToPM }: AuditT
   // Build timeline events
   const timelineEvents = [
     ...missions.map(m => ({
-      type: 'mission' as const,
+      type: 'scan' as const,
       id: m.mission_id,
       timestamp: m.created_at,
       data: m
     })),
     ...assessments.map(a => ({
-      type: 'assessment' as const,
+      type: 'report' as const,
       id: a.assessment_id,
       timestamp: a.assessed_at,
       data: a
@@ -70,8 +79,8 @@ export default function AuditTrail({ missions, assessments, onPushToPM }: AuditT
     ...assessments
       .filter(a => a.pushed_to_pm && a.pushed_at)
       .map(a => ({
-        type: 'pushed' as const,
-        id: `${a.assessment_id}-pushed`,
+        type: 'reviewed' as const,
+        id: `${a.assessment_id}-reviewed`,
         timestamp: a.pushed_at!,
         data: a
       }))
@@ -82,9 +91,9 @@ export default function AuditTrail({ missions, assessments, onPushToPM }: AuditT
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Audit Trail</h1>
+          <h1 className="text-2xl font-bold text-slate-900">History</h1>
           <p className="text-slate-600 mt-1">
-            Track mission history and PM handoffs
+            Track all policy scans and report reviews
           </p>
         </div>
       </div>
@@ -96,8 +105,8 @@ export default function AuditTrail({ missions, assessments, onPushToPM }: AuditT
           <div className="flex items-center gap-1 bg-slate-100 rounded-lg p-1">
             {[
               { value: 'timeline', label: 'Timeline' },
-              { value: 'missions', label: 'Missions' },
-              { value: 'assessments', label: 'Assessments' },
+              { value: 'scans', label: 'Scans' },
+              { value: 'reports', label: 'Reports' },
             ].map((mode) => (
               <button
                 key={mode.value}
@@ -154,7 +163,7 @@ export default function AuditTrail({ missions, assessments, onPushToPM }: AuditT
               >
                 <option value="all">All Status</option>
                 <option value="pending">Pending Review</option>
-                <option value="pushed">Pushed to PM</option>
+                <option value="reviewed">Reviewed</option>
               </select>
               <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
             </div>
@@ -167,12 +176,12 @@ export default function AuditTrail({ missions, assessments, onPushToPM }: AuditT
         <TimelineView events={timelineEvents} onPushToPM={onPushToPM} />
       )}
 
-      {viewMode === 'missions' && (
-        <MissionsView missions={missions} />
+      {viewMode === 'scans' && (
+        <ScansView missions={missions} />
       )}
 
-      {viewMode === 'assessments' && (
-        <AssessmentsView assessments={filteredAssessments} onPushToPM={onPushToPM} />
+      {viewMode === 'reports' && (
+        <ReportsView assessments={filteredAssessments} onPushToPM={onPushToPM} />
       )}
     </div>
   )
@@ -184,7 +193,7 @@ function TimelineView({
   onPushToPM
 }: {
   events: Array<{
-    type: 'mission' | 'assessment' | 'pushed'
+    type: 'scan' | 'report' | 'reviewed'
     id: string
     timestamp: string
     data: ScoutMission | ImpactAssessment
@@ -193,12 +202,12 @@ function TimelineView({
 }) {
   const getEventIcon = (type: string) => {
     switch (type) {
-      case 'mission':
-        return Rocket
-      case 'assessment':
-        return History
-      case 'pushed':
-        return Send
+      case 'scan':
+        return Search
+      case 'report':
+        return FileText
+      case 'reviewed':
+        return CheckCircle
       default:
         return History
     }
@@ -206,11 +215,11 @@ function TimelineView({
 
   const getEventColor = (type: string) => {
     switch (type) {
-      case 'mission':
+      case 'scan':
         return 'bg-govpulse-100 text-govpulse-600 border-govpulse-200'
-      case 'assessment':
+      case 'report':
         return 'bg-purple-100 text-purple-600 border-purple-200'
-      case 'pushed':
+      case 'reviewed':
         return 'bg-green-100 text-green-600 border-green-200'
       default:
         return 'bg-slate-100 text-slate-600 border-slate-200'
@@ -232,6 +241,9 @@ function TimelineView({
             {events.map((event) => {
               const Icon = getEventIcon(event.type)
               const colorClass = getEventColor(event.type)
+              const eventLabel = event.type === 'scan' ? 'Policy Scan' : 
+                                event.type === 'report' ? 'Impact Report' : 
+                                'Marked Reviewed'
 
               return (
                 <div key={event.id} className="relative flex gap-4">
@@ -249,28 +261,28 @@ function TimelineView({
                       <div>
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-xs font-medium uppercase text-slate-500">
-                            {event.type === 'pushed' ? 'PM Handoff' : event.type}
+                            {eventLabel}
                           </span>
                           <span className="text-xs text-slate-400">
                             {formatDistanceToNow(new Date(event.timestamp), { addSuffix: true })}
                           </span>
                         </div>
 
-                        {event.type === 'mission' && (
-                          <MissionSummary mission={event.data as ScoutMission} />
+                        {event.type === 'scan' && (
+                          <ScanSummary mission={event.data as ScoutMission} />
                         )}
 
-                        {event.type === 'assessment' && (
-                          <AssessmentSummary
+                        {event.type === 'report' && (
+                          <ReportSummary
                             assessment={event.data as ImpactAssessment}
                             onPushToPM={onPushToPM}
                           />
                         )}
 
-                        {event.type === 'pushed' && (
+                        {event.type === 'reviewed' && (
                           <div>
                             <p className="font-medium text-slate-900">
-                              Assessment pushed to PM
+                              Report marked as reviewed
                             </p>
                             <p className="text-sm text-slate-600 mt-1">
                               {(event.data as ImpactAssessment).signal_title}
@@ -294,17 +306,17 @@ function TimelineView({
   )
 }
 
-function MissionSummary({ mission }: { mission: ScoutMission }) {
+function ScanSummary({ mission }: { mission: ScoutMission }) {
   return (
     <div>
       <p className="font-medium text-slate-900 flex items-center gap-2">
         <span className="text-xl">{MARKETS.find(m => m.code === mission.market)?.flag}</span>
-        {mission.market} {mission.domain.replace('_', ' ')} scan
+        {mission.market} - {DOMAIN_LABELS[mission.domain] || mission.domain}
       </p>
       <div className="flex items-center gap-4 mt-2 text-sm text-slate-500">
         <span className="flex items-center gap-1">
           <Calendar className="w-4 h-4" />
-          {mission.lookback_days}d lookback
+          {mission.lookback_days} days period
         </span>
         <span className="flex items-center gap-1">
           <User className="w-4 h-4" />
@@ -314,14 +326,14 @@ function MissionSummary({ mission }: { mission: ScoutMission }) {
           'px-2 py-0.5 rounded text-xs',
           mission.status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'
         )}>
-          {mission.signals.length} signals
+          {mission.signals.length} findings
         </span>
       </div>
     </div>
   )
 }
 
-function AssessmentSummary({
+function ReportSummary({
   assessment,
   onPushToPM
 }: {
@@ -341,7 +353,7 @@ function AssessmentSummary({
           to={`/analysis/${assessment.assessment_id}`}
           className="text-sm text-govpulse-600 hover:text-govpulse-700 flex items-center gap-1"
         >
-          View analysis
+          View report
           <ExternalLink className="w-3 h-3" />
         </Link>
         {!assessment.pushed_to_pm && (
@@ -349,8 +361,8 @@ function AssessmentSummary({
             onClick={() => onPushToPM(assessment.assessment_id)}
             className="text-sm text-green-600 hover:text-green-700 flex items-center gap-1"
           >
-            <Send className="w-3 h-3" />
-            Push to PM
+            <CheckCircle className="w-3 h-3" />
+            Mark as Reviewed
           </button>
         )}
       </div>
@@ -358,24 +370,24 @@ function AssessmentSummary({
   )
 }
 
-// Missions View Component
-function MissionsView({ missions }: { missions: ScoutMission[] }) {
+// Scans View Component
+function ScansView({ missions }: { missions: ScoutMission[] }) {
   return (
     <div className="card">
       <div className="card-header">
-        <h2 className="text-lg font-semibold text-slate-900">All Missions</h2>
+        <h2 className="text-lg font-semibold text-slate-900">All Policy Scans</h2>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full">
           <thead className="bg-slate-50 border-b border-slate-200">
             <tr>
-              <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Mission ID</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Market</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Domain</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Lookback</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Scan ID</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Region</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Policy Area</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Period</th>
               <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Status</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Signals</th>
-              <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Created</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Findings</th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">Date</th>
               <th className="px-4 py-3 text-left text-xs font-medium text-slate-500 uppercase">By</th>
             </tr>
           </thead>
@@ -396,10 +408,10 @@ function MissionsView({ missions }: { missions: ScoutMission[] }) {
                   <td className="px-4 py-3">
                     <span className="flex items-center gap-2 text-slate-600">
                       <DomainIcon className="w-4 h-4" />
-                      {mission.domain.replace('_', ' ')}
+                      {DOMAIN_LABELS[mission.domain] || mission.domain}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-slate-600">{mission.lookback_days}d</td>
+                  <td className="px-4 py-3 text-slate-600">{mission.lookback_days} days</td>
                   <td className="px-4 py-3">
                     <span className={clsx(
                       'px-2 py-0.5 rounded text-xs font-medium',
@@ -425,8 +437,8 @@ function MissionsView({ missions }: { missions: ScoutMission[] }) {
   )
 }
 
-// Assessments View Component
-function AssessmentsView({
+// Reports View Component
+function ReportsView({
   assessments,
   onPushToPM
 }: {
@@ -436,7 +448,7 @@ function AssessmentsView({
   return (
     <div className="card">
       <div className="card-header flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-slate-900">All Assessments</h2>
+        <h2 className="text-lg font-semibold text-slate-900">All Impact Reports</h2>
         <span className="text-sm text-slate-500">{assessments.length} total</span>
       </div>
       <div className="divide-y divide-slate-200">
@@ -451,15 +463,15 @@ function AssessmentsView({
                   {assessment.pushed_to_pm && (
                     <span className="flex items-center gap-1 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
                       <CheckCircle className="w-3 h-3" />
-                      Pushed
+                      Reviewed
                     </span>
                   )}
                 </div>
                 <h3 className="font-medium text-slate-900">{assessment.signal_title}</h3>
                 <p className="text-sm text-slate-600 mt-1 line-clamp-2">{assessment.risk_rationale}</p>
                 <div className="flex items-center gap-4 mt-2 text-xs text-slate-500">
-                  <span>{assessment.compliance_gaps.length} gaps</span>
-                  <span>{assessment.remediations.length} remediations</span>
+                  <span>{assessment.compliance_gaps.length} action items</span>
+                  <span>{assessment.remediations.length} recommendations</span>
                   <span className="flex items-center gap-1">
                     <Clock className="w-3 h-3" />
                     {formatDistanceToNow(new Date(assessment.assessed_at), { addSuffix: true })}
@@ -478,8 +490,8 @@ function AssessmentsView({
                     onClick={() => onPushToPM(assessment.assessment_id)}
                     className="btn-primary text-sm py-1.5 px-3"
                   >
-                    <Send className="w-3 h-3" />
-                    Push
+                    <CheckCircle className="w-3 h-3" />
+                    Review
                   </button>
                 )}
               </div>

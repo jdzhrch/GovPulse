@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
 import {
-  Rocket,
+  Search,
   AlertTriangle,
-  GitCompare,
+  FileCheck,
   TrendingUp,
   Globe,
   Shield,
@@ -20,38 +20,47 @@ interface DashboardProps {
   assessments: ImpactAssessment[]
 }
 
+// User-friendly labels for domains
+const DOMAIN_LABELS: Record<string, string> = {
+  all: 'All Policy Areas',
+  minor_protection: 'Youth Safety',
+  ecommerce: 'Digital Commerce',
+  data_sovereignty: 'Data & Privacy',
+  content_moderation: 'Content Policy',
+}
+
 export default function Dashboard({ missions, assessments }: DashboardProps) {
   // Calculate stats
   const p0Count = assessments.filter(a => a.risk_level === 'P0').length
   const p1Count = assessments.filter(a => a.risk_level === 'P1').length
   const pendingReview = assessments.filter(a => !a.pushed_to_pm).length
-  const totalGaps = assessments.reduce((sum, a) => sum + a.compliance_gaps.length, 0)
+  const totalActionItems = assessments.reduce((sum, a) => sum + a.compliance_gaps.length, 0)
 
   const stats = [
     {
-      name: 'Critical Alerts (P0)',
+      name: 'Urgent Actions',
       value: p0Count,
       icon: AlertTriangle,
       color: 'text-red-600 bg-red-100',
-      change: '+1 this week'
+      change: 'Needs immediate attention'
     },
     {
-      name: 'High Priority (P1)',
+      name: 'High Priority',
       value: p1Count,
       icon: TrendingUp,
       color: 'text-orange-600 bg-orange-100',
-      change: '+2 this month'
+      change: 'Review within 2 weeks'
     },
     {
-      name: 'Pending PM Review',
+      name: 'Pending Review',
       value: pendingReview,
-      icon: GitCompare,
+      icon: FileCheck,
       color: 'text-govpulse-600 bg-govpulse-100',
       change: 'Action needed'
     },
     {
-      name: 'Compliance Gaps',
-      value: totalGaps,
+      name: 'Action Items',
+      value: totalActionItems,
       icon: Shield,
       color: 'text-purple-600 bg-purple-100',
       change: 'Across all markets'
@@ -71,14 +80,14 @@ export default function Dashboard({ missions, assessments }: DashboardProps) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Policy War Room</h1>
+          <h1 className="text-2xl font-bold text-slate-900">Policy Overview</h1>
           <p className="text-slate-600 mt-1">
-            Real-time regulatory intelligence and compliance gap analysis
+            Track regulatory changes and their impact on your operations
           </p>
         </div>
         <Link to="/launch" className="btn-primary">
-          <Rocket className="w-4 h-4" />
-          Launch Mission
+          <Search className="w-4 h-4" />
+          New Scan
         </Link>
       </div>
 
@@ -105,7 +114,7 @@ export default function Dashboard({ missions, assessments }: DashboardProps) {
         {/* Recent Assessments */}
         <div className="lg:col-span-2 card">
           <div className="card-header flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-slate-900">Recent Impact Assessments</h2>
+            <h2 className="text-lg font-semibold text-slate-900">Recent Impact Reports</h2>
             <Link to="/analysis" className="text-sm text-govpulse-600 hover:text-govpulse-700 font-medium">
               View all
             </Link>
@@ -131,7 +140,7 @@ export default function Dashboard({ missions, assessments }: DashboardProps) {
                         </span>
                         {assessment.pushed_to_pm && (
                           <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
-                            Pushed to PM
+                            Reviewed
                           </span>
                         )}
                       </div>
@@ -146,8 +155,8 @@ export default function Dashboard({ missions, assessments }: DashboardProps) {
                           <Clock className="w-3 h-3" />
                           {formatDistanceToNow(new Date(assessment.assessed_at), { addSuffix: true })}
                         </span>
-                        <span>{assessment.compliance_gaps.length} gaps</span>
-                        <span>{assessment.remediations.length} remediations</span>
+                        <span>{assessment.compliance_gaps.length} action items</span>
+                        <span>{assessment.remediations.length} recommendations</span>
                       </div>
                     </div>
                     <ChevronRight className="w-5 h-5 text-slate-400 flex-shrink-0" />
@@ -158,10 +167,10 @@ export default function Dashboard({ missions, assessments }: DashboardProps) {
           </div>
         </div>
 
-        {/* Recent Missions */}
+        {/* Recent Scans */}
         <div className="card">
           <div className="card-header flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-slate-900">Recent Missions</h2>
+            <h2 className="text-lg font-semibold text-slate-900">Recent Scans</h2>
             <Link to="/audit" className="text-sm text-govpulse-600 hover:text-govpulse-700 font-medium">
               View all
             </Link>
@@ -187,7 +196,7 @@ export default function Dashboard({ missions, assessments }: DashboardProps) {
                         </span>
                       </div>
                       <p className="text-sm text-slate-500 mt-0.5">
-                        {mission.domain.replace('_', ' ')} • {mission.lookback_days}d lookback
+                        {DOMAIN_LABELS[mission.domain] || mission.domain} • {mission.lookback_days} days
                       </p>
                       <p className="text-xs text-slate-400 mt-1">
                         {formatDistanceToNow(new Date(mission.created_at), { addSuffix: true })}

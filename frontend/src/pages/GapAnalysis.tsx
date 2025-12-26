@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import {
-  GitCompare,
+  FileCheck,
   AlertTriangle,
   CheckCircle,
   Send,
@@ -31,11 +31,24 @@ const severityColors = {
   minor: 'bg-yellow-100 text-yellow-800 border-yellow-300',
 }
 
+const severityLabels = {
+  critical: 'Urgent',
+  major: 'Important',
+  minor: 'Low',
+}
+
 const effortColors = {
   S: 'bg-green-100 text-green-700',
   M: 'bg-blue-100 text-blue-700',
   L: 'bg-orange-100 text-orange-700',
   XL: 'bg-red-100 text-red-700',
+}
+
+const effortLabels = {
+  S: 'Quick Fix (1-2 days)',
+  M: 'Moderate (1-2 weeks)',
+  L: 'Significant (1-2 months)',
+  XL: 'Major Project (2+ months)',
 }
 
 export default function GapAnalysis({
@@ -60,15 +73,15 @@ export default function GapAnalysis({
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Gap Analysis</h1>
+          <h1 className="text-2xl font-bold text-slate-900">Impact Reports</h1>
           <p className="text-slate-600 mt-1">
-            Compare regulatory requirements against internal compliance baseline
+            Review how regulatory changes affect your operations
           </p>
         </div>
 
         <div className="card">
           <div className="card-header">
-            <h2 className="text-lg font-semibold text-slate-900">Select an Assessment</h2>
+            <h2 className="text-lg font-semibold text-slate-900">Select a Report</h2>
           </div>
           <div className="divide-y divide-slate-200">
             {assessments.map((assessment) => (
@@ -83,7 +96,7 @@ export default function GapAnalysis({
                       'p-2 rounded-lg',
                       RISK_COLORS[assessment.risk_level].bg
                     )}>
-                      <GitCompare className={clsx(
+                      <FileCheck className={clsx(
                         'w-5 h-5',
                         RISK_COLORS[assessment.risk_level].text
                       )} />
@@ -94,13 +107,13 @@ export default function GapAnalysis({
                         <span className="font-medium text-slate-900">{assessment.market}</span>
                         {assessment.pushed_to_pm && (
                           <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
-                            Pushed to PM
+                            Reviewed
                           </span>
                         )}
                       </div>
                       <p className="text-slate-700">{assessment.signal_title}</p>
                       <p className="text-sm text-slate-500 mt-1">
-                        {assessment.compliance_gaps.length} gaps • {assessment.remediations.length} remediations
+                        {assessment.compliance_gaps.length} action items • {assessment.remediations.length} recommendations
                       </p>
                     </div>
                   </div>
@@ -125,14 +138,14 @@ export default function GapAnalysis({
             className="text-govpulse-600 hover:text-govpulse-700 text-sm mb-2 flex items-center gap-1"
           >
             <ChevronRight className="w-4 h-4 rotate-180" />
-            Back to all assessments
+            Back to all reports
           </button>
           <h1 className="text-2xl font-bold text-slate-900">{selectedAssessment.signal_title}</h1>
           <div className="flex items-center gap-4 mt-2">
             <RiskBadge level={selectedAssessment.risk_level} />
             <span className="text-slate-500">{selectedAssessment.market}</span>
             <span className="text-slate-500">
-              Assessed {formatDistanceToNow(new Date(selectedAssessment.assessed_at), { addSuffix: true })}
+              Analyzed {formatDistanceToNow(new Date(selectedAssessment.assessed_at), { addSuffix: true })}
             </span>
           </div>
         </div>
@@ -140,7 +153,7 @@ export default function GapAnalysis({
           {selectedAssessment.pushed_to_pm ? (
             <span className="flex items-center gap-2 text-green-600 bg-green-50 px-4 py-2 rounded-lg">
               <CheckCircle className="w-5 h-5" />
-              Pushed to PM
+              Reviewed
               <span className="text-sm text-green-500">
                 {selectedAssessment.pushed_at && format(new Date(selectedAssessment.pushed_at), 'MMM d, HH:mm')}
               </span>
@@ -151,7 +164,7 @@ export default function GapAnalysis({
               className="btn-primary"
             >
               <Send className="w-4 h-4" />
-              Push to PM
+              Mark as Reviewed
             </button>
           )}
         </div>
@@ -160,7 +173,7 @@ export default function GapAnalysis({
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className={clsx('card p-4', `risk-${selectedAssessment.risk_level.toLowerCase()}`)}>
-          <h3 className="text-sm font-medium opacity-75">Risk Assessment</h3>
+          <h3 className="text-sm font-medium opacity-75">Risk Summary</h3>
           <p className="mt-1 font-medium">{selectedAssessment.risk_rationale}</p>
         </div>
         <div className="card p-4">
@@ -168,7 +181,7 @@ export default function GapAnalysis({
           <p className="mt-1 text-slate-900">{selectedAssessment.business_impact}</p>
         </div>
         <div className="card p-4">
-          <h3 className="text-sm font-medium text-slate-500">Compliance Deadline</h3>
+          <h3 className="text-sm font-medium text-slate-500">Action Deadline</h3>
           <p className="mt-1 text-slate-900 flex items-center gap-2">
             <Clock className="w-4 h-4 text-slate-400" />
             {selectedAssessment.deadline
@@ -178,19 +191,19 @@ export default function GapAnalysis({
         </div>
       </div>
 
-      {/* Gap Analysis - Side by Side View */}
+      {/* Action Items - Side by Side View */}
       <div className="card">
         <div className="card-header">
           <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-            <GitCompare className="w-5 h-5 text-govpulse-600" />
-            Compliance Gap Analysis
+            <FileCheck className="w-5 h-5 text-govpulse-600" />
+            What Changed vs. Current Practice
           </h2>
         </div>
         <div className="p-4">
           {selectedAssessment.compliance_gaps.length === 0 ? (
             <div className="text-center py-8 text-slate-500">
               <CheckCircle className="w-12 h-12 mx-auto text-green-500 mb-3" />
-              <p>No significant compliance gaps detected</p>
+              <p>No action items detected - current practices align with new requirements</p>
             </div>
           ) : (
             <div className="space-y-6">
@@ -207,7 +220,7 @@ export default function GapAnalysis({
         <div className="card-header">
           <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
             <Wrench className="w-5 h-5 text-govpulse-600" />
-            Product Remediation Plan
+            Recommended Changes
           </h2>
         </div>
         <div className="divide-y divide-slate-200">
@@ -222,7 +235,7 @@ export default function GapAnalysis({
         <div className="card-header">
           <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
             <Target className="w-5 h-5 text-govpulse-600" />
-            Recommended Actions
+            Next Steps
           </h2>
         </div>
         <div className="card-body">
@@ -256,13 +269,13 @@ function GapComparisonCard({ gap }: { gap: ComplianceGap }) {
             'px-2 py-0.5 rounded text-xs font-medium uppercase',
             severityColors[gap.gap_severity]
           )}>
-            {gap.gap_severity}
+            {severityLabels[gap.gap_severity]}
           </span>
           <span className="font-mono text-sm text-slate-600">{gap.baseline_policy_id}</span>
           {gap.is_blocking && (
             <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full flex items-center gap-1">
               <AlertTriangle className="w-3 h-3" />
-              Blocking
+              Immediate Action Required
             </span>
           )}
         </div>
@@ -270,11 +283,11 @@ function GapComparisonCard({ gap }: { gap: ComplianceGap }) {
 
       {/* Side-by-side comparison */}
       <div className="gap-comparison p-4">
-        {/* Current Baseline */}
+        {/* Current Practice */}
         <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-3">
             <Shield className="w-4 h-4 text-amber-600" />
-            <span className="text-sm font-medium text-amber-800">Current Baseline</span>
+            <span className="text-sm font-medium text-amber-800">Current Practice</span>
           </div>
           <p className="text-amber-900">{gap.baseline_requirement}</p>
         </div>
@@ -284,11 +297,11 @@ function GapComparisonCard({ gap }: { gap: ComplianceGap }) {
           <ArrowRight className="w-4 h-4 text-slate-400" />
         </div>
 
-        {/* New Regulation */}
+        {/* New Requirement */}
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-3">
             <FileText className="w-4 h-4 text-blue-600" />
-            <span className="text-sm font-medium text-blue-800">New Regulatory Requirement</span>
+            <span className="text-sm font-medium text-blue-800">New Requirement</span>
           </div>
           <p className="text-blue-900">{gap.regulatory_requirement}</p>
         </div>
@@ -298,7 +311,7 @@ function GapComparisonCard({ gap }: { gap: ComplianceGap }) {
       <div className="px-4 pb-4">
         <div className="bg-slate-100 rounded-lg p-3">
           <p className="text-sm text-slate-700">
-            <strong>Gap:</strong> {gap.gap_description}
+            <strong>What needs to change:</strong> {gap.gap_description}
           </p>
         </div>
       </div>
@@ -317,7 +330,7 @@ function RemediationCard({ remediation }: { remediation: ProductRemediation }) {
               'px-2 py-0.5 rounded text-xs font-medium',
               effortColors[remediation.engineering_effort]
             )}>
-              Effort: {remediation.engineering_effort}
+              {effortLabels[remediation.engineering_effort]}
             </span>
             <span className="text-xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
               {remediation.remediation_type.replace('_', ' ')}
@@ -328,7 +341,7 @@ function RemediationCard({ remediation }: { remediation: ProductRemediation }) {
 
           {/* Affected Features */}
           <div className="mt-3">
-            <p className="text-xs text-slate-500 mb-1">Affected Features:</p>
+            <p className="text-xs text-slate-500 mb-1">Products/Services Affected:</p>
             <div className="flex flex-wrap gap-1">
               {remediation.affected_features.map((feature, i) => (
                 <span key={i} className="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded">
@@ -340,7 +353,7 @@ function RemediationCard({ remediation }: { remediation: ProductRemediation }) {
 
           {/* Acceptance Criteria */}
           <div className="mt-3">
-            <p className="text-xs text-slate-500 mb-1">Acceptance Criteria:</p>
+            <p className="text-xs text-slate-500 mb-1">How to verify completion:</p>
             <ul className="space-y-1">
               {remediation.acceptance_criteria.map((criteria, i) => (
                 <li key={i} className="text-sm text-slate-600 flex items-start gap-2">
@@ -353,7 +366,7 @@ function RemediationCard({ remediation }: { remediation: ProductRemediation }) {
         </div>
 
         <div className="text-right flex-shrink-0">
-          <p className="text-xs text-slate-500">Recommended Owner</p>
+          <p className="text-xs text-slate-500">Suggested Owner</p>
           <p className="text-sm font-medium text-slate-900">{remediation.pm_owner_recommendation}</p>
         </div>
       </div>
