@@ -1,0 +1,76 @@
+{
+  "assessment_id": "IMPACT-UK-AM-2025-005-20251226070611",
+  "signal_id": "UK-AM-2025-005",
+  "signal_title": "CMA's Action Against Amazon's UK Online Marketplace Practices",
+  "market": "UK",
+  "domain": "ecommerce",
+  "risk_level": "P2",
+  "risk_rationale": "The regulatory signal from the UK CMA regarding Amazon's practices in its online marketplace highlights potential compliance gaps in TikTok's e-commerce operations, particularly concerning the use of non-public seller data and product selection criteria. While TikTok's current baseline does not explicitly address these issues, the risk is moderate as it can be resolved within a quarter.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-UK-AM-2025-005-0",
+      "signal_id": "UK-AM-2025-005",
+      "baseline_policy_id": "EC-004",
+      "baseline_requirement": "Merchant verification: KYC mandatory before onboarding",
+      "regulatory_requirement": "Commitment not to use non-public data from third-party sellers",
+      "gap_description": "TikTok's baseline does not explicitly prohibit the use of non-public data from third-party sellers, which is now a regulatory requirement in the UK.",
+      "gap_severity": "major",
+      "is_blocking": false
+    },
+    {
+      "gap_id": "GAP-UK-AM-2025-005-1",
+      "signal_id": "UK-AM-2025-005",
+      "baseline_policy_id": "EC-030",
+      "baseline_requirement": "Business license verification: Mandatory for all sellers",
+      "regulatory_requirement": "Equal criteria for selecting products for the 'Buy Box'",
+      "gap_description": "TikTok's baseline does not specify criteria for product selection in a manner that ensures equal treatment, which is now a regulatory requirement in the UK.",
+      "gap_severity": "major",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-UK-AM-2025-005-0",
+      "gap_id": "GAP-UK-AM-2025-005-0",
+      "remediation_type": "product_change",
+      "title": "Prohibit Use of Non-Public Seller Data",
+      "description": "Implement a policy that prohibits the use of non-public data from third-party sellers in TikTok's e-commerce operations in the UK.",
+      "affected_features": [
+        "Seller data management",
+        "Product recommendation algorithms"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "E-commerce Product Manager",
+      "acceptance_criteria": [
+        "Policy implemented prohibiting use of non-public seller data",
+        "Audit mechanism in place to ensure compliance"
+      ]
+    },
+    {
+      "remediation_id": "REM-UK-AM-2025-005-1",
+      "gap_id": "GAP-UK-AM-2025-005-1",
+      "remediation_type": "product_change",
+      "title": "Standardize Product Selection Criteria",
+      "description": "Develop and implement standardized criteria for product selection that ensures equal treatment of all sellers in TikTok's e-commerce platform in the UK.",
+      "affected_features": [
+        "Product listing algorithms",
+        "Seller interface"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "E-commerce Product Manager",
+      "acceptance_criteria": [
+        "Standardized product selection criteria documented",
+        "Algorithm updated to reflect new criteria"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "The business impact is moderate as it requires changes to data handling practices and product selection algorithms, which could affect seller relationships and marketplace dynamics.",
+  "recommended_actions": [
+    "Review current data handling practices for compliance with new UK regulations",
+    "Develop standardized product selection criteria",
+    "Implement audit mechanisms to ensure ongoing compliance"
+  ],
+  "assessed_at": "2025-12-26T07:06:16.926933",
+  "assessed_by": "github_actions"
+}

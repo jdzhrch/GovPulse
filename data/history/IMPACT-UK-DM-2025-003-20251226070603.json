@@ -1,0 +1,59 @@
+{
+  "assessment_id": "IMPACT-UK-DM-2025-003-20251226070603",
+  "signal_id": "UK-DM-2025-003",
+  "signal_title": "Digital Markets, Competition and Consumers Act 2024",
+  "market": "UK",
+  "domain": "ecommerce",
+  "risk_level": "P1",
+  "risk_rationale": "The new UK legislation introduces measures that could require immediate changes to TikTok's e-commerce interfaces to comply with actions against unfair commercial practices. This poses a material compliance gap that needs to be addressed promptly to avoid enforcement actions.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-UK-DM-2025-003-0",
+      "signal_id": "UK-DM-2025-003",
+      "baseline_policy_id": "EC-020",
+      "baseline_requirement": "Return policy minimum: 7-day no-questions-asked (14 in EU)",
+      "regulatory_requirement": "Actions against unfair commercial practices",
+      "gap_description": "The new regulation may require additional measures beyond the current return policy to address unfair commercial practices, such as displaying warnings or restricting access to certain interfaces.",
+      "gap_severity": "major",
+      "is_blocking": true
+    },
+    {
+      "gap_id": "GAP-UK-DM-2025-003-1",
+      "signal_id": "UK-DM-2025-003",
+      "baseline_policy_id": "EC-024",
+      "baseline_requirement": "Live commerce disclosures: Real-time 'sponsored' overlay",
+      "regulatory_requirement": "Displaying warnings to consumers",
+      "gap_description": "The regulation may necessitate additional consumer warnings beyond current live commerce disclosures to ensure compliance with the new Act.",
+      "gap_severity": "major",
+      "is_blocking": true
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-UK-DM-2025-003-0",
+      "gap_id": "GAP-UK-DM-2025-003-0",
+      "remediation_type": "product_change",
+      "title": "Enhance Consumer Protection Measures",
+      "description": "Implement additional consumer protection measures on e-commerce interfaces, including warnings for potentially unfair practices and mechanisms to restrict access if necessary.",
+      "affected_features": [
+        "E-commerce interface",
+        "Live commerce disclosures"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "E-commerce Product Manager",
+      "acceptance_criteria": [
+        "Warnings are displayed for identified unfair practices",
+        "Mechanisms to restrict access to non-compliant interfaces are implemented"
+      ]
+    }
+  ],
+  "deadline": "2025-04-06",
+  "business_impact": "Failure to comply with the new UK legislation could result in enforcement actions that may disrupt e-commerce operations and damage brand reputation.",
+  "recommended_actions": [
+    "Conduct a detailed review of e-commerce practices to identify potential unfair practices",
+    "Develop and implement consumer warning systems on e-commerce interfaces",
+    "Establish a compliance monitoring system to ensure ongoing adherence to the new Act"
+  ],
+  "assessed_at": "2025-12-26T07:06:07.697342",
+  "assessed_by": "github_actions"
+}

@@ -1,0 +1,110 @@
+{
+  "mission_id": "MISSION-UK-20251226070449",
+  "market": "UK",
+  "domain": "ecommerce",
+  "lookback_days": 365,
+  "created_at": "2025-12-26T07:04:49.042385",
+  "created_by": "github_actions",
+  "status": "completed",
+  "generated_queries": [
+    "site:legislation.gov.uk \"e-commerce regulation\" OR \"social commerce\" OR \"digital trade\" OR \"online marketplace\" OR \"cross-border commerce\" AND (\"draft bill\" OR \"enacted law\") AND date:[2022-10-01 TO 2023-10-01]",
+    "site:gov.uk \"e-commerce regulation\" OR \"social commerce\" OR \"digital trade\" OR \"online marketplace\" OR \"cross-border commerce\" AND (\"regulatory guidance\" OR \"consultation\") AND date:[2022-10-01 TO 2023-10-01]",
+    "site:ofcom.org.uk \"e-commerce\" OR \"digital trade\" OR \"online marketplace\" AND (\"hearing\" OR \"report\") AND date:[2022-10-01 TO 2023-10-01]",
+    "site:gov.uk \"CMA\" AND \"e-commerce\" OR \"online marketplace\" AND (\"court ruling\" OR \"decision\") AND date:[2022-10-01 TO 2023-10-01]",
+    "site:ico.org.uk \"e-commerce\" OR \"digital trade\" AND (\"guidance\" OR \"policy update\") AND date:[2022-10-01 TO 2023-10-01]"
+  ],
+  "signals": [
+    {
+      "id": "UK-ET-2025-001",
+      "market": "UK",
+      "domain": "ecommerce",
+      "source_type": "legislation",
+      "title": "Electronic Trade Documents Act 2023",
+      "summary": "This Act grants legal recognition to electronic trade documents, such as bills of lading and bills of exchange, placing them on equal footing with their paper counterparts. It aims to enhance efficiency, reduce trade costs, and bolster security in international trade transactions.",
+      "source_url": "https://lawcom.gov.uk/project/electronic-trade-documents/?utm_source=openai",
+      "published_date": "2023-09-01",
+      "effective_date": "2023-09-01",
+      "key_provisions": [
+        "Legal recognition of electronic trade documents",
+        "Enhance efficiency and reduce trade costs",
+        "Bolster security in international trade transactions"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.95
+    },
+    {
+      "id": "UK-WT-2025-002",
+      "market": "UK",
+      "domain": "ecommerce",
+      "source_type": "executive_order",
+      "title": "UK's Accession to the WTO E-Commerce Joint Initiative",
+      "summary": "The UK, along with 90 other countries, finalized the E-Commerce Joint Initiative under the WTO. This agreement is designed to modernize global trade by digitalizing customs documents and processes, making trade faster, cheaper, and more secure.",
+      "source_url": "https://www.gov.uk/government/news/uk-joins-groundbreaking-global-digital-trade-agreement?utm_source=openai",
+      "published_date": "2024-07-26",
+      "effective_date": null,
+      "key_provisions": [
+        "Digitalization of customs documents and processes",
+        "Recognition of electronic documents and signatures"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "UK-DM-2025-003",
+      "market": "UK",
+      "domain": "ecommerce",
+      "source_type": "legislation",
+      "title": "Digital Markets, Competition and Consumers Act 2024",
+      "summary": "This Act empowers designated enforcers to take actions against online interfaces that facilitate unfair commercial practices. It includes measures such as disabling or restricting access to online interfaces and displaying warnings to consumers.",
+      "source_url": "https://www.legislation.gov.uk/ukpga/2024/13/2025-04-06?utm_source=openai",
+      "published_date": "2025-04-06",
+      "effective_date": "2025-04-06",
+      "key_provisions": [
+        "Actions against unfair commercial practices",
+        "Disabling or restricting access to online interfaces",
+        "Displaying warnings to consumers"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.92
+    },
+    {
+      "id": "UK-CM-2025-004",
+      "market": "UK",
+      "domain": "ecommerce",
+      "source_type": "court_ruling",
+      "title": "CMA's Action Against Emma Group for Misleading Online Sales Practices",
+      "summary": "The CMA initiated court proceedings against Emma Group for allegedly using misleading online sales tactics, including urgency claims like countdown timers. The CMA seeks an enforcement order requiring Emma Group to change its online selling practices.",
+      "source_url": "https://www.gov.uk/government/news/cma-launches-court-action-against-emma-to-protect-uk-consumers?utm_source=openai",
+      "published_date": "2024-10-25",
+      "effective_date": null,
+      "key_provisions": [
+        "Court proceedings against misleading sales tactics",
+        "Enforcement order to change online selling practices"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.88
+    },
+    {
+      "id": "UK-AM-2025-005",
+      "market": "UK",
+      "domain": "ecommerce",
+      "source_type": "regulatory_guidance",
+      "title": "CMA's Action Against Amazon's UK Online Marketplace Practices",
+      "summary": "The CMA accepted binding commitments from Amazon regarding its conduct on its UK online marketplace, addressing concerns about Amazon's use of non-public data from third-party sellers and its criteria for selecting products for the 'Buy Box'.",
+      "source_url": "https://assets.publishing.service.gov.uk/media/6544cbaed36c91000d935d20/Non-confidential_decision_pdfa_4.pdf?utm_source=openai",
+      "published_date": "2023-11-03",
+      "effective_date": null,
+      "key_provisions": [
+        "Amazon's commitment not to use non-public data from third-party sellers",
+        "Equal criteria for selecting products for the 'Buy Box'"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    }
+  ]
+}

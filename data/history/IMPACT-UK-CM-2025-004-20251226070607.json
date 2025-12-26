@@ -1,0 +1,49 @@
+{
+  "assessment_id": "IMPACT-UK-CM-2025-004-20251226070607",
+  "signal_id": "UK-CM-2025-004",
+  "signal_title": "CMA's Action Against Emma Group for Misleading Online Sales Practices",
+  "market": "UK",
+  "domain": "ecommerce",
+  "risk_level": "P2",
+  "risk_rationale": "The court ruling against Emma Group highlights a regulatory focus on misleading online sales practices, which may affect TikTok's ecommerce operations in the UK. The risk is moderate as it requires alignment with fair trading practices but does not pose an immediate existential threat.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-UK-CM-2025-004-0",
+      "signal_id": "UK-CM-2025-004",
+      "baseline_policy_id": "EC-022",
+      "baseline_requirement": "Price transparency: All-in pricing including duties/taxes",
+      "regulatory_requirement": "Prohibition of misleading sales tactics such as urgency claims",
+      "gap_description": "The baseline does not explicitly address misleading sales tactics like urgency claims, which are now under scrutiny by the CMA.",
+      "gap_severity": "major",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-UK-CM-2025-004-0",
+      "gap_id": "GAP-UK-CM-2025-004-0",
+      "remediation_type": "product_change",
+      "title": "Enhance Sales Practice Transparency",
+      "description": "Implement measures to ensure that all sales tactics, including urgency claims, are transparent and not misleading. This may include removing countdown timers or clearly explaining their purpose.",
+      "affected_features": [
+        "Ecommerce sales interface",
+        "Promotional content"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Ecommerce Product Manager",
+      "acceptance_criteria": [
+        "All urgency claims are accompanied by clear explanations.",
+        "No misleading sales tactics are present in the ecommerce interface."
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Ensuring compliance with the CMA's focus on misleading sales practices will help maintain consumer trust and avoid potential legal actions or fines in the UK market.",
+  "recommended_actions": [
+    "Review current ecommerce sales practices for compliance with UK regulations.",
+    "Develop and implement guidelines for transparent sales tactics.",
+    "Monitor regulatory developments in the UK for further changes."
+  ],
+  "assessed_at": "2025-12-26T07:06:11.711021",
+  "assessed_by": "github_actions"
+}
