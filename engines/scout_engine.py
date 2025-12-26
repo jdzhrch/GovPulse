@@ -322,11 +322,13 @@ def fetch_real_world_data(queries: list[str], market: str) -> list[dict]:
         try:
             print(f"  [{i}/{len(queries)}] Searching: {query[:60]}...")
 
-            # 使用 OpenAI Responses API + web_search_preview
-            response = client.responses.create(
-                model="gpt-4o",
-                tools=[{"type": "web_search_preview"}],
-                input=f"""Search for recent regulatory news and policy updates:
+            # 检查是否支持 Responses API
+            if hasattr(client, 'responses'):
+                # 使用 OpenAI Responses API + web_search_preview
+                response = client.responses.create(
+                    model="gpt-4o",
+                    tools=[{"type": "web_search_preview"}],
+                    input=f"""Search for recent regulatory news and policy updates:
 
 Query: {query}
 
@@ -336,16 +338,62 @@ Focus on:
 - Regulatory enforcement actions
 - Policy proposals and drafts
 
-Return the most relevant and recent regulatory developments."""
-            )
+Return the most relevant and recent regulatory developments with specific details like dates, law names, and sources."""
+                )
 
-            # 提取结果
-            content = response.output_text if hasattr(response, 'output_text') else str(response)
-            sources = []
+                # 提取结果
+                content = response.output_text if hasattr(response, 'output_text') else str(response)
+                sources = []
 
-            # 尝试提取 sources（如果可用）
-            if hasattr(response, 'sources'):
-                sources = [{"url": s.url, "title": s.title} for s in response.sources]
+                # 从 annotations 中提取 sources
+                if hasattr(response, 'output') and response.output:
+                    for item in response.output:
+                        if hasattr(item, 'content'):
+                            for content_item in item.content:
+                                if hasattr(content_item, 'annotations'):
+                                    for ann in content_item.annotations:
+                                        if hasattr(ann, 'url'):
+                                            sources.append({
+                                                "url": ann.url,
+                                                "title": getattr(ann, 'title', '')
+                                            })
+
+                print(f"    ✓ Got response, {len(sources)} sources extracted")
+                print(f"    Content preview: {content[:200]}..." if content else "    No content")
+
+            else:
+                # 回退到 Chat Completions API with web search model
+                print(f"    [Info] Responses API not available, using chat completions...")
+                response = client.chat.completions.create(
+                    model="gpt-4o-search-preview",
+                    messages=[{
+                        "role": "user",
+                        "content": f"""Search for recent regulatory news and policy updates:
+
+Query: {query}
+
+Focus on:
+- Official government announcements
+- New legislation or regulations  
+- Regulatory enforcement actions
+- Policy proposals and drafts
+
+Return the most relevant and recent regulatory developments with specific details like dates, law names, and sources."""
+                    }]
+                )
+                content = response.choices[0].message.content
+                sources = []
+                
+                # 尝试从 annotations 提取
+                if hasattr(response.choices[0].message, 'annotations'):
+                    for ann in response.choices[0].message.annotations:
+                        if hasattr(ann, 'url_citation'):
+                            sources.append({
+                                "url": ann.url_citation.url,
+                                "title": ann.url_citation.title
+                            })
+                
+                print(f"    ✓ Got response via chat completions")
 
             results.append({
                 "query": query,
@@ -354,10 +402,10 @@ Return the most relevant and recent regulatory developments."""
                 "market": market
             })
 
-            print(f"    ✓ Found {len(sources)} sources")
-
         except Exception as e:
             print(f"    ✗ Search failed: {e}")
+            import traceback
+            traceback.print_exc()
             continue
 
     print(f"[WebSearch] Completed. Got {len(results)} results.")
@@ -648,6 +696,10 @@ class ScoutEngine:
             raw_results = fetch_real_world_data(queries, mission.market)
             if raw_results:
                 mission.signals = self._parse_web_search_results(raw_results, mission)
+                # 如果解析后没有信号，回退到模拟数据
+                if not mission.signals:
+                    print("[Warning] Failed to extract signals from search results, using simulated data")
+                    mission.signals = self._get_simulated_signals(mission)
             else:
                 print("[Warning] Web search returned no results, using simulated data")
                 mission.signals = self._get_simulated_signals(mission)
@@ -680,33 +732,54 @@ class ScoutEngine:
             for r in raw_results
         ])
 
-        parse_prompt = f"""分析以下监管搜索结果，提取所有相关的监管信号。
+        print(f"[Parser] Processing {len(raw_results)} search results, total {len(combined_content)} chars")
 
-市场: {mission.market}
-政策领域: {mission.domain.value}
+        # 改进的解析 prompt
+        parse_prompt = f"""你是一名监管情报分析师。请仔细分析以下关于 {mission.market} 市场 {mission.domain.value} 领域的搜索结果，提取所有监管信号。
 
 搜索结果:
-{combined_content[:15000]}
+{combined_content[:20000]}
 
-请提取所有监管信号，每个信号需要包含:
-- id: 信号ID (格式: {mission.market}-XX-{datetime.now().year}-XXX)
-- title: 法规/政策标题
-- summary: 简要摘要 (2-3句话)
-- source_url: 来源URL
-- published_date: 发布日期 (YYYY-MM-DD)
-- effective_date: 生效日期 (可选)
-- key_provisions: 主要条款列表
-- source_type: 来源类型 (legislation/executive_order/regulatory_guidance/court_ruling/draft_bill)
-- confidence_score: 可信度 (0.0-1.0)
+任务：从上述内容中提取所有监管相关的信号。即使信息不完整，也请尽可能提取。
 
-返回 JSON 数组格式。如果没有找到相关监管信号，返回空数组 []。
+对于每个监管信号，请提供：
+- id: 信号ID，格式为 "{mission.market}-XX-{datetime.now().year}-XXX"，其中 XX 是领域缩写
+- title: 法规或政策的完整标题
+- summary: 2-3句话的摘要，描述这是什么以及其影响
+- source_url: 来源URL（如果有的话）
+- published_date: 发布日期，格式 "YYYY-MM-DD"
+- effective_date: 生效日期（可选），格式 "YYYY-MM-DD" 或 null
+- key_provisions: 主要条款列表（字符串数组）
+- source_type: 来源类型，必须是以下之一：legislation, executive_order, regulatory_guidance, court_ruling, draft_bill
+- confidence_score: 信息可信度，0.0-1.0 之间的数字
+
+重要：
+1. 请返回一个 JSON 对象，包含 "signals" 键，值为信号数组
+2. 即使只找到部分信息，也要提取信号
+3. 如果确实没有找到任何监管信息，返回 {{"signals": []}}
+4. 不要编造不存在的信息，但要尽可能从文本中提取真实内容
+
+示例输出格式：
+{{"signals": [
+  {{
+    "id": "{mission.market}-MP-{datetime.now().year}-001",
+    "title": "Example Regulation Name",
+    "summary": "Brief description of the regulation...",
+    "source_url": "https://example.gov/...",
+    "published_date": "2025-01-15",
+    "effective_date": "2025-07-01",
+    "key_provisions": ["Provision 1", "Provision 2"],
+    "source_type": "legislation",
+    "confidence_score": 0.85
+  }}
+]}}
 """
 
         try:
             response = client.chat.completions.create(
                 model="gpt-4o",
                 messages=[
-                    {"role": "system", "content": "你是一名专业的监管情报分析师，擅长从搜索结果中提取结构化的监管信息。"},
+                    {"role": "system", "content": "你是一名专业的监管情报分析师。你的任务是从搜索结果中提取结构化的监管信息。请务必提取所有相关信号，即使信息不完整。始终返回有效的 JSON 格式。"},
                     {"role": "user", "content": parse_prompt}
                 ],
                 temperature=0.2,
@@ -714,18 +787,40 @@ class ScoutEngine:
             )
 
             content = response.choices[0].message.content
+            print(f"[Parser] LLM response: {content[:500]}...")
+            
             result = json.loads(content)
 
-            # 解析 JSON 结果
-            signal_list = result if isinstance(result, list) else result.get("signals", [])
+            # 解析 JSON 结果 - 支持多种格式
+            signal_list = []
+            if isinstance(result, list):
+                signal_list = result
+            elif "signals" in result:
+                signal_list = result["signals"]
+            elif "data" in result:
+                signal_list = result["data"]
+            else:
+                # 尝试找到任何包含列表的键
+                for key, value in result.items():
+                    if isinstance(value, list) and len(value) > 0:
+                        signal_list = value
+                        break
+
+            print(f"[Parser] Found {len(signal_list)} signals in response")
 
             for i, s in enumerate(signal_list):
                 try:
+                    # 处理 source_type，确保是有效的枚举值
+                    source_type_str = s.get("source_type", "legislation").lower().replace(" ", "_").replace("-", "_")
+                    valid_source_types = ["legislation", "executive_order", "regulatory_guidance", "court_ruling", "hearing_transcript", "draft_bill"]
+                    if source_type_str not in valid_source_types:
+                        source_type_str = "legislation"
+                    
                     signal = RegulatorySignal(
                         id=s.get("id", f"{mission.market}-{mission.domain.value[:2].upper()}-{datetime.now().year}-{i:03d}"),
                         market=mission.market,
                         domain=mission.domain,
-                        source_type=SourceType(s.get("source_type", "legislation")),
+                        source_type=SourceType(source_type_str),
                         title=s.get("title", "Unknown"),
                         summary=s.get("summary", ""),
                         source_url=s.get("source_url", ""),
@@ -733,17 +828,21 @@ class ScoutEngine:
                         effective_date=s.get("effective_date"),
                         key_provisions=s.get("key_provisions", []),
                         affected_policies=[],  # 后续由 impact_analyzer 填充
-                        raw_text_excerpt=s.get("excerpt", ""),
+                        raw_text_excerpt=s.get("excerpt", s.get("raw_text_excerpt", "")),
                         confidence_score=float(s.get("confidence_score", 0.7))
                     )
                     signals.append(signal)
+                    print(f"[Parser] ✓ Parsed signal: {signal.title[:50]}...")
                 except Exception as e:
-                    print(f"[Warning] Failed to parse signal: {e}")
+                    print(f"[Warning] Failed to parse signal {i}: {e}")
+                    print(f"[Warning] Signal data: {s}")
 
-            print(f"[Parser] Extracted {len(signals)} regulatory signals from search results")
+            print(f"[Parser] Successfully extracted {len(signals)} regulatory signals")
 
         except Exception as e:
             print(f"[Error] Failed to parse search results: {e}")
+            import traceback
+            traceback.print_exc()
             return self._convert_raw_to_signals(raw_results, mission)
 
         return signals
@@ -756,21 +855,45 @@ class ScoutEngine:
         """将原始搜索结果转换为信号（当 LLM 不可用时）"""
         signals = []
         for i, result in enumerate(raw_results):
-            for j, source in enumerate(result.get("sources", [])[:3]):
+            sources = result.get("sources", [])
+            content = result.get("content", "")
+            query = result.get("query", "Unknown")
+            
+            # 如果有 sources，为每个 source 创建一个信号
+            if sources:
+                for j, source in enumerate(sources[:3]):
+                    signal = RegulatorySignal(
+                        id=f"{mission.market}-{mission.domain.value[:2].upper()}-{datetime.now().year}-{i:03d}-{j}",
+                        market=mission.market,
+                        domain=mission.domain,
+                        source_type=SourceType.LEGISLATION,
+                        title=source.get("title", query),
+                        summary=content[:500] if content else "",
+                        source_url=source.get("url", ""),
+                        published_date=datetime.now().strftime("%Y-%m-%d"),
+                        effective_date=None,
+                        key_provisions=[],
+                        affected_policies=[],
+                        raw_text_excerpt=content[:1000] if content else "",
+                        confidence_score=0.5
+                    )
+                    signals.append(signal)
+            elif content:
+                # 如果没有 sources 但有 content，仍然创建一个信号
                 signal = RegulatorySignal(
-                    id=f"{mission.market}-{mission.domain.value[:2].upper()}-{datetime.now().year}-{i:03d}-{j}",
+                    id=f"{mission.market}-{mission.domain.value[:2].upper()}-{datetime.now().year}-{i:03d}",
                     market=mission.market,
                     domain=mission.domain,
                     source_type=SourceType.LEGISLATION,
-                    title=source.get("title", result.get("query", "Unknown")),
-                    summary=result.get("content", "")[:500],
-                    source_url=source.get("url", ""),
+                    title=query,
+                    summary=content[:500],
+                    source_url="",
                     published_date=datetime.now().strftime("%Y-%m-%d"),
                     effective_date=None,
                     key_provisions=[],
                     affected_policies=[],
-                    raw_text_excerpt=result.get("content", "")[:1000],
-                    confidence_score=0.5
+                    raw_text_excerpt=content[:1000],
+                    confidence_score=0.4
                 )
                 signals.append(signal)
         return signals

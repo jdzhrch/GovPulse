@@ -21,7 +21,7 @@ except ImportError:
     OPENAI_AVAILABLE = False
     print("Warning: OpenAI SDK not installed. Run: pip install openai")
 
-from scout_engine import ScoutMission, RegulatorySignal, Domain
+from .scout_engine import ScoutMission, RegulatorySignal, Domain
 
 
 class RiskLevel(Enum):
