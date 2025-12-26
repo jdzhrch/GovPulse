@@ -9,7 +9,9 @@ import {
   ShoppingCart,
   Database,
   ChevronRight,
-  Clock
+  Clock,
+  Rocket,
+  Lightbulb
 } from 'lucide-react'
 import { ScoutMission, ImpactAssessment, RISK_COLORS } from '../types'
 import RiskBadge from '../components/RiskBadge'
@@ -126,7 +128,22 @@ export default function Dashboard({ missions, assessments }: DashboardProps) {
             </Link>
           </div>
           <div className="divide-y divide-slate-200">
-            {assessments.slice(0, 5).map((assessment) => {
+            {assessments.length === 0 ? (
+              <div className="p-8 text-center">
+                <div className="w-12 h-12 rounded-full bg-govpulse-100 flex items-center justify-center mx-auto mb-4">
+                  <Lightbulb className="w-6 h-6 text-govpulse-600" />
+                </div>
+                <h3 className="font-medium text-slate-900 mb-2">No reports yet</h3>
+                <p className="text-sm text-slate-600 mb-4">
+                  Run your first policy scan to start tracking regulatory changes.
+                </p>
+                <Link to="/launch" className="btn-primary inline-flex">
+                  <Rocket className="w-4 h-4" />
+                  Start First Scan
+                </Link>
+              </div>
+            ) : (
+            assessments.slice(0, 5).map((assessment) => {
               const DomainIcon = domainIcons[assessment.domain as keyof typeof domainIcons] || Globe
               return (
                 <Link
@@ -169,7 +186,8 @@ export default function Dashboard({ missions, assessments }: DashboardProps) {
                   </div>
                 </Link>
               )
-            })}
+            })
+            )}
           </div>
         </div>
 
@@ -182,7 +200,14 @@ export default function Dashboard({ missions, assessments }: DashboardProps) {
             </Link>
           </div>
           <div className="divide-y divide-slate-200">
-            {missions.slice(0, 5).map((mission) => {
+            {missions.length === 0 ? (
+              <div className="p-6 text-center">
+                <p className="text-sm text-slate-500">
+                  No scans yet. Start monitoring your target markets.
+                </p>
+              </div>
+            ) : (
+            missions.slice(0, 5).map((mission) => {
               const DomainIcon = domainIcons[mission.domain] || Globe
               return (
                 <div key={mission.mission_id} className="p-4">
@@ -205,13 +230,14 @@ export default function Dashboard({ missions, assessments }: DashboardProps) {
                         {DOMAIN_LABELS[mission.domain] || mission.domain} • {mission.lookback_days} days
                       </p>
                       <p className="text-xs text-slate-400 mt-1">
-                        {formatDistanceToNow(new Date(mission.created_at), { addSuffix: true })}
+                        {formatDistanceToNow(parseUTCDate(mission.created_at), { addSuffix: true })}
                       </p>
                     </div>
                   </div>
                 </div>
               )
-            })}
+            })
+            )}
           </div>
         </div>
       </div>

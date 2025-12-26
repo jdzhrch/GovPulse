@@ -11,7 +11,8 @@ import {
   CheckCircle,
   ExternalLink,
   Github,
-  AlertCircle
+  AlertCircle,
+  HelpCircle
 } from 'lucide-react'
 import clsx from 'clsx'
 import { Domain, MARKETS, DOMAINS } from '../types'
@@ -442,7 +443,15 @@ export default function MissionLauncher() {
 
             {/* Market Selection */}
             <div>
-              <label className="label">Region / Market *</label>
+              <label className="label flex items-center gap-1">
+                Region / Market *
+                <span className="group relative">
+                  <HelpCircle className="w-4 h-4 text-slate-400 cursor-help" />
+                  <span className="absolute left-6 top-1/2 -translate-y-1/2 w-64 p-2 bg-slate-800 text-white text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                    Select the country or region to monitor for regulatory changes. Each scan focuses on one market for depth.
+                  </span>
+                </span>
+              </label>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                 {MARKETS.map((market) => (
                   <button
@@ -465,7 +474,15 @@ export default function MissionLauncher() {
 
             {/* Domain Selection */}
             <div>
-              <label className="label">Policy Area</label>
+              <label className="label flex items-center gap-1">
+                Policy Area
+                <span className="group relative">
+                  <HelpCircle className="w-4 h-4 text-slate-400 cursor-help" />
+                  <span className="absolute left-6 top-1/2 -translate-y-1/2 w-64 p-2 bg-slate-800 text-white text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                    Choose a specific policy domain to focus on, or "All Policy Areas" for comprehensive coverage.
+                  </span>
+                </span>
+              </label>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                 {DOMAINS.map((domain) => {
                   const Icon = domainIcons[domain.value]
@@ -495,7 +512,15 @@ export default function MissionLauncher() {
 
             {/* Lookback Period */}
             <div>
-              <label className="label">Policy Date Range</label>
+              <label className="label flex items-center gap-1">
+                Policy Date Range
+                <span className="group relative">
+                  <HelpCircle className="w-4 h-4 text-slate-400 cursor-help" />
+                  <span className="absolute left-6 top-1/2 -translate-y-1/2 w-64 p-2 bg-slate-800 text-white text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
+                    How far back to search for policy updates. 3 months is recommended for regular monitoring.
+                  </span>
+                </span>
+              </label>
               <div className="flex items-center gap-3">
                 <Calendar className="w-5 h-5 text-slate-400" />
                 <div className="flex gap-2">

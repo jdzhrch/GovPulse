@@ -1,13 +1,15 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Outlet, NavLink, useLocation } from 'react-router-dom'
 import {
   LayoutDashboard,
   Search,
   FileCheck,
   Activity,
-  ClipboardList
+  ClipboardList,
+  HelpCircle
 } from 'lucide-react'
 import clsx from 'clsx'
+import HelpGuide from './HelpGuide'
 
 const navigation = [
   { name: 'Overview', to: '/', icon: LayoutDashboard },
@@ -18,6 +20,7 @@ const navigation = [
 
 export default function Layout() {
   const location = useLocation()
+  const [isHelpOpen, setIsHelpOpen] = useState(false)
 
   // Scroll to top on route change
   useEffect(() => {
@@ -62,8 +65,15 @@ export default function Layout() {
               ))}
             </nav>
 
-            {/* Version badge */}
-            <div className="flex items-center">
+            {/* Help & Version */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setIsHelpOpen(true)}
+                className="p-2 text-slate-500 hover:text-govpulse-600 hover:bg-govpulse-50 rounded-lg transition-colors"
+                title="Help Guide"
+              >
+                <HelpCircle className="w-5 h-5" />
+              </button>
               <span className="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">v0.1.0</span>
             </div>
           </div>
@@ -97,6 +107,9 @@ export default function Layout() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Outlet />
       </main>
+
+      {/* Help Guide Modal */}
+      <HelpGuide isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />
     </div>
   )
 }
