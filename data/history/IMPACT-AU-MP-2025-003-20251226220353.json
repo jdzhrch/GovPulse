@@ -1,0 +1,49 @@
+{
+  "assessment_id": "IMPACT-AU-MP-2025-003-20251226220353",
+  "signal_id": "AU-MP-2025-003",
+  "signal_title": "Industry Standards for Tackling Harmful Online Content",
+  "market": "AU",
+  "domain": "minor_protection",
+  "risk_level": "P1",
+  "risk_rationale": "The new Australian regulation mandates technology companies to prevent misuse of their services for distributing harmful content, including child sexual abuse material, which aligns with TikTok's existing CSAM detection policy. However, the regulation's application to AI-generated explicit content introduces a new compliance requirement that TikTok's current baseline does not explicitly address.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-AU-MP-2025-003-0",
+      "signal_id": "AU-MP-2025-003",
+      "baseline_policy_id": "CM-001",
+      "baseline_requirement": "CSAM detection using PhotoDNA + proprietary classifiers",
+      "regulatory_requirement": "Prevent misuse for distributing harmful content, including AI-generated explicit content",
+      "gap_description": "The baseline addresses CSAM detection but does not explicitly cover AI-generated explicit content, which is a new requirement under the Australian regulation.",
+      "gap_severity": "major",
+      "is_blocking": true
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-AU-MP-2025-003-0",
+      "gap_id": "GAP-AU-MP-2025-003-0",
+      "remediation_type": "product_change",
+      "title": "Enhance AI Content Moderation Capabilities",
+      "description": "Develop and implement AI content moderation tools specifically designed to detect and prevent the distribution of AI-generated explicit content. This includes updating existing classifiers and detection algorithms to identify and block harmful AI-generated content.",
+      "affected_features": [
+        "Content Moderation System",
+        "AI Classifiers"
+      ],
+      "engineering_effort": "L",
+      "pm_owner_recommendation": "Content Moderation PM",
+      "acceptance_criteria": [
+        "AI-generated explicit content is detected and blocked with a 95% accuracy rate.",
+        "Regular audits and updates to the AI classifiers to ensure compliance with Australian standards."
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Failure to comply with the new Australian standards could result in significant fines and damage to TikTok's reputation in the Australian market.",
+  "recommended_actions": [
+    "Initiate a project to enhance AI content moderation capabilities.",
+    "Engage with Australian regulators to ensure alignment with the new standards.",
+    "Conduct a risk assessment to evaluate the potential impact of non-compliance."
+  ],
+  "assessed_at": "2025-12-26T22:03:59.273548",
+  "assessed_by": "github_actions"
+}

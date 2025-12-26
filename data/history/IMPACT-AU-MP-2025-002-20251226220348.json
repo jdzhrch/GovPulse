@@ -1,0 +1,76 @@
+{
+  "assessment_id": "IMPACT-AU-MP-2025-002-20251226220348",
+  "signal_id": "AU-MP-2025-002",
+  "signal_title": "Regulatory Guidance for Social Media Platforms",
+  "market": "AU",
+  "domain": "minor_protection",
+  "risk_level": "P2",
+  "risk_rationale": "The regulatory guidance from the eSafety Commissioner in Australia introduces new requirements for age assurance technologies and reporting pathways for underage account attempts, which are not fully covered by the current TikTok compliance baseline.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-AU-MP-2025-002-0",
+      "signal_id": "AU-MP-2025-002",
+      "baseline_policy_id": "MP-001",
+      "baseline_requirement": "Minimum registration age is 13 years globally, with regional variations.",
+      "regulatory_requirement": "Implementation of effective age assurance technologies.",
+      "gap_description": "The baseline does not specify the use of age assurance technologies, which is now required by the new guidance.",
+      "gap_severity": "major",
+      "is_blocking": false
+    },
+    {
+      "gap_id": "GAP-AU-MP-2025-002-1",
+      "signal_id": "AU-MP-2025-002",
+      "baseline_policy_id": "MP-001",
+      "baseline_requirement": "Minimum registration age is 13 years globally, with regional variations.",
+      "regulatory_requirement": "Clear reporting pathways for underage account attempts.",
+      "gap_description": "The baseline does not include provisions for reporting pathways for underage account attempts.",
+      "gap_severity": "major",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-AU-MP-2025-002-0",
+      "gap_id": "GAP-AU-MP-2025-002-0",
+      "remediation_type": "product_change",
+      "title": "Implement Age Assurance Technologies",
+      "description": "Develop and integrate age assurance technologies to verify user ages effectively, ensuring compliance with the new Australian regulatory guidance.",
+      "affected_features": [
+        "User Registration",
+        "Age Verification"
+      ],
+      "engineering_effort": "L",
+      "pm_owner_recommendation": "User Safety PM",
+      "acceptance_criteria": [
+        "Age assurance technology is implemented and operational",
+        "Verification process is compliant with Australian regulations"
+      ]
+    },
+    {
+      "remediation_id": "REM-AU-MP-2025-002-1",
+      "gap_id": "GAP-AU-MP-2025-002-1",
+      "remediation_type": "product_change",
+      "title": "Establish Reporting Pathways for Underage Attempts",
+      "description": "Create clear and accessible reporting pathways for underage account attempts to align with the new guidance.",
+      "affected_features": [
+        "User Registration",
+        "Compliance Reporting"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Compliance PM",
+      "acceptance_criteria": [
+        "Reporting pathways are established and functional",
+        "Reports are processed in compliance with Australian regulations"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Failure to comply with the new Australian regulatory guidance could result in reputational damage and potential fines, impacting TikTok's operations in Australia.",
+  "recommended_actions": [
+    "Develop and implement age assurance technologies",
+    "Establish reporting pathways for underage account attempts",
+    "Engage with Australian regulators to ensure compliance"
+  ],
+  "assessed_at": "2025-12-26T22:03:53.429208",
+  "assessed_by": "github_actions"
+}
