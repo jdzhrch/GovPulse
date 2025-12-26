@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { useState, useEffect, useCallback } from 'react'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import Layout from './components/Layout'
 import Dashboard from './pages/Dashboard'
 import MissionLauncher from './pages/MissionLauncher'
@@ -97,18 +97,42 @@ function App() {
   const [missions, setMissions] = useState<ScoutMission[]>(mockMissions)
   const [assessments, setAssessments] = useState<ImpactAssessment[]>(mockAssessments)
   const [, setIsLoading] = useState(true)
+  const location = useLocation()
 
-  // Load real history data
-  useEffect(() => {
-    loadHistoryData().then(({ missions: realMissions, assessments: realAssessments }) => {
-      if (realMissions.length > 0 || realAssessments.length > 0) {
-        // Merge real data with mock data (real data first)
-        setMissions([...realMissions, ...mockMissions])
-        setAssessments([...realAssessments, ...mockAssessments])
-      }
-      setIsLoading(false)
-    })
+  // Function to load and merge data
+  const refreshData = useCallback(async () => {
+    const { missions: realMissions, assessments: realAssessments } = await loadHistoryData()
+    if (realMissions.length > 0 || realAssessments.length > 0) {
+      // Merge real data with mock data, then sort by date descending
+      const mergedMissions = [...realMissions, ...mockMissions].sort(
+        (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      )
+      const mergedAssessments = [...realAssessments, ...mockAssessments].sort(
+        (a, b) => new Date(b.assessed_at).getTime() - new Date(a.assessed_at).getTime()
+      )
+      setMissions(mergedMissions)
+      setAssessments(mergedAssessments)
+      console.log('Loaded data:', { 
+        realMissions: realMissions.length, 
+        realAssessments: realAssessments.length,
+        totalMissions: mergedMissions.length,
+        totalAssessments: mergedAssessments.length
+      })
+    }
+    setIsLoading(false)
   }, [])
+
+  // Load data on mount and when navigating to dashboard or analysis pages
+  useEffect(() => {
+    refreshData()
+  }, [refreshData])
+
+  // Refresh data when navigating to dashboard or analysis pages (to pick up new results)
+  useEffect(() => {
+    if (location.pathname === '/' || location.pathname.startsWith('/analysis') || location.pathname === '/audit') {
+      refreshData()
+    }
+  }, [location.pathname, refreshData])
   const [selectedAssessment, setSelectedAssessment] = useState<ImpactAssessment | null>(null)
 
   const handleMissionCreate = (mission: ScoutMission) => {
