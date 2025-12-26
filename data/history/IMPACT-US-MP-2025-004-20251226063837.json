@@ -1,0 +1,75 @@
+{
+  "assessment_id": "IMPACT-US-MP-2025-004-20251226063837",
+  "signal_id": "US-MP-2025-004",
+  "signal_title": "Amendment to the Children's Online Privacy Protection Act",
+  "market": "US",
+  "domain": "all",
+  "risk_level": "P1",
+  "risk_rationale": "The draft bill proposes amendments to the Children's Online Privacy Protection Act, which could introduce new compliance requirements for online platforms like TikTok. This poses a material compliance gap that may require immediate product changes to align with the new legal standards.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-US-MP-2025-004-0",
+      "signal_id": "US-MP-2025-004",
+      "baseline_policy_id": "MP-001",
+      "baseline_requirement": "Minimum registration age is 13 years.",
+      "regulatory_requirement": "Potentially stricter age verification and parental consent mechanisms for minors under 13.",
+      "gap_description": "The amendment may require enhanced age verification and parental consent mechanisms, which are not currently specified in the baseline.",
+      "gap_severity": "major",
+      "is_blocking": true
+    },
+    {
+      "gap_id": "GAP-US-MP-2025-004-1",
+      "signal_id": "US-MP-2025-004",
+      "baseline_policy_id": "MP-002",
+      "baseline_requirement": "Account privacy for 13-15 years is private by default with no opt-out allowed.",
+      "regulatory_requirement": "Potentially stricter privacy controls for minors under 16.",
+      "gap_description": "The amendment may necessitate stricter privacy controls for minors, impacting current settings for 13-15 year olds.",
+      "gap_severity": "major",
+      "is_blocking": true
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-US-MP-2025-004-0",
+      "gap_id": "GAP-US-MP-2025-004-0",
+      "remediation_type": "product_change",
+      "title": "Enhance Age Verification and Parental Consent Mechanisms",
+      "description": "Develop and implement enhanced age verification processes and parental consent mechanisms to comply with the updated COPPA requirements.",
+      "affected_features": [
+        "User Registration",
+        "Parental Controls"
+      ],
+      "engineering_effort": "L",
+      "pm_owner_recommendation": "Head of User Safety",
+      "acceptance_criteria": [
+        "Age verification process updated to meet new legal standards",
+        "Parental consent mechanisms implemented for users under 13"
+      ]
+    },
+    {
+      "remediation_id": "REM-US-MP-2025-004-1",
+      "gap_id": "GAP-US-MP-2025-004-1",
+      "remediation_type": "product_change",
+      "title": "Strengthen Privacy Controls for Minors",
+      "description": "Review and update privacy settings for minors to ensure compliance with potentially stricter privacy requirements.",
+      "affected_features": [
+        "Account Privacy Settings"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Head of Privacy",
+      "acceptance_criteria": [
+        "Privacy settings for minors reviewed and updated",
+        "Compliance with new privacy standards verified"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Potential increase in compliance costs and engineering resources to implement new age verification and privacy controls. May affect user onboarding processes and user experience for minors.",
+  "recommended_actions": [
+    "Monitor the progress of the draft bill and prepare for potential changes.",
+    "Initiate a cross-functional task force to assess and implement necessary changes.",
+    "Engage with policymakers to understand the implications and provide feedback on the draft bill."
+  ],
+  "assessed_at": "2025-12-26T06:38:42.408417",
+  "assessed_by": "github_actions"
+}

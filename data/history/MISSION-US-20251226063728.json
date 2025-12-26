@@ -1,0 +1,198 @@
+{
+  "mission_id": "MISSION-US-20251226063728",
+  "market": "US",
+  "domain": "all",
+  "lookback_days": 90,
+  "created_at": "2025-12-26T06:37:28.918248",
+  "created_by": "github_actions",
+  "status": "completed",
+  "generated_queries": [
+    "site:congress.gov \"children safety\" OR \"minor protection\" AND (\"draft bill\" OR \"enacted law\") AND date:[2023-07-01 TO 2023-10-01]",
+    "site:ftc.gov \"e-commerce regulation\" OR \"social commerce\" AND \"regulatory guidance\" AND date:[2023-07-01 TO 2023-10-01]",
+    "site:justice.gov \"data localization\" AND (\"court ruling\" OR \"hearing\") AND date:[2023-07-01 TO 2023-10-01]",
+    "site:whitehouse.gov \"children safety\" OR \"minor protection\" AND \"executive order\" AND date:[2023-07-01 TO 2023-10-01]",
+    "site:ftc.gov OR site:fcc.gov \"e-commerce regulation\" OR \"social commerce\" AND \"recent developments\" AND date:[2023-07-01 TO 2023-10-01]"
+  ],
+  "signals": [
+    {
+      "id": "US-MP-2025-001",
+      "market": "US",
+      "domain": "all",
+      "source_type": "legislation",
+      "title": "Social Security Child Protection Act of 2025",
+      "summary": "This act mandates the Social Security Administration to issue a new Social Security number to children under 14 if their original card is lost or stolen during mailing, enhancing identity protection for minors.",
+      "source_url": "https://www.congress.gov/bill/119th-congress/house-bill/5348/text?utm_source=openai",
+      "published_date": "2025-09-15",
+      "effective_date": null,
+      "key_provisions": [
+        "Mandates issuance of new Social Security number for children under 14 if lost or stolen.",
+        "Requires evidence under penalty of perjury to obtain a new number."
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "US-MP-2024-002",
+      "market": "US",
+      "domain": "all",
+      "source_type": "draft_bill",
+      "title": "Child Marriage Prevention Act of 2024",
+      "summary": "This act aims to combat child marriage in the United States by establishing federal standards and supporting state efforts to prevent child marriages.",
+      "source_url": "https://www.congress.gov/bill/118th-congress/senate-bill/4990/text?utm_source=openai",
+      "published_date": "2024-08-01",
+      "effective_date": null,
+      "key_provisions": [
+        "Establishes federal standards to prevent child marriages.",
+        "Supports state efforts to combat child marriage."
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "US-MP-2024-003",
+      "market": "US",
+      "domain": "all",
+      "source_type": "draft_bill",
+      "title": "Child Safety and Well-Being Act of 2024",
+      "summary": "This act proposes the establishment of an independent Children’s Commission and the position of Children’s Commissioner to oversee and promote policies related to child safety and well-being.",
+      "source_url": "https://www.congress.gov/bill/118th-congress/house-bill/9875/text/ih?utm_source=openai",
+      "published_date": "2024-09-27",
+      "effective_date": null,
+      "key_provisions": [
+        "Establishes an independent Children’s Commission.",
+        "Creates the position of Children’s Commissioner."
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "US-MP-2025-004",
+      "market": "US",
+      "domain": "all",
+      "source_type": "draft_bill",
+      "title": "Amendment to the Children's Online Privacy Protection Act",
+      "summary": "This amendment seeks to enhance online safety for minors by updating the Children's Online Privacy Protection Act of 1998.",
+      "source_url": "https://www.congress.gov/119/bills/hr6289/BILLS-119hr6289ih.htm?utm_source=openai",
+      "published_date": "2025-11-25",
+      "effective_date": null,
+      "key_provisions": [
+        "Enhances online safety for minors.",
+        "Amends the Children's Online Privacy Protection Act of 1998."
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.8
+    },
+    {
+      "id": "US-MP-2023-005",
+      "market": "US",
+      "domain": "all",
+      "source_type": "draft_bill",
+      "title": "PROTECT Kids Act",
+      "summary": "This act requires schools to obtain parental consent before changing a minor child's gender markers, pronouns, or preferred name on school forms.",
+      "source_url": "https://www.congress.gov/bill/118th-congress/house-bill/736/text/ih?utm_source=openai",
+      "published_date": "2023-02-01",
+      "effective_date": null,
+      "key_provisions": [
+        "Requires parental consent for changes to gender markers and pronouns.",
+        "Mandates parental consent for changes to sex-based accommodations."
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "US-EC-2023-006",
+      "market": "US",
+      "domain": "all",
+      "source_type": "regulatory_guidance",
+      "title": "INFORM Consumers Act",
+      "summary": "The act requires online marketplaces to collect, verify, and disclose specific information about high-volume third-party sellers to enhance transparency and accountability.",
+      "source_url": "https://www.ftc.gov/business-guidance/blog/2023/08/online-sellers-how-inform-consumers-act-could-impact-your-business?utm_source=openai",
+      "published_date": "2023-06-27",
+      "effective_date": "2023-06-27",
+      "key_provisions": [
+        "Requires online marketplaces to verify third-party sellers.",
+        "Enhances transparency in online transactions."
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "US-EC-2023-007",
+      "market": "US",
+      "domain": "all",
+      "source_type": "regulatory_guidance",
+      "title": "FTC's Updated Endorsement Guides",
+      "summary": "The updated guides clarify requirements for disclosing material connections between advertisers and endorsers, addressing the use of endorsements in social media and influencer marketing.",
+      "source_url": "https://www.ftc.gov/business-guidance/advertising-marketing/endorsements-influencers-reviews?utm_source=openai",
+      "published_date": "2023-06-01",
+      "effective_date": null,
+      "key_provisions": [
+        "Clarifies disclosure requirements for endorsements.",
+        "Addresses endorsements in social media and influencer marketing."
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "US-EC-2025-008",
+      "market": "US",
+      "domain": "all",
+      "source_type": "regulatory_guidance",
+      "title": "FTC's Rule on Unfair or Deceptive Fees",
+      "summary": "This rule prohibits bait-and-switch pricing and other tactics used to obscure and misrepresent total prices and fees in live-event ticketing and short-term lodging sectors.",
+      "source_url": "https://www.ftc.gov/business-guidance/advertising-marketing/online-advertising-marketing?utm_source=openai",
+      "published_date": "2025-05-12",
+      "effective_date": "2025-05-12",
+      "key_provisions": [
+        "Prohibits bait-and-switch pricing.",
+        "Applies to live-event tickets and short-term lodging."
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "US-MP-2025-009",
+      "market": "US",
+      "domain": "all",
+      "source_type": "executive_order",
+      "title": "Protecting Children from Chemical and Surgical Mutilation",
+      "summary": "This executive order prohibits federal funding for medical interventions aimed at changing a child's sex and directs HHS to review and rescind related policies.",
+      "source_url": "https://www.whitehouse.gov/presidential-actions/2025/01/protecting-children-from-chemical-and-surgical-mutilation/?utm_source=openai",
+      "published_date": "2025-01-28",
+      "effective_date": null,
+      "key_provisions": [
+        "Prohibits federal funding for sex-change interventions for minors.",
+        "Directs HHS to review related policies."
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "US-MP-2025-010",
+      "market": "US",
+      "domain": "all",
+      "source_type": "executive_order",
+      "title": "Reinstating Common Sense School Discipline Policies",
+      "summary": "This executive order rescinds previous guidance on school discipline and directs the Department of Education to issue new guidance emphasizing compliance with Title VI protections.",
+      "source_url": "https://www.whitehouse.gov/presidential-actions/2025/04/reinstating-common-sense-school-discipline-policies/?utm_source=openai",
+      "published_date": "2025-04-23",
+      "effective_date": null,
+      "key_provisions": [
+        "Rescinds previous guidance on school discipline.",
+        "Emphasizes compliance with Title VI protections."
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    }
+  ]
+}

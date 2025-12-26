@@ -1,0 +1,49 @@
+{
+  "assessment_id": "IMPACT-US-EC-2023-007-20251226063847",
+  "signal_id": "US-EC-2023-007",
+  "signal_title": "FTC's Updated Endorsement Guides",
+  "market": "US",
+  "domain": "all",
+  "risk_level": "P2",
+  "risk_rationale": "The FTC's updated endorsement guides introduce clarified requirements for disclosing material connections in influencer marketing, which may require adjustments to TikTok's existing policies on influencer disclosures.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-US-EC-2023-007-0",
+      "signal_id": "US-EC-2023-007",
+      "baseline_policy_id": "MP-022",
+      "baseline_requirement": "Mandatory #ad labeling for influencer disclosure for minors.",
+      "regulatory_requirement": "Clarified disclosure requirements for endorsements, addressing the use of endorsements in social media and influencer marketing.",
+      "gap_description": "The updated FTC guides may require more detailed disclosure practices beyond the current #ad labeling, potentially affecting all influencer marketing, not just those involving minors.",
+      "gap_severity": "major",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-US-EC-2023-007-0",
+      "gap_id": "GAP-US-EC-2023-007-0",
+      "remediation_type": "product_change",
+      "title": "Enhance Influencer Disclosure Practices",
+      "description": "Update influencer marketing guidelines to ensure compliance with the FTC's clarified disclosure requirements. This may include additional training for influencers and more explicit disclosure formats.",
+      "affected_features": [
+        "Influencer marketing tools",
+        "Advertising content management"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Influencer Marketing PM",
+      "acceptance_criteria": [
+        "Updated guidelines are published and communicated to influencers.",
+        "Influencer marketing campaigns include enhanced disclosure formats."
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Failure to comply with the updated FTC guidelines could result in regulatory scrutiny and potential fines, impacting TikTok's reputation and financial standing in the US market.",
+  "recommended_actions": [
+    "Review and update influencer marketing guidelines to align with FTC's updated endorsement guides.",
+    "Conduct training sessions for influencers on new disclosure requirements.",
+    "Implement monitoring mechanisms to ensure compliance with enhanced disclosure practices."
+  ],
+  "assessed_at": "2025-12-26T06:38:50.654304",
+  "assessed_by": "github_actions"
+}
