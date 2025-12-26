@@ -91,16 +91,6 @@ export default function Layout() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Outlet />
       </main>
-
-      {/* Footer */}
-      <footer className="border-t border-slate-200 bg-white mt-auto">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between text-sm text-slate-500">
-            <p>GovPulse v1.0 - Policy Monitoring Platform</p>
-            <p>Public Policy & Government Relations</p>
-          </div>
-        </div>
-      </footer>
     </div>
   )
 }

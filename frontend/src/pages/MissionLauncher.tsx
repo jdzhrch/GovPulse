@@ -757,10 +757,10 @@ export default function MissionLauncher({
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <button
-              onClick={() => window.location.href = '/GovPulse/'}
+              onClick={() => window.location.href = '/GovPulse/reports'}
               className="btn-primary"
             >
-              Go to Dashboard
+              View Scan Reports
             </button>
             <button onClick={handleNewScan} className="btn-secondary">
               Start Another Scan

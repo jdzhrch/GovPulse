@@ -61,21 +61,28 @@ export default function AuditTrail({ missions, assessments, onPushToPM }: AuditT
     return true
   })
 
-  // Build timeline events
+  // Filter missions
+  const filteredMissions = missions.filter((m) => {
+    if (filterMarket !== 'all' && m.market !== filterMarket) return false
+    if (searchQuery && !m.mission_id.toLowerCase().includes(searchQuery.toLowerCase())) return false
+    return true
+  })
+
+  // Build timeline events from filtered data
   const timelineEvents = [
-    ...missions.map(m => ({
+    ...filteredMissions.map(m => ({
       type: 'scan' as const,
       id: m.mission_id,
       timestamp: m.created_at,
       data: m
     })),
-    ...assessments.map(a => ({
+    ...filteredAssessments.map(a => ({
       type: 'report' as const,
       id: a.assessment_id,
       timestamp: a.assessed_at,
       data: a
     })),
-    ...assessments
+    ...filteredAssessments
       .filter(a => a.pushed_to_pm && a.pushed_at)
       .map(a => ({
         type: 'reviewed' as const,
@@ -176,7 +183,7 @@ export default function AuditTrail({ missions, assessments, onPushToPM }: AuditT
       )}
 
       {viewMode === 'scans' && (
-        <ScansView missions={missions} />
+        <ScansView missions={filteredMissions} />
       )}
 
       {viewMode === 'reports' && (
