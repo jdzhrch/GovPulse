@@ -5,22 +5,29 @@ import Dashboard from './pages/Dashboard'
 import MissionLauncher from './pages/MissionLauncher'
 import GapAnalysis from './pages/GapAnalysis'
 import AuditTrail from './pages/AuditTrail'
+import ScanReport from './pages/ScanReport'
 import { ImpactAssessment, ScoutMission, RegulatorySignal } from './types'
 import { mockMissions, mockAssessments } from './utils/mockData'
 
 // Use base URL from Vite config
 const BASE_URL = import.meta.env.BASE_URL || '/'
 
-// Load real data from data/history/
+// Load real data from data/history/ with cache busting
 async function loadHistoryData(): Promise<{
   missions: ScoutMission[]
   assessments: ImpactAssessment[]
 }> {
   try {
+    // Add cache buster to prevent browser caching issues
+    const cacheBuster = `?t=${Date.now()}`
+    
     // First try to load manifest.json which lists all available files
-    const manifestUrl = `${BASE_URL}data/history/manifest.json`
+    const manifestUrl = `${BASE_URL}data/history/manifest.json${cacheBuster}`
     console.log('Fetching manifest from:', manifestUrl)
-    const manifestResponse = await fetch(manifestUrl)
+    const manifestResponse = await fetch(manifestUrl, {
+      cache: 'no-store',
+      headers: { 'Cache-Control': 'no-cache' }
+    })
     let files: string[] = []
     
     if (manifestResponse.ok) {
@@ -46,39 +53,49 @@ async function loadHistoryData(): Promise<{
     const missions: ScoutMission[] = []
     const assessments: ImpactAssessment[] = []
 
-    for (const file of files) {
+    // Fetch all files in parallel with cache busting
+    const fetchPromises = files.map(async (file) => {
       try {
-        const fileResponse = await fetch(`${BASE_URL}data/history/${file}`)
-        if (!fileResponse.ok) continue
-
-        const data = await fileResponse.json()
-
-        if (file.startsWith('MISSION-')) {
-          // Convert backend data format to frontend format
-          const mission: ScoutMission = {
-            mission_id: data.mission_id,
-            market: data.market,
-            domain: data.domain,
-            lookback_days: data.lookback_days,
-            created_at: data.created_at,
-            created_by: data.created_by,
-            status: data.status,
-            signals: (data.signals || []).map((s: RegulatorySignal) => ({
-              ...s,
-              effective_date: s.effective_date || null
-            }))
-          }
-          missions.push(mission)
-        } else if (file.startsWith('IMPACT-')) {
-          const assessment: ImpactAssessment = {
-            ...data,
-            deadline: data.deadline || null,
-            pushed_to_pm: false
-          }
-          assessments.push(assessment)
-        }
+        const fileResponse = await fetch(`${BASE_URL}data/history/${file}${cacheBuster}`, {
+          cache: 'no-store'
+        })
+        if (!fileResponse.ok) return null
+        return { file, data: await fileResponse.json() }
       } catch (e) {
         console.warn(`Failed to load ${file}:`, e)
+        return null
+      }
+    })
+
+    const results = await Promise.all(fetchPromises)
+
+    for (const result of results) {
+      if (!result) continue
+      const { file, data } = result
+
+      if (file.startsWith('MISSION-')) {
+        // Convert backend data format to frontend format
+        const mission: ScoutMission = {
+          mission_id: data.mission_id,
+          market: data.market,
+          domain: data.domain,
+          lookback_days: data.lookback_days,
+          created_at: data.created_at,
+          created_by: data.created_by,
+          status: data.status,
+          signals: (data.signals || []).map((s: RegulatorySignal) => ({
+            ...s,
+            effective_date: s.effective_date || null
+          }))
+        }
+        missions.push(mission)
+      } else if (file.startsWith('IMPACT-')) {
+        const assessment: ImpactAssessment = {
+          ...data,
+          deadline: data.deadline || null,
+          pushed_to_pm: false
+        }
+        assessments.push(assessment)
       }
     }
 
@@ -163,6 +180,26 @@ function App() {
             <MissionLauncher
               onMissionCreate={handleMissionCreate}
               onAssessmentCreate={handleAssessmentCreate}
+            />
+          }
+        />
+        <Route
+          path="reports"
+          element={
+            <ScanReport
+              missions={missions}
+              assessments={assessments}
+              onPushToPM={handlePushToPM}
+            />
+          }
+        />
+        <Route
+          path="reports/:missionId"
+          element={
+            <ScanReport
+              missions={missions}
+              assessments={assessments}
+              onPushToPM={handlePushToPM}
             />
           }
         />

@@ -388,10 +388,12 @@ export default function MissionLauncher({
   }
 
   const handleViewResults = () => {
-    if (assessments.length > 0) {
-      navigate(`/analysis/${assessments[0].assessment_id}`)
+    if (missionResult) {
+      // Navigate to the scan report for this mission
+      navigate(`/reports/${missionResult.mission_id}`)
     } else {
-      navigate('/analysis')
+      // For live mode, go to the reports list (data will be loaded from server)
+      navigate('/reports')
     }
   }
 

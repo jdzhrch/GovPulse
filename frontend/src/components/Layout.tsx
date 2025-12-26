@@ -4,14 +4,16 @@ import {
   Search,
   FileCheck,
   History,
-  Activity
+  Activity,
+  ClipboardList
 } from 'lucide-react'
 import clsx from 'clsx'
 
 const navigation = [
   { name: 'Overview', to: '/', icon: LayoutDashboard },
   { name: 'New Scan', to: '/launch', icon: Search },
-  { name: 'Impact Reports', to: '/analysis', icon: FileCheck },
+  { name: 'Scan Reports', to: '/reports', icon: ClipboardList },
+  { name: 'Policy Details', to: '/analysis', icon: FileCheck },
   { name: 'History', to: '/audit', icon: History },
 ]
 
