@@ -21,7 +21,7 @@ import {
 import clsx from 'clsx'
 import { ScoutMission, ImpactAssessment, RISK_COLORS, MARKETS } from '../types'
 import RiskBadge from '../components/RiskBadge'
-import { formatDistanceToNow, format } from 'date-fns'
+import { format } from 'date-fns'
 
 interface ScanReportProps {
   missions: ScoutMission[]
@@ -142,6 +142,11 @@ export default function ScanReport({ missions, assessments, onPushToPM }: ScanRe
               return riskOrder.indexOf(a.risk_level) < riskOrder.indexOf(max) ? a.risk_level : max
             }, 'P3' as 'P0' | 'P1' | 'P2' | 'P3')
 
+            // Calculate date range for this scan
+            const scanDate = new Date(m.created_at)
+            const rangeStartDate = new Date(scanDate)
+            rangeStartDate.setDate(rangeStartDate.getDate() - m.lookback_days)
+
             return (
               <Link
                 key={m.mission_id}
@@ -166,13 +171,14 @@ export default function ScanReport({ missions, assessments, onPushToPM }: ScanRe
                             <DomainIcon className="w-4 h-4" />
                             {DOMAIN_LABELS[m.domain] || m.domain}
                           </span>
-                          <span>•</span>
-                          <span>{m.lookback_days} days</span>
-                          <span>•</span>
-                          <span className="flex items-center gap-1">
-                            <Clock className="w-4 h-4" />
-                            {formatDistanceToNow(new Date(m.created_at), { addSuffix: true })}
-                          </span>
+                        </div>
+                        <div className="mt-2 text-xs text-slate-500 space-y-0.5">
+                          <div>
+                            <strong>Scanned:</strong> {format(scanDate, 'MMM d, yyyy \'at\' h:mm a')}
+                          </div>
+                          <div>
+                            <strong>Policy range:</strong> {format(rangeStartDate, 'MMM d')} — {format(scanDate, 'MMM d, yyyy')} ({m.lookback_days} days)
+                          </div>
                         </div>
                         <div className="mt-2 flex items-center gap-4 text-sm">
                           <span className="text-govpulse-600 font-medium">
@@ -216,6 +222,11 @@ export default function ScanReport({ missions, assessments, onPushToPM }: ScanRe
   const totalGaps = relatedAssessments.reduce((sum, a) => sum + a.compliance_gaps.length, 0)
   const totalRemediations = relatedAssessments.reduce((sum, a) => sum + a.remediations.length, 0)
 
+  // Calculate scan date range
+  const scanDate = new Date(mission.created_at)
+  const rangeStartDate = new Date(scanDate)
+  rangeStartDate.setDate(rangeStartDate.getDate() - mission.lookback_days)
+
   return (
     <div className="space-y-6">
       {/* Back button */}
@@ -236,18 +247,31 @@ export default function ScanReport({ missions, assessments, onPushToPM }: ScanRe
               <h1 className="text-2xl font-bold text-slate-900 mb-2">
                 {market?.name || mission.market} Scan Report
               </h1>
-              <div className="flex flex-wrap items-center gap-4 text-sm text-slate-600">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-600">
                 <span className="flex items-center gap-1">
                   <DomainIcon className="w-4 h-4" />
                   {DOMAIN_LABELS[mission.domain] || mission.domain}
                 </span>
-                <span className="flex items-center gap-1">
-                  <Clock className="w-4 h-4" />
-                  {format(new Date(mission.created_at), 'PPpp')}
-                </span>
                 <span className="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-xs font-medium">
                   {mission.status}
                 </span>
+              </div>
+              <div className="mt-3 text-sm text-slate-500 space-y-1">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4" />
+                  <span>
+                    <strong>Scanned at:</strong> {format(scanDate, 'MMM d, yyyy \'at\' h:mm a')}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <FileText className="w-4 h-4" />
+                  <span>
+                    <strong>Policy date range:</strong> {format(rangeStartDate, 'MMM d, yyyy')} — {format(scanDate, 'MMM d, yyyy')} ({mission.lookback_days} days)
+                  </span>
+                </div>
+                <div className="text-xs text-slate-400 ml-6">
+                  Searched for policies published or updated within this date range
+                </div>
               </div>
             </div>
           </div>

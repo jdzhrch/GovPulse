@@ -601,7 +601,7 @@ export default function MissionLauncher({
 
             {/* Lookback Period */}
             <div>
-              <label className="label">Time Period</label>
+              <label className="label">Policy Date Range</label>
               <div className="flex items-center gap-3">
                 <Calendar className="w-5 h-5 text-slate-400" />
                 <div className="flex gap-2">
@@ -622,7 +622,7 @@ export default function MissionLauncher({
                 </div>
               </div>
               <p className="text-xs text-slate-500 mt-2">
-                How far back to look for regulatory changes
+                Search for policies published or updated within this time period
               </p>
             </div>
           </div>
@@ -641,7 +641,7 @@ export default function MissionLauncher({
                   <strong>Policy Area:</strong> {DOMAIN_LABELS[selectedDomain] || selectedDomain}
                 </p>
                 <p>
-                  <strong>Period:</strong> Past {lookbackDays} days
+                  <strong>Date Range:</strong> Policies from the past {lookbackDays} days (published or updated)
                 </p>
                 <p>
                   <strong>Mode:</strong> {launchMode === 'live' ? 'Live Scan' : 'Quick Preview'}
