@@ -4,9 +4,7 @@ import {
   Rocket,
   GitCompare,
   History,
-  Activity,
-  Bell,
-  User
+  Activity
 } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -56,15 +54,9 @@ export default function Layout() {
               ))}
             </nav>
 
-            {/* Right side actions */}
-            <div className="flex items-center gap-3">
-              <button className="relative p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors">
-                <Bell className="w-5 h-5" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full" />
-              </button>
-              <div className="w-8 h-8 rounded-full bg-govpulse-100 flex items-center justify-center">
-                <User className="w-4 h-4 text-govpulse-600" />
-              </div>
+            {/* Version badge */}
+            <div className="flex items-center">
+              <span className="text-xs text-slate-500 bg-slate-100 px-2 py-1 rounded">v0.1.0</span>
             </div>
           </div>
         </div>
