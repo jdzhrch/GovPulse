@@ -3,8 +3,6 @@ import { Routes, Route, useLocation } from 'react-router-dom'
 import Layout from './components/Layout'
 import Dashboard from './pages/Dashboard'
 import MissionLauncher from './pages/MissionLauncher'
-import GapAnalysis from './pages/GapAnalysis'
-import AuditTrail from './pages/AuditTrail'
 import ScanReport from './pages/ScanReport'
 import { ImpactAssessment, ScoutMission, RegulatorySignal } from './types'
 import { mockMissions, mockAssessments } from './utils/mockData'
@@ -144,13 +142,12 @@ function App() {
     refreshData()
   }, [refreshData])
 
-  // Refresh data when navigating to dashboard or analysis pages (to pick up new results)
+  // Refresh data when navigating to dashboard or reports pages (to pick up new results)
   useEffect(() => {
-    if (location.pathname === '/' || location.pathname.startsWith('/analysis') || location.pathname === '/audit') {
+    if (location.pathname === '/' || location.pathname.startsWith('/reports')) {
       refreshData()
     }
   }, [location.pathname, refreshData])
-  const [selectedAssessment, setSelectedAssessment] = useState<ImpactAssessment | null>(null)
 
   const handleMissionCreate = (mission: ScoutMission) => {
     setMissions(prev => [mission, ...prev])
@@ -201,34 +198,6 @@ function App() {
               assessments={assessments}
               onPushToPM={handlePushToPM}
             />
-          }
-        />
-        <Route
-          path="analysis"
-          element={
-            <GapAnalysis
-              assessments={assessments}
-              selectedAssessment={selectedAssessment}
-              onSelectAssessment={setSelectedAssessment}
-              onPushToPM={handlePushToPM}
-            />
-          }
-        />
-        <Route
-          path="analysis/:assessmentId"
-          element={
-            <GapAnalysis
-              assessments={assessments}
-              selectedAssessment={selectedAssessment}
-              onSelectAssessment={setSelectedAssessment}
-              onPushToPM={handlePushToPM}
-            />
-          }
-        />
-        <Route
-          path="audit"
-          element={
-            <AuditTrail missions={missions} assessments={assessments} onPushToPM={handlePushToPM} />
           }
         />
       </Route>

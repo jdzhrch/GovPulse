@@ -835,7 +835,7 @@ export default function MissionLauncher({
                     </div>
                   </div>
                   <button
-                    onClick={() => navigate(`/analysis/${assessment.assessment_id}`)}
+                    onClick={() => navigate(`/reports/${assessment.assessment_id}`)}
                     className="flex items-center gap-1 text-govpulse-600 hover:text-govpulse-700 text-sm whitespace-nowrap"
                   >
                     View details
