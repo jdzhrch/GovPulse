@@ -1,0 +1,50 @@
+{
+  "assessment_id": "IMPACT-EU-CM-2025-007-20251226201434",
+  "signal_id": "EU-CM-2025-007",
+  "signal_title": "Research API for DSA Transparency Database",
+  "market": "EU",
+  "domain": "content_moderation",
+  "risk_level": "P2",
+  "risk_rationale": "The introduction of a Research API for the DSA Transparency Database by the European Commission enhances the scrutiny of content moderation practices, which may require TikTok to ensure its transparency reports are compatible with programmatic access and analysis.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-EU-CM-2025-007-0",
+      "signal_id": "EU-CM-2025-007",
+      "baseline_policy_id": "CM-010",
+      "baseline_requirement": "DSA transparency report - Biannual (EU)",
+      "regulatory_requirement": "Programmatic search functionalities for DSA Transparency Database",
+      "gap_description": "The current baseline requires biannual transparency reports, but does not specify compatibility with programmatic access or the new Research API requirements.",
+      "gap_severity": "major",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-EU-CM-2025-007-0",
+      "gap_id": "GAP-EU-CM-2025-007-0",
+      "remediation_type": "product_change",
+      "title": "Enhance Transparency Report Compatibility",
+      "description": "Ensure that the DSA transparency reports are compatible with the new Research API by incorporating programmatic search functionalities and supporting longitudinal and cross-platform analyses.",
+      "affected_features": [
+        "Transparency Reports",
+        "Content Moderation Data"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "EU Policy Compliance PM",
+      "acceptance_criteria": [
+        "Transparency reports are accessible via the Research API.",
+        "Reports support programmatic search functionalities.",
+        "Reports facilitate longitudinal and cross-platform analyses."
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Enhancing transparency report compatibility with the Research API may increase operational transparency and compliance costs, but it also positions TikTok as a leader in regulatory compliance and transparency.",
+  "recommended_actions": [
+    "Initiate a project to assess and update transparency reports for API compatibility.",
+    "Engage with the European Commission to clarify technical requirements for the Research API.",
+    "Monitor further regulatory developments related to the DSA Transparency Database."
+  ],
+  "assessed_at": "2025-12-26T20:14:44.655217",
+  "assessed_by": "github_actions"
+}

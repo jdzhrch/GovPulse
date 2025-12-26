@@ -1,0 +1,49 @@
+{
+  "assessment_id": "IMPACT-EU-CM-2025-001-20251226201351",
+  "signal_id": "EU-CM-2025-001",
+  "signal_title": "Code of Practice on Marking and Labelling AI-Generated Content",
+  "market": "EU",
+  "domain": "content_moderation",
+  "risk_level": "P1",
+  "risk_rationale": "The draft bill introduces a new requirement for marking and labelling AI-generated content, which is not currently addressed in TikTok's content moderation policies. This represents a material compliance gap that requires immediate attention to align with the upcoming EU regulations.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-EU-CM-2025-001-0",
+      "signal_id": "EU-CM-2025-001",
+      "baseline_policy_id": "CM-004",
+      "baseline_requirement": "Intervention workflows, crisis resources for self-harm/suicide content",
+      "regulatory_requirement": "Providers of generative AI systems must mark AI-generated content.",
+      "gap_description": "The current baseline does not include requirements for marking or labelling AI-generated content, which is mandated by the new EU draft bill.",
+      "gap_severity": "major",
+      "is_blocking": true
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-EU-CM-2025-001-0",
+      "gap_id": "GAP-EU-CM-2025-001-0",
+      "remediation_type": "product_change",
+      "title": "Implement AI-Generated Content Labelling",
+      "description": "Develop and integrate a system to automatically mark and label AI-generated content on the platform, ensuring compliance with the EU's Code of Practice on AI-generated content transparency.",
+      "affected_features": [
+        "Content Creation Tools",
+        "Content Moderation Systems"
+      ],
+      "engineering_effort": "L",
+      "pm_owner_recommendation": "Content Moderation PM",
+      "acceptance_criteria": [
+        "AI-generated content is consistently marked across the platform",
+        "Labels for AI-generated content are visible to users in the EU"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Failure to comply with the new EU regulations could result in significant fines and damage to TikTok's reputation in the EU market.",
+  "recommended_actions": [
+    "Initiate a project to assess the technical requirements for AI content labelling",
+    "Engage with EU regulatory bodies to clarify compliance expectations",
+    "Develop a timeline for implementing the necessary changes before the regulation takes effect"
+  ],
+  "assessed_at": "2025-12-26T20:14:01.723255",
+  "assessed_by": "github_actions"
+}

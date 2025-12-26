@@ -1,0 +1,86 @@
+{
+  "assessment_id": "IMPACT-EU-CM-2025-005-20251226201421",
+  "signal_id": "EU-CM-2025-005",
+  "signal_title": "Draft Guidelines on Protection of Minors Online Under the DSA",
+  "market": "EU",
+  "domain": "content_moderation",
+  "risk_level": "P1",
+  "risk_rationale": "The draft guidelines introduce new requirements for age verification and content recommendation systems, which are not fully aligned with TikTok's current baseline, particularly in the EU market. The requirement for default private settings for children's accounts is partially aligned but may require adjustments for full compliance.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-EU-CM-2025-005-0",
+      "signal_id": "EU-CM-2025-005",
+      "baseline_policy_id": "MP-001",
+      "baseline_requirement": "Minimum registration age: 13 years",
+      "regulatory_requirement": "Age verification mechanisms",
+      "gap_description": "The baseline does not specify detailed age verification mechanisms, which may be required under the new guidelines.",
+      "gap_severity": "major",
+      "is_blocking": true
+    },
+    {
+      "gap_id": "GAP-EU-CM-2025-005-1",
+      "signal_id": "EU-CM-2025-005",
+      "baseline_policy_id": "MP-012",
+      "baseline_requirement": "Reduced personalization for <16",
+      "regulatory_requirement": "Improved content recommendation systems",
+      "gap_description": "The baseline requires reduced personalization but may not meet the 'improved' standard set by the new guidelines.",
+      "gap_severity": "major",
+      "is_blocking": true
+    },
+    {
+      "gap_id": "GAP-EU-CM-2025-005-2",
+      "signal_id": "EU-CM-2025-005",
+      "baseline_policy_id": "MP-002",
+      "baseline_requirement": "Account privacy for 13-15 years: Private by default",
+      "regulatory_requirement": "Default private settings for children's accounts",
+      "gap_description": "The baseline is aligned with the requirement for default private settings for children's accounts, but verification and enforcement mechanisms may need enhancement.",
+      "gap_severity": "minor",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-EU-CM-2025-005-0",
+      "gap_id": "GAP-EU-CM-2025-005-0",
+      "remediation_type": "product_change",
+      "title": "Implement Comprehensive Age Verification Mechanisms",
+      "description": "Develop and integrate robust age verification systems to comply with EU guidelines, ensuring accurate age determination for all users.",
+      "affected_features": [
+        "User Registration",
+        "Age Verification"
+      ],
+      "engineering_effort": "L",
+      "pm_owner_recommendation": "Head of User Safety",
+      "acceptance_criteria": [
+        "Age verification system is implemented and operational",
+        "Compliance with EU guidelines is verified by third-party audit"
+      ]
+    },
+    {
+      "remediation_id": "REM-EU-CM-2025-005-1",
+      "gap_id": "GAP-EU-CM-2025-005-1",
+      "remediation_type": "product_change",
+      "title": "Enhance Content Recommendation Systems",
+      "description": "Revise the content recommendation algorithms to align with EU guidelines, focusing on improved safety and reduced personalization for minors.",
+      "affected_features": [
+        "Content Recommendation",
+        "Algorithm Personalization"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Head of Algorithm Development",
+      "acceptance_criteria": [
+        "Content recommendation system meets EU guidelines",
+        "User feedback indicates improved safety and relevance"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Failure to comply with the new EU guidelines could result in significant fines and restrictions on operations within the EU market, impacting user trust and engagement.",
+  "recommended_actions": [
+    "Conduct a detailed gap analysis of current age verification processes",
+    "Initiate development of enhanced content recommendation systems",
+    "Engage with EU regulators to clarify compliance expectations"
+  ],
+  "assessed_at": "2025-12-26T20:14:29.348165",
+  "assessed_by": "github_actions"
+}

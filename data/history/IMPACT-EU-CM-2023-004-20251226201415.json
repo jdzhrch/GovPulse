@@ -1,0 +1,49 @@
+{
+  "assessment_id": "IMPACT-EU-CM-2023-004-20251226201415",
+  "signal_id": "EU-CM-2023-004",
+  "signal_title": "Public Consultation on the DSA Transparency Database",
+  "market": "EU",
+  "domain": "content_moderation",
+  "risk_level": "P2",
+  "risk_rationale": "The regulatory guidance from the EU requires platforms to submit statements explaining reasons for content removal, which aligns with transparency obligations but introduces a new requirement for public submission to a centralized database. This represents a moderate risk as it requires process adjustments but does not pose an existential threat.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-EU-CM-2023-004-0",
+      "signal_id": "EU-CM-2023-004",
+      "baseline_policy_id": "CM-010",
+      "baseline_requirement": "DSA transparency report - Biannual (EU)",
+      "regulatory_requirement": "Platforms must submit statements explaining reasons for content removal to a public database.",
+      "gap_description": "The current baseline requires biannual transparency reports, but the new regulation requires real-time or frequent submissions to a public database.",
+      "gap_severity": "major",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-EU-CM-2023-004-0",
+      "gap_id": "GAP-EU-CM-2023-004-0",
+      "remediation_type": "product_change",
+      "title": "Implement Real-Time Content Removal Statement Submission",
+      "description": "Develop a system to generate and submit statements explaining content removal decisions to the EU DSA Transparency Database in real-time or as required.",
+      "affected_features": [
+        "Content Moderation System",
+        "Transparency Reporting"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Content Moderation PM",
+      "acceptance_criteria": [
+        "System generates content removal statements with required details.",
+        "Statements are submitted to the EU DSA Transparency Database as per regulatory timelines."
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "The requirement to submit content removal statements to a public database may increase operational overhead and require additional resources for compliance. However, it enhances transparency and aligns with EU regulatory expectations, potentially improving trust with EU users.",
+  "recommended_actions": [
+    "Assess current content moderation decision documentation processes.",
+    "Develop automated tools for generating and submitting required statements.",
+    "Engage with EU regulatory bodies to clarify submission timelines and formats."
+  ],
+  "assessed_at": "2025-12-26T20:14:21.305976",
+  "assessed_by": "github_actions"
+}
