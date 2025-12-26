@@ -21,7 +21,11 @@ except ImportError:
     OPENAI_AVAILABLE = False
     print("Warning: OpenAI SDK not installed. Run: pip install openai")
 
-from .scout_engine import ScoutMission, RegulatorySignal, Domain
+# 支持相对导入和直接导入两种方式
+try:
+    from .scout_engine import ScoutMission, RegulatorySignal, Domain
+except ImportError:
+    from scout_engine import ScoutMission, RegulatorySignal, Domain
 
 
 class RiskLevel(Enum):
@@ -362,7 +366,17 @@ class ImpactAnalyzer:
     def __init__(self, baseline_path: str = "knowledge/internal_baseline.md"):
         self.baseline_path = baseline_path
         self.baseline = BaselineParser(baseline_path)
-        self.llm_analyzer = LLMAnalyzer(baseline_path)
+        self.llm_analyzer = None
+        self._llm_available = False
+        
+        # 尝试初始化 LLM 分析器，如果失败则使用 fallback
+        try:
+            self.llm_analyzer = LLMAnalyzer(baseline_path)
+            self._llm_available = True
+        except Exception as e:
+            print(f"[Warning] LLM analyzer not available: {e}")
+            print("[Warning] Will use rule-based analysis as fallback")
+        
         self.assessments: dict[str, ImpactAssessment] = {}
 
     def analyze_signal(
@@ -377,15 +391,19 @@ class ImpactAnalyzer:
         """
         assessment_id = f"IMPACT-{signal.id}-{datetime.now().strftime('%Y%m%d%H%M%S')}"
 
-        if use_llm:
+        if use_llm and self._llm_available and self.llm_analyzer:
             # Use LLM-powered analysis
-            llm_result = self.llm_analyzer.analyze_with_llm(signal)
-            return self._build_assessment_from_llm(
-                assessment_id=assessment_id,
-                signal=signal,
-                llm_result=llm_result,
-                analyst=analyst
-            )
+            try:
+                llm_result = self.llm_analyzer.analyze_with_llm(signal)
+                return self._build_assessment_from_llm(
+                    assessment_id=assessment_id,
+                    signal=signal,
+                    llm_result=llm_result,
+                    analyst=analyst
+                )
+            except Exception as e:
+                print(f"[Warning] LLM analysis failed: {e}, falling back to rule-based analysis")
+                return self._analyze_signal_rules(signal, analyst)
         else:
             # Use rule-based analysis (legacy)
             return self._analyze_signal_rules(signal, analyst)
