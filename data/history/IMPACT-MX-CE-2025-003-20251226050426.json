@@ -1,0 +1,49 @@
+{
+  "assessment_id": "IMPACT-MX-CE-2025-003-20251226050426",
+  "signal_id": "MX-CE-2025-003",
+  "signal_title": "Aprobación de la Nueva Ley de Aduanas",
+  "market": "MX",
+  "domain": "all",
+  "risk_level": "P3",
+  "risk_rationale": "The new Mexican Customs Law focuses on customs oversight and digitalization, which may indirectly affect TikTok's e-commerce and cross-border settlement processes. However, it does not directly impose new requirements on TikTok's operations.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-MX-CE-2025-003-0",
+      "signal_id": "MX-CE-2025-003",
+      "baseline_policy_id": "EC-010",
+      "baseline_requirement": "Currency conversion transparency with real-time FX disclosure at checkout.",
+      "regulatory_requirement": "Enhanced customs oversight and digitalization of customs processes.",
+      "gap_description": "Potential need for alignment with digital customs processes for cross-border transactions.",
+      "gap_severity": "minor",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-MX-CE-2025-003-0",
+      "gap_id": "GAP-MX-CE-2025-003-0",
+      "remediation_type": "product_change",
+      "title": "Align Cross-Border Processes with New Customs Digitalization",
+      "description": "Evaluate and update cross-border transaction processes to ensure alignment with Mexico's new digital customs requirements.",
+      "affected_features": [
+        "Cross-border settlement",
+        "Currency conversion"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "E-commerce Product Manager",
+      "acceptance_criteria": [
+        "Cross-border transactions comply with new digital customs processes.",
+        "Currency conversion disclosures are updated to reflect any new customs requirements."
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Minimal direct impact on TikTok's operations, but potential adjustments needed for e-commerce transactions involving customs processes.",
+  "recommended_actions": [
+    "Conduct a detailed review of the new customs law to identify specific digitalization requirements.",
+    "Engage with local legal counsel to understand the implications for e-commerce operations.",
+    "Update internal processes and systems to align with any new customs digitalization requirements."
+  ],
+  "assessed_at": "2025-12-26T05:04:33.899794",
+  "assessed_by": "github_actions"
+}

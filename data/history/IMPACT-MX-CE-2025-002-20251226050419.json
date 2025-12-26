@@ -1,0 +1,49 @@
+{
+  "assessment_id": "IMPACT-MX-CE-2025-002-20251226050419",
+  "signal_id": "MX-CE-2025-002",
+  "signal_title": "Reforma a la Ley Federal de Protección al Consumidor",
+  "market": "MX",
+  "domain": "all",
+  "risk_level": "P2",
+  "risk_rationale": "The new regulatory requirement in Mexico mandates e-commerce platforms to display total product prices upfront, which aligns with TikTok's existing global compliance baseline for price transparency but requires specific implementation for the Mexican market.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-MX-CE-2025-002-0",
+      "signal_id": "MX-CE-2025-002",
+      "baseline_policy_id": "EC-022",
+      "baseline_requirement": "All-in pricing including duties/taxes",
+      "regulatory_requirement": "Display of total product prices upfront",
+      "gap_description": "The baseline requirement is globally applicable but may need specific adjustments or confirmations for compliance with the new Mexican regulation.",
+      "gap_severity": "minor",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-MX-CE-2025-002-0",
+      "gap_id": "GAP-MX-CE-2025-002-0",
+      "remediation_type": "product_change",
+      "title": "Implement Total Price Display for Mexican Market",
+      "description": "Ensure that the e-commerce platform in Mexico displays total product prices upfront, including all applicable duties and taxes, in compliance with the new regulatory requirement.",
+      "affected_features": [
+        "E-commerce checkout process",
+        "Price display interface"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "E-commerce Product Manager for LATAM",
+      "acceptance_criteria": [
+        "Total price including all duties and taxes is displayed upfront for all products in the Mexican market.",
+        "Compliance with the new Mexican regulation is confirmed by legal review."
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "The business impact is expected to be minimal as the requirement aligns with existing global standards, but it ensures compliance and avoids potential fines or legal challenges in the Mexican market.",
+  "recommended_actions": [
+    "Review and confirm the alignment of current price display practices in Mexico with the new regulation.",
+    "Coordinate with the legal team to ensure full compliance with the Mexican consumer protection law.",
+    "Update the e-commerce platform to ensure total price display is implemented effectively in Mexico."
+  ],
+  "assessed_at": "2025-12-26T05:04:26.615990",
+  "assessed_by": "github_actions"
+}

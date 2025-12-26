@@ -1,0 +1,140 @@
+{
+  "mission_id": "MISSION-MX-20251226050314",
+  "market": "MX",
+  "domain": "all",
+  "lookback_days": 90,
+  "created_at": "2025-12-26T05:03:14.660957",
+  "created_by": "github_actions",
+  "status": "completed",
+  "generated_queries": [
+    "site:gov.mx \"protección de menores\" OR \"seguridad infantil\" AND \"regulación\" AND \"2023\"",
+    "site:gov.mx \"regulación de comercio electrónico\" AND \"2023\" AND \"nueva ley\" OR \"proyecto de ley\"",
+    "site:gov.mx \"comercio social\" AND \"guía regulatoria\" AND \"2023\"",
+    "site:gov.mx \"localización de datos\" AND \"audiencia\" OR \"fallo judicial\" AND \"2023\"",
+    "site:gov.mx \"protección de menores\" AND \"audiencia pública\" OR \"cambios regulatorios\" AND \"2023\""
+  ],
+  "signals": [
+    {
+      "id": "MX-MP-2023-001",
+      "market": "MX",
+      "domain": "all",
+      "source_type": "draft_bill",
+      "title": "Reformas al Código Penal Federal para la Protección de Menores",
+      "summary": "An initiative to reform articles 202 and 261 of the Federal Penal Code was presented, focusing on strengthening penalties against crimes affecting minors.",
+      "source_url": "https://gaceta.diputados.gob.mx/Gaceta/65/2023/nov/20231129-II-3.html?utm_source=openai",
+      "published_date": "2023-11-29",
+      "effective_date": null,
+      "key_provisions": [
+        "Strengthening penalties for crimes against minors"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "MX-MP-2023-002",
+      "market": "MX",
+      "domain": "all",
+      "source_type": "draft_bill",
+      "title": "Propuesta de Reforma a la Ley General de Educación",
+      "summary": "A reform to article 13 of the General Education Law was proposed to enhance the protection of minors in the educational environment.",
+      "source_url": "https://gaceta.diputados.gob.mx/Gaceta/65/2023/oct/20231003-III-2.html?utm_source=openai",
+      "published_date": "2023-10-03",
+      "effective_date": null,
+      "key_provisions": [
+        "Enhancing protection of minors in education"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "MX-MP-2023-003",
+      "market": "MX",
+      "domain": "all",
+      "source_type": "draft_bill",
+      "title": "Iniciativa para Combatir el Abuso Sexual Infantil en Escuelas",
+      "summary": "An initiative was presented to establish stricter measures for preventing and punishing child sexual abuse in educational institutions.",
+      "source_url": "https://gaceta.diputados.gob.mx/Gaceta/65/2023/oct/20231010-IV-4.html?utm_source=openai",
+      "published_date": "2023-10-10",
+      "effective_date": null,
+      "key_provisions": [
+        "Stricter measures against child sexual abuse in schools"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "MX-MP-2023-004",
+      "market": "MX",
+      "domain": "all",
+      "source_type": "draft_bill",
+      "title": "Propuesta de Reforma a la Ley General de los Derechos de Niñas, Niños y Adolescentes",
+      "summary": "An initiative was presented to reform the General Law on the Rights of Children and Adolescents, focusing on protection against vicarious violence.",
+      "source_url": "https://gaceta.diputados.gob.mx/Gaceta/65/2023/mar/20230316-II.html?utm_source=openai",
+      "published_date": "2023-03-16",
+      "effective_date": null,
+      "key_provisions": [
+        "Protection against vicarious violence"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "MX-CE-2025-001",
+      "market": "MX",
+      "domain": "all",
+      "source_type": "draft_bill",
+      "title": "Propuesta de Ley Federal de Comercio Electrónico",
+      "summary": "A proposal for a federal law to regulate digital commerce was developed, aiming to consolidate consumer and business rights and ensure user cybersecurity.",
+      "source_url": "https://sglinforme.diputados.gob.mx/index.php/notilegis/diputadas-y-diputados-de-morena-proponen-regular-el-comercio-electronico-en-mexico?utm_source=openai",
+      "published_date": "2025-07-31",
+      "effective_date": null,
+      "key_provisions": [
+        "Consolidation of consumer and business rights",
+        "Ensuring cybersecurity"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.8
+    },
+    {
+      "id": "MX-CE-2025-002",
+      "market": "MX",
+      "domain": "all",
+      "source_type": "draft_bill",
+      "title": "Reforma a la Ley Federal de Protección al Consumidor",
+      "summary": "An initiative to reform the Federal Consumer Protection Law was presented, requiring e-commerce platforms to display total product prices upfront.",
+      "source_url": "https://gaceta.diputados.gob.mx/Gaceta/66/2025/may/20250529.html?utm_source=openai",
+      "published_date": "2025-05-29",
+      "effective_date": null,
+      "key_provisions": [
+        "Display of total product prices upfront"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "MX-CE-2025-003",
+      "market": "MX",
+      "domain": "all",
+      "source_type": "legislation",
+      "title": "Aprobación de la Nueva Ley de Aduanas",
+      "summary": "The Mexican Congress approved a new Customs Law to enhance customs oversight, increase agent responsibilities, and promote digitalization of customs processes.",
+      "source_url": "https://elpais.com/mexico/2025-10-07/el-congreso-de-mexico-vota-la-nueva-ley-de-aduanas-en-pleno-escandalo-por-el-huachicol-fiscal.html?utm_source=openai",
+      "published_date": "2025-10-07",
+      "effective_date": null,
+      "key_provisions": [
+        "Enhanced customs oversight",
+        "Increased agent responsibilities",
+        "Digitalization of customs processes"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    }
+  ]
+}
