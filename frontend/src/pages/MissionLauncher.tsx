@@ -349,7 +349,7 @@ VITE_GITHUB_REPO_NAME=GovPulse`}
                   <span className="font-medium text-slate-900">GitHub Actions</span>
                   {!isGitHubConfigured && (
                     <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded">
-                      Not configured
+                      Local dev only
                     </span>
                   )}
                 </div>
@@ -360,7 +360,7 @@ VITE_GITHUB_REPO_NAME=GovPulse`}
             </div>
             {!isGitHubConfigured && (
               <p className="text-xs text-slate-500 mt-3">
-                Configure VITE_GITHUB_TOKEN and VITE_GITHUB_REPO_OWNER in .env.local to enable GitHub integration.
+                GitHub Actions integration requires local development setup. Use "Local Demo" mode on deployed site, or trigger workflows directly from the <a href="https://github.com/jdzhrch/GovPulse/actions" target="_blank" rel="noopener noreferrer" className="text-govpulse-600 hover:underline">GitHub Actions page</a>.
               </p>
             )}
           </div>

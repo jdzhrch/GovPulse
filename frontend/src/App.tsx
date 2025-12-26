@@ -92,11 +92,11 @@ function App() {
   const [assessments, setAssessments] = useState<ImpactAssessment[]>(mockAssessments)
   const [, setIsLoading] = useState(true)
 
-  // 加载真实历史数据
+  // Load real history data
   useEffect(() => {
     loadHistoryData().then(({ missions: realMissions, assessments: realAssessments }) => {
       if (realMissions.length > 0 || realAssessments.length > 0) {
-        // 合并真实数据和 mock 数据（真实数据优先）
+        // Merge real data with mock data (real data first)
         setMissions([...realMissions, ...mockMissions])
         setAssessments([...realAssessments, ...mockAssessments])
       }

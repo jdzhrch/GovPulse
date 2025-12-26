@@ -140,21 +140,21 @@ jobs:
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
 
-          # Generate manifest.json for frontend data loading
+          # Generate manifest.json using Python for proper JSON format
           cd data/history
-          echo '{"files": [' > manifest.json
-          first=true
-          for f in MISSION-*.json IMPACT-*.json; do
-            if [ -f "$f" ]; then
-              if [ "$first" = true ]; then
-                first=false
-              else
-                echo ',' >> manifest.json
-              fi
-              echo "\"$f\"" >> manifest.json
-            fi
-          done
-          echo ']}' >> manifest.json
+          python3 -c "
+          import os
+          import json
+
+          files = []
+          for f in sorted(os.listdir('.')):
+              if (f.startswith('MISSION-') or f.startswith('IMPACT-')) and f.endswith('.json'):
+                  files.append(f)
+
+          with open('manifest.json', 'w') as fp:
+              json.dump({'files': files}, fp)
+          print(f'Generated manifest.json with {len(files)} files')
+          "
           cd ../..
 
           # Add all new files in data/history
