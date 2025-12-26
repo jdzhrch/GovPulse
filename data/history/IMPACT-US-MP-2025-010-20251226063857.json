@@ -1,0 +1,20 @@
+{
+  "assessment_id": "IMPACT-US-MP-2025-010-20251226063857",
+  "signal_id": "US-MP-2025-010",
+  "signal_title": "Reinstating Common Sense School Discipline Policies",
+  "market": "US",
+  "domain": "all",
+  "risk_level": "P3",
+  "risk_rationale": "The executive order focuses on school discipline and Title VI protections, which do not directly impact TikTok's current compliance baseline related to minor protection standards or other domains. The emphasis on Title VI protections is more relevant to educational institutions rather than social media platforms.",
+  "compliance_gaps": [],
+  "remediations": [],
+  "deadline": null,
+  "business_impact": "Minimal impact on TikTok's operations as the executive order pertains to educational policy rather than social media regulation.",
+  "recommended_actions": [
+    "Monitor for any further regulatory developments that may impact social media platforms.",
+    "Ensure ongoing compliance with existing Title VI related obligations, if applicable.",
+    "Engage with legal counsel to confirm no indirect implications for TikTok."
+  ],
+  "assessed_at": "2025-12-26T06:38:59.200358",
+  "assessed_by": "github_actions"
+}
