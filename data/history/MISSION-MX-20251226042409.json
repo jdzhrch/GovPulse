@@ -1,0 +1,159 @@
+{
+  "mission_id": "MISSION-MX-20251226042409",
+  "market": "MX",
+  "domain": "all",
+  "lookback_days": 90,
+  "created_at": "2025-12-26T04:24:09.355643",
+  "created_by": "github_actions",
+  "status": "completed",
+  "generated_queries": [
+    [
+      "site:gov.mx \"protección de menores\" AND \"comercio electrónico\" AND fecha:[now-90d TO now]",
+      "site:gov.mx \"seguridad infantil\" AND \"localización de datos\" AND \"legislación\" AND fecha:[now-90d TO now]",
+      "site:gov.mx \"comercio social\" AND \"regulación\" AND \"audiencia pública\" AND fecha:[now-90d TO now]",
+      "site:gov.mx \"protección de menores\" AND \"sentencia judicial\" AND fecha:[now-90d TO now]",
+      "site:gov.mx \"comercio electrónico\" AND \"directrices regulatorias\" AND fecha:[now-90d TO now]"
+    ]
+  ],
+  "signals": [
+    {
+      "id": "MX-PM-2025-001",
+      "market": "MX",
+      "domain": "all",
+      "source_type": "regulatory_guidance",
+      "title": "La Protección de Datos Personales de la Niñez",
+      "summary": "El Congreso de la Ciudad de México e INFO CDMX acordaron trabajar conjuntamente para proteger los datos personales de menores, incluyendo la realización de talleres en escuelas.",
+      "source_url": "https://www.congresocdmx.gob.mx/comsoc-acuerdan-congreso-local-e-info-cdmx-trabajar-conjuntamente-proteger-datos-personales-menores-3342-3.html?utm_source=openai",
+      "published_date": "2025-12-12",
+      "effective_date": null,
+      "key_provisions": [
+        "Establecer acuerdos y convenios para talleres en escuelas",
+        "Protección de datos personales de menores"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "MX-PM-2025-002",
+      "market": "MX",
+      "domain": "all",
+      "source_type": "regulatory_guidance",
+      "title": "Alerta de la Secretaría de Seguridad Pública de Puebla",
+      "summary": "La SSP de Puebla alertó sobre los riesgos para menores en plataformas de comercio electrónico, recomendando controles parentales.",
+      "source_url": "https://www.puebla.gob.mx/index.php/noticias/item/20394-alerta-ssp-sobre-riesgos-para-menores-en-plataformas-de-comercio-electronico?utm_source=openai",
+      "published_date": "2025-09-05",
+      "effective_date": null,
+      "key_provisions": [
+        "Activar controles parentales",
+        "Supervisar el uso de dispositivos electrónicos por menores"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "MX-CE-2023-001",
+      "market": "MX",
+      "domain": "all",
+      "source_type": "legislation",
+      "title": "Reformas a la Ley Federal de Protección al Consumidor",
+      "summary": "La Cámara de Diputados aprobó reformas para proteger los derechos de los consumidores en el comercio electrónico, incluyendo la publicación de una lista de proveedores que violen derechos.",
+      "source_url": "https://comunicacionsocial.diputados.gob.mx/index.php/boletines/diputadas-y-diputados-aprueban-reformas-que-protegen-los-derechos-de-los-consumidores-de-comercio-electronico?utm_source=openai",
+      "published_date": "2023-10-30",
+      "effective_date": null,
+      "key_provisions": [
+        "Publicación de lista de proveedores que violen derechos de consumidores"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.95
+    },
+    {
+      "id": "MX-CE-2025-002",
+      "market": "MX",
+      "domain": "all",
+      "source_type": "draft_bill",
+      "title": "Propuesta para Evitar Precios Ocultos en Compras en Línea",
+      "summary": "Una propuesta de reforma al artículo 7 de la Ley Federal de Protección al Consumidor busca que las plataformas digitales muestren el precio total del producto desde el inicio del proceso de compra.",
+      "source_url": "https://comunicacionsocial.diputados.gob.mx/index.php/grupo-parlamentario/diputado-del-partido-verde-propone-reforma-para-evitar-precios-ocultos-en-compras-en-l-nea?utm_source=openai",
+      "published_date": "2025-06-08",
+      "effective_date": null,
+      "key_provisions": [
+        "Mostrar precio total del producto desde el inicio de la compra"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "MX-PM-2025-003",
+      "market": "MX",
+      "domain": "all",
+      "source_type": "regulatory_guidance",
+      "title": "Alerta sobre el Uso de Inteligencia Artificial por Menores",
+      "summary": "La Policía Cibernética alertó sobre los riesgos de que menores usen herramientas de inteligencia artificial, recomendando supervisión y educación digital.",
+      "source_url": "https://www.ssc.cdmx.gob.mx/comunicacion/nota/COM2956-13-10-2025?utm_source=openai",
+      "published_date": "2025-10-13",
+      "effective_date": null,
+      "key_provisions": [
+        "Supervisión y educación digital para menores"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "MX-PM-2025-004",
+      "market": "MX",
+      "domain": "all",
+      "source_type": "regulatory_guidance",
+      "title": "Recomendaciones para Proteger Dispositivos Móviles de Menores",
+      "summary": "La Secretaría de Seguridad y Protección Ciudadana emitió recomendaciones para que padres instalen controles parentales en dispositivos móviles de menores.",
+      "source_url": "https://gabinetedeseguridad.gob.mx/contenido/4516/la-sspc-brinda-recomendaciones-para-proteger-los-dispositivos-moviles-de-menores-y-adolescentes?utm_source=openai",
+      "published_date": "2025-02-04",
+      "effective_date": null,
+      "key_provisions": [
+        "Instalación de controles parentales en dispositivos móviles"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "MX-PM-2025-005",
+      "market": "MX",
+      "domain": "all",
+      "source_type": "draft_bill",
+      "title": "Iniciativa para Regular Publicidad Digital Dirigida a Menores",
+      "summary": "Se presentó una iniciativa para prohibir la publicidad digital dirigida a menores que fomente el consumo de alcohol, tabaco o perpetúe estereotipos discriminatorios.",
+      "source_url": "https://gaceta.diputados.gob.mx/Gaceta/66/2025/dic/20251217-II-5.html?utm_source=openai",
+      "published_date": "2025-12-17",
+      "effective_date": null,
+      "key_provisions": [
+        "Prohibición de publicidad digital dirigida a menores",
+        "Verificación de edad de usuarios en plataformas digitales"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "MX-CE-2025-003",
+      "market": "MX",
+      "domain": "all",
+      "source_type": "regulatory_guidance",
+      "title": "Concurso Nacional de Comercio Electrónico 2025",
+      "summary": "Convocatoria para el primer Concurso Nacional de Comercio Electrónico 2025, como parte del proceso de consulta para la construcción de una legislación del comercio digital.",
+      "source_url": "https://comunicacionsocial.diputados.gob.mx/index.php/notilegis/presenta-carlos-ventura-palacios-convocatoria-para-el-primer-concurso-nacional-de-comercio-electronico-2025?utm_source=openai",
+      "published_date": "2025-08-03",
+      "effective_date": null,
+      "key_provisions": [
+        "Consulta para la construcción de legislación del comercio digital"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.8
+    }
+  ]
+}

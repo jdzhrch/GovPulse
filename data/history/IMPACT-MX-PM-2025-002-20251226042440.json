@@ -1,0 +1,49 @@
+{
+  "assessment_id": "IMPACT-MX-PM-2025-002-20251226042440",
+  "signal_id": "MX-PM-2025-002",
+  "signal_title": "Alerta de la Secretaría de Seguridad Pública de Puebla",
+  "market": "MX",
+  "domain": "all",
+  "risk_level": "P2",
+  "risk_rationale": "该监管信号建议在电子商务平台上加强对未成年人的家长控制，这与TikTok现有的家长控制和家庭配对功能相关。虽然没有直接的法律强制性，但可能会影响平台在墨西哥的声誉和用户信任。",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-MX-PM-2025-002-0",
+      "signal_id": "MX-PM-2025-002",
+      "baseline_policy_id": "MP-030",
+      "baseline_requirement": "Family Pairing availability - Global rollout complete",
+      "regulatory_requirement": "Activar controles parentales",
+      "gap_description": "建议在电子商务平台上激活家长控制功能，可能需要在现有功能基础上加强或推广。",
+      "gap_severity": "minor",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-MX-PM-2025-002-0",
+      "gap_id": "GAP-MX-PM-2025-002-0",
+      "remediation_type": "product_change",
+      "title": "加强家长控制功能宣传",
+      "description": "在墨西哥市场加强对现有家长控制和家庭配对功能的宣传，以回应当地监管建议。",
+      "affected_features": [
+        "Family Pairing",
+        "Parent dashboard"
+      ],
+      "engineering_effort": "S",
+      "pm_owner_recommendation": "Regional Product Manager - LATAM",
+      "acceptance_criteria": [
+        "在墨西哥市场推出针对家长控制功能的宣传活动",
+        "监测用户反馈和使用率的提升"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "可能影响TikTok在墨西哥市场的用户信任和品牌声誉，尤其是在家长用户群体中。",
+  "recommended_actions": [
+    "在墨西哥市场推出家长控制功能的宣传活动",
+    "与当地监管机构沟通以展示合规努力",
+    "监测用户反馈以评估功能使用情况"
+  ],
+  "assessed_at": "2025-12-26T04:24:45.633532",
+  "assessed_by": "github_actions"
+}

@@ -1,0 +1,49 @@
+{
+  "assessment_id": "IMPACT-MX-PM-2025-004-20251226042502",
+  "signal_id": "MX-PM-2025-004",
+  "signal_title": "Recomendaciones para Proteger Dispositivos Móviles de Menores",
+  "market": "MX",
+  "domain": "all",
+  "risk_level": "P2",
+  "risk_rationale": "墨西哥的监管指导建议父母在未成年人设备上安装家长控制，这与我们现有的全球家长控制政策可能存在差距。",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-MX-PM-2025-004-0",
+      "signal_id": "MX-PM-2025-004",
+      "baseline_policy_id": "MP-030",
+      "baseline_requirement": "Family Pairing availability - Global rollout complete",
+      "regulatory_requirement": "Instalación de controles parentales en dispositivos móviles",
+      "gap_description": "当前基准仅强调全球推出家庭配对功能，但未明确要求在设备上安装家长控制。",
+      "gap_severity": "minor",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-MX-PM-2025-004-0",
+      "gap_id": "GAP-MX-PM-2025-004-0",
+      "remediation_type": "product_change",
+      "title": "增强家长控制功能",
+      "description": "在现有的家庭配对功能中增加明确的家长控制安装指导，确保符合墨西哥的监管建议。",
+      "affected_features": [
+        "Family Pairing",
+        "Parent Dashboard"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Family Safety PM",
+      "acceptance_criteria": [
+        "在墨西哥市场推出更新的家长控制安装指南",
+        "确保所有用户都能访问并理解这些指南"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "可能需要在墨西哥市场进行额外的用户教育和支持，以确保家长能够正确安装和使用家长控制功能。",
+  "recommended_actions": [
+    "评估现有家长控制功能的覆盖范围",
+    "与墨西哥当地的监管机构沟通以确认合规性",
+    "在墨西哥市场推出针对家长的教育活动"
+  ],
+  "assessed_at": "2025-12-26T04:25:08.741023",
+  "assessed_by": "github_actions"
+}

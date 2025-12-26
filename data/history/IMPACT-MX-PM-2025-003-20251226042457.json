@@ -1,0 +1,49 @@
+{
+  "assessment_id": "IMPACT-MX-PM-2025-003-20251226042457",
+  "signal_id": "MX-PM-2025-003",
+  "signal_title": "Alerta sobre el Uso de Inteligencia Artificial por Menores",
+  "market": "MX",
+  "domain": "all",
+  "risk_level": "P3",
+  "risk_rationale": "该监管信号建议对未成年人使用人工智能工具进行监督和数字教育，但没有强制性要求或具体合规标准。因此，风险较低，仅需监控。",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-MX-PM-2025-003-0",
+      "signal_id": "MX-PM-2025-003",
+      "baseline_policy_id": "MP-010",
+      "baseline_requirement": "未成年人默认60分钟屏幕时间管理，需使用绕过代码。",
+      "regulatory_requirement": "建议对未成年人使用人工智能工具进行监督和数字教育。",
+      "gap_description": "当前基准没有具体涉及人工智能工具的监督和教育要求。",
+      "gap_severity": "minor",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-MX-PM-2025-003-0",
+      "gap_id": "GAP-MX-PM-2025-003-0",
+      "remediation_type": "product_change",
+      "title": "增加人工智能工具使用的家长监督选项",
+      "description": "在家长控制功能中增加对未成年人使用人工智能工具的监督选项，并提供相关的数字教育资源。",
+      "affected_features": [
+        "家长控制",
+        "屏幕时间管理"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "家长控制产品经理",
+      "acceptance_criteria": [
+        "家长可以选择启用对AI工具的使用监督",
+        "提供数字教育资源链接"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "可能需要增加家长控制功能的复杂性，但不会对现有业务模式产生重大影响。",
+  "recommended_actions": [
+    "监控该监管信号的进一步发展",
+    "评估增加家长监督功能的可行性",
+    "与监管机构保持沟通以获取更多指导"
+  ],
+  "assessed_at": "2025-12-26T04:25:02.401862",
+  "assessed_by": "github_actions"
+}
