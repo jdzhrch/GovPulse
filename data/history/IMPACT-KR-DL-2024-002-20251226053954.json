@@ -1,0 +1,20 @@
+{
+  "assessment_id": "IMPACT-KR-DL-2024-002-20251226053954",
+  "signal_id": "KR-DL-2024-002",
+  "signal_title": "개인정보 보호위원회 직제 일부개정",
+  "market": "KR",
+  "domain": "all",
+  "risk_level": "P3",
+  "risk_rationale": "The regulatory signal indicates an increase in personnel for dispute mediation and the operation of a personal information protection level evaluation system in Korea. This does not directly impose new compliance requirements on TikTok but suggests an enhanced regulatory oversight environment.",
+  "compliance_gaps": [],
+  "remediations": [],
+  "deadline": null,
+  "business_impact": "The business impact is minimal as the regulatory change focuses on enhancing the capabilities of the regulatory body rather than imposing new obligations on TikTok. However, increased oversight may lead to more frequent audits or inquiries.",
+  "recommended_actions": [
+    "Monitor developments related to the personal information protection level evaluation system.",
+    "Prepare for potential increased engagement with Korean regulatory authorities.",
+    "Ensure that current data protection practices align with Korean regulations to avoid future compliance issues."
+  ],
+  "assessed_at": "2025-12-26T05:39:57.426347",
+  "assessed_by": "github_actions"
+}

@@ -1,0 +1,49 @@
+{
+  "assessment_id": "IMPACT-KR-EC-2025-005-20251226054006",
+  "signal_id": "KR-EC-2025-005",
+  "signal_title": "Amendments to the Enforcement Decree of the Network Act",
+  "market": "KR",
+  "domain": "all",
+  "risk_level": "P2",
+  "risk_rationale": "The new regulation in South Korea mandates measures to prevent illegal information distribution, which aligns with TikTok's existing content moderation policies but may require additional compliance measures specific to South Korea.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-KR-EC-2025-005-0",
+      "signal_id": "KR-EC-2025-005",
+      "baseline_policy_id": "CM-002",
+      "baseline_requirement": "Terrorism content detection using GIFCT hash-sharing membership.",
+      "regulatory_requirement": "Measures to prevent illegal information distribution.",
+      "gap_description": "The regulation may require additional or specific measures beyond current global standards to address illegal information distribution in South Korea.",
+      "gap_severity": "major",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-KR-EC-2025-005-0",
+      "gap_id": "GAP-KR-EC-2025-005-0",
+      "remediation_type": "product_change",
+      "title": "Enhance Illegal Content Detection for South Korea",
+      "description": "Implement additional measures to detect and prevent illegal information distribution specific to South Korean regulations.",
+      "affected_features": [
+        "Content Moderation",
+        "Proactive Detection"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Regional Policy Lead - South Korea",
+      "acceptance_criteria": [
+        "Implementation of additional detection measures for illegal content specific to South Korea.",
+        "Compliance with South Korean legal requirements for content distribution."
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Potential increase in compliance costs and operational adjustments to meet South Korean regulatory requirements.",
+  "recommended_actions": [
+    "Conduct a detailed legal analysis of the new South Korean regulation.",
+    "Develop and implement additional content moderation measures specific to South Korea.",
+    "Engage with South Korean regulators to ensure compliance and clarify requirements."
+  ],
+  "assessed_at": "2025-12-26T05:40:10.260278",
+  "assessed_by": "github_actions"
+}
