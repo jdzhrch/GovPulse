@@ -1,0 +1,20 @@
+{
+  "assessment_id": "IMPACT-US-MP-2025-001-20251227063700",
+  "signal_id": "US-MP-2025-001",
+  "signal_title": "Social Security Child Protection Act of 2025",
+  "market": "US",
+  "domain": "all",
+  "risk_level": "P3",
+  "risk_rationale": "The regulatory signal pertains to the reissuance of Social Security numbers to minors, which is primarily a measure for identity theft prevention. It does not directly impact TikTok's current compliance baseline related to minor protection, e-commerce, data sovereignty, or content moderation.",
+  "compliance_gaps": [],
+  "remediations": [],
+  "deadline": null,
+  "business_impact": "Minimal business impact as the regulation focuses on identity theft prevention through Social Security number management, which is outside the scope of TikTok's current operations and compliance requirements.",
+  "recommended_actions": [
+    "Monitor for any further developments or related regulations that may impact user identity verification processes.",
+    "Ensure that any identity verification processes for minors are compliant with updated Social Security number protocols.",
+    "Engage with legal and policy teams to assess any indirect implications on data handling and user verification."
+  ],
+  "assessed_at": "2025-12-27T06:37:03.258057",
+  "assessed_by": "github_actions"
+}

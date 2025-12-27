@@ -1,0 +1,77 @@
+{
+  "assessment_id": "IMPACT-US-MP-2024-004-20251227063709",
+  "signal_id": "US-MP-2024-004",
+  "signal_title": "Kids Online Safety Act",
+  "market": "US",
+  "domain": "all",
+  "risk_level": "P1",
+  "risk_rationale": "The Kids Online Safety Act introduces new requirements for default safeguard settings and parental control tools that may necessitate immediate product changes to align with the legislation.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-US-MP-2024-004-0",
+      "signal_id": "US-MP-2024-004",
+      "baseline_policy_id": "MP-002",
+      "baseline_requirement": "Account privacy for 13-15 years is private by default with no opt-out allowed.",
+      "regulatory_requirement": "Default safeguard settings for minors.",
+      "gap_description": "The legislation may require additional safeguard settings beyond account privacy, such as content restrictions or activity monitoring.",
+      "gap_severity": "major",
+      "is_blocking": true
+    },
+    {
+      "gap_id": "GAP-US-MP-2024-004-1",
+      "signal_id": "US-MP-2024-004",
+      "baseline_policy_id": "MP-030",
+      "baseline_requirement": "Family Pairing availability is globally rolled out.",
+      "regulatory_requirement": "Parental control tools.",
+      "gap_description": "The legislation may require enhancements to existing parental control tools to meet new standards.",
+      "gap_severity": "major",
+      "is_blocking": true
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-US-MP-2024-004-0",
+      "gap_id": "GAP-US-MP-2024-004-0",
+      "remediation_type": "product_change",
+      "title": "Enhance Default Safeguard Settings",
+      "description": "Implement additional default safeguard settings for minors, such as content restrictions and activity monitoring, to comply with the Kids Online Safety Act.",
+      "affected_features": [
+        "Account privacy settings",
+        "Content restrictions",
+        "Activity monitoring"
+      ],
+      "engineering_effort": "L",
+      "pm_owner_recommendation": "Minor Protection Product Manager",
+      "acceptance_criteria": [
+        "New safeguard settings are implemented and enabled by default for minors",
+        "Settings comply with the Kids Online Safety Act requirements"
+      ]
+    },
+    {
+      "remediation_id": "REM-US-MP-2024-004-1",
+      "gap_id": "GAP-US-MP-2024-004-1",
+      "remediation_type": "product_change",
+      "title": "Upgrade Parental Control Tools",
+      "description": "Enhance existing parental control tools to provide more comprehensive monitoring and control options for parents, in line with the Kids Online Safety Act.",
+      "affected_features": [
+        "Family Pairing",
+        "Parental dashboard"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Family Safety Product Manager",
+      "acceptance_criteria": [
+        "Parental control tools offer enhanced features as per the new legislation",
+        "Tools are user-friendly and accessible to parents"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Failure to comply with the Kids Online Safety Act could result in significant legal and financial repercussions, including fines and potential restrictions on platform operations in the US market.",
+  "recommended_actions": [
+    "Conduct a detailed gap analysis to identify all areas requiring updates",
+    "Prioritize engineering resources to implement necessary changes",
+    "Engage with legal and policy teams to ensure full compliance with the legislation"
+  ],
+  "assessed_at": "2025-12-27T06:37:14.761253",
+  "assessed_by": "github_actions"
+}

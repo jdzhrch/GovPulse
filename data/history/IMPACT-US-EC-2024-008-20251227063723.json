@@ -1,0 +1,75 @@
+{
+  "assessment_id": "IMPACT-US-EC-2024-008-20251227063723",
+  "signal_id": "US-EC-2024-008",
+  "signal_title": "FTC's Social Media and Video Streaming Services Report",
+  "market": "US",
+  "domain": "all",
+  "risk_level": "P2",
+  "risk_rationale": "The FTC report highlights concerns about content moderation and its impact on children and teens, aligning with existing TikTok policies but indicating potential areas for enhancement.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-US-EC-2024-008-0",
+      "signal_id": "US-EC-2024-008",
+      "baseline_policy_id": "CM-001",
+      "baseline_requirement": "CSAM detection using PhotoDNA + proprietary classifiers",
+      "regulatory_requirement": "Enhanced content moderation practices for child safety",
+      "gap_description": "The FTC report suggests a need for more robust content moderation practices to protect children and teens.",
+      "gap_severity": "major",
+      "is_blocking": false
+    },
+    {
+      "gap_id": "GAP-US-EC-2024-008-1",
+      "signal_id": "US-EC-2024-008",
+      "baseline_policy_id": "MP-014",
+      "baseline_requirement": "No mature content surfaced to minors",
+      "regulatory_requirement": "Enhanced protection against harmful content for minors",
+      "gap_description": "The report implies a need for stricter controls on content exposure to minors.",
+      "gap_severity": "major",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-US-EC-2024-008-0",
+      "gap_id": "GAP-US-EC-2024-008-0",
+      "remediation_type": "product_change",
+      "title": "Enhance Content Moderation for Child Safety",
+      "description": "Implement additional content moderation measures to better protect children and teens from harmful content.",
+      "affected_features": [
+        "Content Moderation System",
+        "Algorithm Personalization"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Content Safety PM",
+      "acceptance_criteria": [
+        "Improved detection accuracy for harmful content",
+        "Reduced exposure of mature content to minors"
+      ]
+    },
+    {
+      "remediation_id": "REM-US-EC-2024-008-1",
+      "gap_id": "GAP-US-EC-2024-008-1",
+      "remediation_type": "product_change",
+      "title": "Strengthen Content Filtering for Minors",
+      "description": "Develop more stringent content filtering mechanisms to ensure no mature content is accessible to minors.",
+      "affected_features": [
+        "Content Filtering System"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Minor Protection PM",
+      "acceptance_criteria": [
+        "No mature content accessible to accounts flagged as minors",
+        "Regular audits of content filtering effectiveness"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Enhancing content moderation and filtering for minors could increase user trust and compliance with regulatory expectations, potentially reducing legal risks.",
+  "recommended_actions": [
+    "Conduct a detailed review of current content moderation practices",
+    "Develop a roadmap for implementing enhanced content filtering",
+    "Engage with FTC to clarify expectations and demonstrate compliance efforts"
+  ],
+  "assessed_at": "2025-12-27T06:37:28.231479",
+  "assessed_by": "github_actions"
+}

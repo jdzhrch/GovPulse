@@ -1,0 +1,49 @@
+{
+  "assessment_id": "IMPACT-US-DL-2024-012-20251227063739",
+  "signal_id": "US-DL-2024-012",
+  "signal_title": "Protecting Americans' Data from Foreign Adversaries Act of 2024",
+  "market": "US",
+  "domain": "all",
+  "risk_level": "P1",
+  "risk_rationale": "The new legislation imposes restrictions on data sales to foreign adversaries, which could impact TikTok's data handling practices, particularly concerning cross-border data transfers and data sovereignty policies.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-US-DL-2024-012-0",
+      "signal_id": "US-DL-2024-012",
+      "baseline_policy_id": "DS-013",
+      "baseline_requirement": "Government access transparency with annual transparency report",
+      "regulatory_requirement": "Restrictions on data sales to foreign adversaries",
+      "gap_description": "The baseline does not explicitly address restrictions on data sales to foreign adversaries, which is a new requirement under the legislation.",
+      "gap_severity": "major",
+      "is_blocking": true
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-US-DL-2024-012-0",
+      "gap_id": "GAP-US-DL-2024-012-0",
+      "remediation_type": "product_change",
+      "title": "Implement Data Sale Restrictions",
+      "description": "Develop and enforce policies to ensure no U.S. user data is sold to entities classified as foreign adversaries. This includes updating data handling protocols and enhancing transparency measures.",
+      "affected_features": [
+        "Data handling protocols",
+        "Transparency reports"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Data Compliance PM",
+      "acceptance_criteria": [
+        "No data sales to foreign adversaries",
+        "Updated transparency reports reflecting compliance with the new legislation"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Failure to comply with the new legislation could result in significant legal and financial penalties, as well as damage to TikTok's reputation in the U.S. market.",
+  "recommended_actions": [
+    "Review and update data handling policies to comply with the new legislation",
+    "Enhance transparency measures to include compliance with restrictions on data sales",
+    "Coordinate with legal and policy teams to ensure alignment with national security safeguards"
+  ],
+  "assessed_at": "2025-12-27T06:37:42.430251",
+  "assessed_by": "github_actions"
+}

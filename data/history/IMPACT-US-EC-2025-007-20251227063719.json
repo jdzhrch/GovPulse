@@ -1,0 +1,59 @@
+{
+  "assessment_id": "IMPACT-US-EC-2025-007-20251227063719",
+  "signal_id": "US-EC-2025-007",
+  "signal_title": "Digital Asset Market Clarity Act of 2025",
+  "market": "US",
+  "domain": "all",
+  "risk_level": "P2",
+  "risk_rationale": "The Digital Asset Market Clarity Act of 2025 introduces federal oversight for digital commodity marketplaces, which may impact TikTok's e-commerce and payment operations if digital assets are integrated. Currently, TikTok's baseline does not explicitly address digital assets, indicating a moderate risk that can be resolved within a quarter.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-US-EC-2025-007-0",
+      "signal_id": "US-EC-2025-007",
+      "baseline_policy_id": "EC-001",
+      "baseline_requirement": "Social-commerce separation",
+      "regulatory_requirement": "Federal oversight of digital commodity marketplaces",
+      "gap_description": "The baseline does not address compliance with federal oversight for digital commodity marketplaces, which may be required if TikTok integrates digital assets into its platform.",
+      "gap_severity": "major",
+      "is_blocking": false
+    },
+    {
+      "gap_id": "GAP-US-EC-2025-007-1",
+      "signal_id": "US-EC-2025-007",
+      "baseline_policy_id": "EC-003",
+      "baseline_requirement": "Payment processor independence",
+      "regulatory_requirement": "Compliance roadmap for digital assets",
+      "gap_description": "The baseline does not include a compliance roadmap for digital assets, which may be necessary under the new legislation.",
+      "gap_severity": "major",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-US-EC-2025-007-0",
+      "gap_id": "GAP-US-EC-2025-007-0",
+      "remediation_type": "product_change",
+      "title": "Integrate Digital Asset Compliance Framework",
+      "description": "Develop and implement a compliance framework for digital assets in alignment with the Digital Asset Market Clarity Act of 2025, ensuring adherence to federal oversight requirements.",
+      "affected_features": [
+        "E-commerce platform",
+        "Payment processing"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "E-commerce Product Manager",
+      "acceptance_criteria": [
+        "Compliance framework for digital assets is documented and approved",
+        "Federal oversight requirements are integrated into platform operations"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "The integration of digital asset compliance may open new revenue streams through digital commodities but requires investment in compliance infrastructure.",
+  "recommended_actions": [
+    "Conduct a detailed impact assessment of digital asset integration",
+    "Develop a compliance roadmap for digital assets",
+    "Engage with legal counsel to ensure alignment with federal oversight requirements"
+  ],
+  "assessed_at": "2025-12-27T06:37:23.945576",
+  "assessed_by": "github_actions"
+}
