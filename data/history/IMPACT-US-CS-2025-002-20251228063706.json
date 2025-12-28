@@ -1,0 +1,71 @@
+{
+  "assessment_id": "IMPACT-US-CS-2025-002-20251228063706",
+  "signal_id": "US-CS-2025-002",
+  "signal_title": "Children's Online Privacy Protection Enhancement Act",
+  "market": "US",
+  "domain": "all",
+  "risk_level": "P1",
+  "risk_rationale": "The draft bill proposes amendments to the existing Children's Online Privacy Protection Act, which could introduce new compliance requirements for online platforms handling minors' data. This presents a material compliance gap requiring immediate attention and potential product changes.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-US-CS-2025-002-0",
+      "signal_id": "US-CS-2025-002",
+      "baseline_policy_id": "MP-001",
+      "baseline_requirement": "Minimum registration age is 13 years.",
+      "regulatory_requirement": "Potentially lower or higher minimum registration age or additional consent requirements.",
+      "gap_description": "The draft bill may introduce changes to the minimum registration age or require additional parental consent mechanisms.",
+      "gap_severity": "major",
+      "is_blocking": true
+    },
+    {
+      "gap_id": "GAP-US-CS-2025-002-1",
+      "signal_id": "US-CS-2025-002",
+      "baseline_policy_id": "MP-002",
+      "baseline_requirement": "Account privacy for 13-15 years is private by default with no opt-out allowed.",
+      "regulatory_requirement": "Potentially stricter privacy controls or additional consent requirements for minors.",
+      "gap_description": "The draft bill may require stricter privacy controls or additional consent mechanisms for minors' accounts.",
+      "gap_severity": "major",
+      "is_blocking": true
+    },
+    {
+      "gap_id": "GAP-US-CS-2025-002-2",
+      "signal_id": "US-CS-2025-002",
+      "baseline_policy_id": "MP-020",
+      "baseline_requirement": "Personalized ads to <18 are prohibited globally.",
+      "regulatory_requirement": "Potentially stricter advertising restrictions or new disclosure requirements for minors.",
+      "gap_description": "The draft bill may introduce stricter advertising restrictions or require new disclosures for ads targeting minors.",
+      "gap_severity": "major",
+      "is_blocking": true
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-US-CS-2025-002-0",
+      "gap_id": "GAP-US-CS-2025-002-0",
+      "remediation_type": "product_change",
+      "title": "Review and Update Minor Protection Policies",
+      "description": "Conduct a comprehensive review of the current minor protection policies to identify areas that may require updates in response to the new regulatory requirements. Implement necessary changes to ensure compliance with the amended Children's Online Privacy Protection Act.",
+      "affected_features": [
+        "Account registration",
+        "Privacy settings",
+        "Advertising mechanisms"
+      ],
+      "engineering_effort": "L",
+      "pm_owner_recommendation": "Minor Protection PM",
+      "acceptance_criteria": [
+        "Updated policies are aligned with the new regulatory requirements",
+        "All affected features are compliant with the amended act",
+        "Legal team approval of changes"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Failure to comply with the amended act could result in significant legal penalties and reputational damage, affecting user trust and platform integrity.",
+  "recommended_actions": [
+    "Initiate a legal review of the draft bill to understand specific compliance requirements.",
+    "Engage with policymakers to provide feedback on the draft bill and advocate for feasible compliance timelines.",
+    "Develop a cross-functional task force to oversee the implementation of necessary changes."
+  ],
+  "assessed_at": "2025-12-28T06:37:11.131107",
+  "assessed_by": "github_actions"
+}

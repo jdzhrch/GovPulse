@@ -1,0 +1,51 @@
+{
+  "assessment_id": "IMPACT-US-EC-2023-006-20251228063720",
+  "signal_id": "US-EC-2023-006",
+  "signal_title": "The INFORM Consumers Act",
+  "market": "US",
+  "domain": "all",
+  "risk_level": "P1",
+  "risk_rationale": "The INFORM Consumers Act introduces new requirements for online marketplaces to collect, verify, and disclose information about high-volume third-party sellers, which is not fully covered by the current compliance baseline.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-US-EC-2023-006-0",
+      "signal_id": "US-EC-2023-006",
+      "baseline_policy_id": "EC-030",
+      "baseline_requirement": "Business license verification is mandatory for all sellers.",
+      "regulatory_requirement": "Requires information collection and verification of high-volume third-party sellers.",
+      "gap_description": "The baseline requires business license verification for all sellers, but the new regulation specifically targets high-volume sellers and includes additional requirements for consumer disclosure and suspicious activity reporting.",
+      "gap_severity": "major",
+      "is_blocking": true
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-US-EC-2023-006-0",
+      "gap_id": "GAP-US-EC-2023-006-0",
+      "remediation_type": "product_change",
+      "title": "Enhance Seller Verification and Disclosure Processes",
+      "description": "Implement processes to collect, verify, and disclose information about high-volume third-party sellers, including establishing a mechanism for reporting suspicious activities.",
+      "affected_features": [
+        "Seller onboarding",
+        "Seller profile management",
+        "Consumer-facing seller information"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "E-commerce Product Manager",
+      "acceptance_criteria": [
+        "High-volume sellers are identified and verified according to the new requirements.",
+        "Seller information is disclosed to consumers as mandated.",
+        "A reporting mechanism for suspicious activities is implemented."
+      ]
+    }
+  ],
+  "deadline": "2023-06-27",
+  "business_impact": "Failure to comply with the INFORM Consumers Act could lead to regulatory penalties and damage to consumer trust, impacting the platform's reputation and operations in the US market.",
+  "recommended_actions": [
+    "Review and update seller verification processes to align with the INFORM Consumers Act.",
+    "Develop a consumer disclosure feature for high-volume seller information.",
+    "Implement a reporting mechanism for suspicious seller activities."
+  ],
+  "assessed_at": "2025-12-28T06:37:24.752533",
+  "assessed_by": "github_actions"
+}

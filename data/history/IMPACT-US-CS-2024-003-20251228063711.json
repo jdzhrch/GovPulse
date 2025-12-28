@@ -1,0 +1,59 @@
+{
+  "assessment_id": "IMPACT-US-CS-2024-003-20251228063711",
+  "signal_id": "US-CS-2024-003",
+  "signal_title": "Child Safety and Well-Being Act of 2024",
+  "market": "US",
+  "domain": "all",
+  "risk_level": "P3",
+  "risk_rationale": "The draft bill proposes the establishment of an independent Children's Commission to oversee child safety, which may influence future regulatory requirements but does not immediately conflict with existing TikTok policies.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-US-CS-2024-003-0",
+      "signal_id": "US-CS-2024-003",
+      "baseline_policy_id": "MP-001",
+      "baseline_requirement": "Minimum registration age is 13 years globally, with regional variations.",
+      "regulatory_requirement": "No specific age requirement mentioned, but oversight by a Children's Commission could lead to future changes.",
+      "gap_description": "Potential future changes to age requirements or oversight mechanisms.",
+      "gap_severity": "minor",
+      "is_blocking": false
+    },
+    {
+      "gap_id": "GAP-US-CS-2024-003-1",
+      "signal_id": "US-CS-2024-003",
+      "baseline_policy_id": "MP-010",
+      "baseline_requirement": "Screen time management with a 60-min default for users under 18, with a bypass code.",
+      "regulatory_requirement": "No specific requirement mentioned, but oversight by a Children's Commission could lead to future changes.",
+      "gap_description": "Potential future changes to screen time management policies.",
+      "gap_severity": "minor",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-US-CS-2024-003-0",
+      "gap_id": "GAP-US-CS-2024-003-0",
+      "remediation_type": "product_change",
+      "title": "Monitor Legislative Developments",
+      "description": "Continuously monitor the progress of the Child Safety and Well-Being Act of 2024 and any subsequent regulations or guidelines issued by the proposed Children's Commission.",
+      "affected_features": [
+        "Age-Gated Account Controls",
+        "Screen Time Management"
+      ],
+      "engineering_effort": "S",
+      "pm_owner_recommendation": "Global Public Policy & Government Relations",
+      "acceptance_criteria": [
+        "Regular updates on legislative progress",
+        "Impact assessment of any new guidelines issued by the Children's Commission"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Currently low impact, but potential for future regulatory changes that could affect user registration and content management policies.",
+  "recommended_actions": [
+    "Monitor the legislative process of the Child Safety and Well-Being Act of 2024.",
+    "Engage with policymakers to understand potential future requirements.",
+    "Prepare for potential adjustments to age-gated controls and screen time management policies."
+  ],
+  "assessed_at": "2025-12-28T06:37:15.384530",
+  "assessed_by": "github_actions"
+}
