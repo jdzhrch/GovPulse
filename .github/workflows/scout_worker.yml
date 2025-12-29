@@ -28,10 +28,10 @@ on:
         required: false
         type: string
 
-  # Schedule regular scans for priority markets
-  schedule:
-    # Run daily at 6 AM UTC for Tier 1 markets
-    - cron: '0 6 * * *'
+  # Schedule regular scans for priority markets (DISABLED)
+  # schedule:
+  #   # Run daily at 6 AM UTC for Tier 1 markets
+  #   - cron: '0 6 * * *'
 
 jobs:
   scout-mission:
