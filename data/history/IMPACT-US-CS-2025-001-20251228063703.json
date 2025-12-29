@@ -1,0 +1,20 @@
+{
+  "assessment_id": "IMPACT-US-CS-2025-001-20251228063703",
+  "signal_id": "US-CS-2025-001",
+  "signal_title": "Social Security Child Protection Act of 2025",
+  "market": "US",
+  "domain": "all",
+  "risk_level": "P3",
+  "risk_rationale": "The regulatory signal pertains to the issuance of Social Security numbers for children under 14, which does not directly impact TikTok's current compliance baseline as it does not involve data handling or privacy policies related to Social Security numbers.",
+  "compliance_gaps": [],
+  "remediations": [],
+  "deadline": null,
+  "business_impact": "Minimal business impact as the regulation does not affect TikTok's operations or compliance obligations directly.",
+  "recommended_actions": [
+    "Monitor the progress of the bill for any amendments that might affect data privacy policies.",
+    "Ensure that any data handling practices involving minors are compliant with existing privacy laws.",
+    "Continue engagement with legal teams to assess any indirect implications of the bill."
+  ],
+  "assessed_at": "2025-12-28T06:37:06.771559",
+  "assessed_by": "github_actions"
+}

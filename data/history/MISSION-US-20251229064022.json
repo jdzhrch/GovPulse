@@ -1,0 +1,124 @@
+{
+  "mission_id": "MISSION-US-20251229064022",
+  "market": "US",
+  "domain": "all",
+  "lookback_days": 90,
+  "created_at": "2025-12-29T06:40:22.379076",
+  "created_by": "github_actions",
+  "status": "completed",
+  "generated_queries": [
+    "site:congress.gov \"children safety\" OR \"minor protection\" AND (\"draft bill\" OR \"enacted law\") AND date:[2023-07-01 TO 2023-10-01]",
+    "site:ftc.gov \"e-commerce regulation\" OR \"social commerce\" AND \"regulatory guidance\" AND date:[2023-07-01 TO 2023-10-01]",
+    "site:justice.gov \"data localization\" AND (\"court ruling\" OR \"hearing\") AND date:[2023-07-01 TO 2023-10-01]",
+    "site:whitehouse.gov \"children safety\" OR \"minor protection\" AND \"executive order\" AND date:[2023-07-01 TO 2023-10-01]",
+    "site:ftc.gov OR site:fcc.gov \"social commerce\" AND \"regulatory guidance\" AND date:[2023-07-01 TO 2023-10-01]"
+  ],
+  "signals": [
+    {
+      "id": "US-MP-2025-001",
+      "market": "US",
+      "domain": "all",
+      "source_type": "draft_bill",
+      "title": "Social Security Child Protection Act of 2025",
+      "summary": "This act mandates the issuance of a new Social Security number to children under 14 if their original number's confidentiality is compromised. It aims to enhance identity protection for minors.",
+      "source_url": "https://www.congress.gov/bill/119th-congress/house-bill/5348/text/rfs?utm_source=openai",
+      "published_date": "2025-09-15",
+      "effective_date": null,
+      "key_provisions": [
+        "Mandates new Social Security numbers for compromised identities of children under 14"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.95
+    },
+    {
+      "id": "US-MP-2025-002",
+      "market": "US",
+      "domain": "all",
+      "source_type": "draft_bill",
+      "title": "Children's Online Privacy Protection Enhancement Act",
+      "summary": "This proposed legislation seeks to amend the Children's Online Privacy Protection Act of 1998 to strengthen online safety measures for minors.",
+      "source_url": "https://www.congress.gov/119/bills/hr6289/BILLS-119hr6289ih.htm?utm_source=openai",
+      "published_date": "2025-11-25",
+      "effective_date": null,
+      "key_provisions": [
+        "Amends COPPA to enhance online safety for minors"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "US-MP-2025-003",
+      "market": "US",
+      "domain": "all",
+      "source_type": "draft_bill",
+      "title": "Baby Food Safety Act of 2023",
+      "summary": "This act proposes amendments to establish limits on toxic elements in infant and toddler food, aiming to improve food safety standards.",
+      "source_url": "https://www.congress.gov/bill/118th-congress/house-bill/6756/text?utm_source=openai",
+      "published_date": "2023-12-13",
+      "effective_date": null,
+      "key_provisions": [
+        "Establishes limits on toxic elements in baby food"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "US-EC-2025-001",
+      "market": "US",
+      "domain": "all",
+      "source_type": "regulatory_guidance",
+      "title": "FTC Negative Option Rule Amendment",
+      "summary": "The FTC proposed amendments to enhance transparency and consumer consent in subscription-based e-commerce models, addressing deceptive practices.",
+      "source_url": null,
+      "published_date": "2025-11-01",
+      "effective_date": null,
+      "key_provisions": [
+        "Mandates clear disclosures about subscription terms",
+        "Simplifies cancellation process",
+        "Requires explicit consumer consent for renewals"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "US-EC-2025-002",
+      "market": "US",
+      "domain": "all",
+      "source_type": "draft_bill",
+      "title": "Digital Asset Market Clarity Act of 2025",
+      "summary": "This act aims to establish a regulatory framework for digital assets, defining oversight responsibilities and consumer protection measures.",
+      "source_url": null,
+      "published_date": "2025-07-01",
+      "effective_date": null,
+      "key_provisions": [
+        "Defines regulatory oversight for digital assets",
+        "Implements consumer protection for digital transactions"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "US-EC-2025-003",
+      "market": "US",
+      "domain": "all",
+      "source_type": "regulatory_guidance",
+      "title": "Updated FTC Endorsement Guides",
+      "summary": "The FTC updated its endorsement guides to address deceptive practices in online advertising, including fake reviews and influencer marketing.",
+      "source_url": "https://www.ftc.gov/news-events/news/press-releases/2023/06/federal-trade-commission-announces-updated-advertising-guides-combat-deceptive-reviews-endorsements?utm_source=openai",
+      "published_date": "2023-06-29",
+      "effective_date": null,
+      "key_provisions": [
+        "Clarifies deceptive practices in consumer reviews",
+        "Expands definition of endorsements"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    }
+  ]
+}

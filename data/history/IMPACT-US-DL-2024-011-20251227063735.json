@@ -1,0 +1,49 @@
+{
+  "assessment_id": "IMPACT-US-DL-2024-011-20251227063735",
+  "signal_id": "US-DL-2024-011",
+  "signal_title": "DOJ's Final Rule Implementing Executive Order 14117",
+  "market": "US",
+  "domain": "all",
+  "risk_level": "P1",
+  "risk_rationale": "The DOJ's Final Rule aims to prevent foreign adversaries from accessing sensitive data, which directly impacts TikTok's data sovereignty and localization policies, particularly concerning US user data. This introduces a material compliance gap that requires immediate product changes to ensure compliance with the new due diligence and reporting requirements.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-US-DL-2024-011-0",
+      "signal_id": "US-DL-2024-011",
+      "baseline_policy_id": "DS-020",
+      "baseline_requirement": "Employee access to US data is restricted to US-based personnel only (CFIUS commitment).",
+      "regulatory_requirement": "Regulations to prevent foreign data access, with due diligence and reporting requirements.",
+      "gap_description": "The new rule introduces additional due diligence and reporting requirements that are not currently covered by the baseline policy, potentially requiring enhanced monitoring and reporting mechanisms.",
+      "gap_severity": "major",
+      "is_blocking": true
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-US-DL-2024-011-0",
+      "gap_id": "GAP-US-DL-2024-011-0",
+      "remediation_type": "product_change",
+      "title": "Enhance Data Access Monitoring and Reporting",
+      "description": "Implement enhanced monitoring and reporting mechanisms to comply with the DOJ's due diligence and reporting requirements. This includes developing a system to track and report access to US user data by foreign entities.",
+      "affected_features": [
+        "Data access control systems",
+        "Compliance reporting tools"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Data Compliance PM",
+      "acceptance_criteria": [
+        "Implementation of a monitoring system for foreign data access",
+        "Development of a reporting mechanism for compliance with DOJ requirements"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Failure to comply with the DOJ's Final Rule could result in significant legal and financial penalties, as well as reputational damage, due to the sensitive nature of the data involved.",
+  "recommended_actions": [
+    "Conduct a detailed gap analysis to identify specific compliance requirements under the new rule.",
+    "Develop and implement enhanced monitoring and reporting systems for data access.",
+    "Engage with legal and compliance teams to ensure alignment with DOJ requirements."
+  ],
+  "assessed_at": "2025-12-27T06:37:39.352500",
+  "assessed_by": "github_actions"
+}

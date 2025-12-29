@@ -1,0 +1,75 @@
+{
+  "assessment_id": "IMPACT-US-DL-2024-008-20251228063729",
+  "signal_id": "US-DL-2024-008",
+  "signal_title": "Executive Order 14117: Preventing Access to Americans’ Sensitive Data by Countries of Concern",
+  "market": "US",
+  "domain": "all",
+  "risk_level": "P1",
+  "risk_rationale": "The executive order prohibits the transfer of Americans' sensitive data to certain foreign countries, which may conflict with TikTok's current data residency and cross-border data transfer policies.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-US-DL-2024-008-0",
+      "signal_id": "US-DL-2024-008",
+      "baseline_policy_id": "DS-010",
+      "baseline_requirement": "EU-US Data Privacy Framework + SCCs",
+      "regulatory_requirement": "Prohibits data transfer to countries of concern",
+      "gap_description": "The baseline allows for data transfers under specific frameworks, but the executive order prohibits transfers to certain countries, potentially conflicting with existing mechanisms.",
+      "gap_severity": "major",
+      "is_blocking": true
+    },
+    {
+      "gap_id": "GAP-US-DL-2024-008-1",
+      "signal_id": "US-DL-2024-008",
+      "baseline_policy_id": "DS-020",
+      "baseline_requirement": "Employee access to US data limited to US-based personnel",
+      "regulatory_requirement": "Mandates DOJ to establish regulations preventing data access",
+      "gap_description": "The executive order may require additional restrictions or changes to current access controls to comply with new DOJ regulations.",
+      "gap_severity": "major",
+      "is_blocking": true
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-US-DL-2024-008-0",
+      "gap_id": "GAP-US-DL-2024-008-0",
+      "remediation_type": "product_change",
+      "title": "Review and Update Data Transfer Policies",
+      "description": "Conduct a thorough review of current data transfer policies and align them with the new executive order to ensure compliance with prohibitions on data transfers to countries of concern.",
+      "affected_features": [
+        "Cross-border data transfer mechanisms",
+        "Data residency policies"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Data Compliance PM",
+      "acceptance_criteria": [
+        "Updated data transfer policies are documented and approved",
+        "No data transfers occur to prohibited countries"
+      ]
+    },
+    {
+      "remediation_id": "REM-US-DL-2024-008-1",
+      "gap_id": "GAP-US-DL-2024-008-1",
+      "remediation_type": "product_change",
+      "title": "Enhance Access Control Measures",
+      "description": "Implement additional access control measures as per DOJ regulations to prevent unauthorized access to US data by foreign entities.",
+      "affected_features": [
+        "Access control architecture"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Security Compliance PM",
+      "acceptance_criteria": [
+        "Access control measures are updated and verified",
+        "Compliance with DOJ regulations is documented"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Potential disruption in data operations and increased compliance costs due to the need to modify data transfer and access control policies.",
+  "recommended_actions": [
+    "Engage with legal and policy teams to interpret the executive order's implications",
+    "Initiate a compliance project to update data transfer and access control policies",
+    "Monitor DOJ's regulatory developments for further guidance"
+  ],
+  "assessed_at": "2025-12-28T06:37:34.473955",
+  "assessed_by": "github_actions"
+}

@@ -1,0 +1,234 @@
+{
+  "mission_id": "MISSION-US-20251227063559",
+  "market": "US",
+  "domain": "all",
+  "lookback_days": 90,
+  "created_at": "2025-12-27T06:35:59.119932",
+  "created_by": "github_actions",
+  "status": "completed",
+  "generated_queries": [
+    "site:congress.gov \"children safety\" OR \"minor protection\" AND (\"draft bill\" OR \"enacted law\") AND date:[2023-07-01 TO 2023-10-01]",
+    "site:ftc.gov \"e-commerce regulation\" OR \"social commerce\" AND (\"regulatory guidance\" OR \"hearings\") AND date:[2023-07-01 TO 2023-10-01]",
+    "site:justice.gov \"data localization\" AND (\"court rulings\" OR \"enforcement actions\") AND date:[2023-07-01 TO 2023-10-01]",
+    "site:whitehouse.gov \"children safety\" OR \"minor protection\" AND (\"executive order\" OR \"policy announcement\") AND date:[2023-07-01 TO 2023-10-01]",
+    "site:ftc.gov OR site:fcc.gov \"social commerce\" AND (\"draft bill\" OR \"regulatory guidance\") AND date:[2023-07-01 TO 2023-10-01]"
+  ],
+  "signals": [
+    {
+      "id": "US-MP-2025-001",
+      "market": "US",
+      "domain": "all",
+      "source_type": "legislation",
+      "title": "Social Security Child Protection Act of 2025",
+      "summary": "This bill mandates the reissuance of Social Security numbers to children under 14 if their original numbers were compromised, aiming to prevent identity theft among minors.",
+      "source_url": "https://www.congress.gov/bill/119th-congress/house-bill/5348/text?utm_source=openai",
+      "published_date": "2025-09-15",
+      "effective_date": null,
+      "key_provisions": [
+        "Reissuance of Social Security numbers for minors",
+        "Prevention of identity theft"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "US-MP-2024-002",
+      "market": "US",
+      "domain": "all",
+      "source_type": "legislation",
+      "title": "Child Marriage Prevention Act of 2024",
+      "summary": "This legislation seeks to combat child marriage by establishing federal standards and supporting states in enforcing minimum age requirements for marriage.",
+      "source_url": "https://www.congress.gov/bill/118th-congress/senate-bill/4990/text?utm_source=openai",
+      "published_date": "2024-08-01",
+      "effective_date": null,
+      "key_provisions": [
+        "Federal standards for child marriage",
+        "Support for state enforcement"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "US-MP-2024-003",
+      "market": "US",
+      "domain": "all",
+      "source_type": "legislation",
+      "title": "Child Safety and Well-Being Act of 2024",
+      "summary": "The act proposes the establishment of an independent Children’s Commission to oversee and advocate for policies promoting child safety and well-being.",
+      "source_url": "https://www.congress.gov/bill/118th-congress/house-bill/9875/text/ih?utm_source=openai",
+      "published_date": "2024-09-27",
+      "effective_date": null,
+      "key_provisions": [
+        "Establishment of Children’s Commission",
+        "Advocacy for child safety policies"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "US-MP-2024-004",
+      "market": "US",
+      "domain": "all",
+      "source_type": "legislation",
+      "title": "Kids Online Safety Act",
+      "summary": "This bill focuses on enhancing online safety measures for minors by requiring online platforms to implement default safeguard settings and parental tools.",
+      "source_url": "https://www.congress.gov/bill/118th-congress/house-bill/7891/text?utm_source=openai",
+      "published_date": null,
+      "effective_date": null,
+      "key_provisions": [
+        "Default safeguard settings for minors",
+        "Parental control tools"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.8
+    },
+    {
+      "id": "US-MP-2025-005",
+      "market": "US",
+      "domain": "all",
+      "source_type": "legislation",
+      "title": "PROTECT Children's Innocence Act",
+      "summary": "This act addresses child protection by strengthening penalties for offenses against children and enhancing preventive measures.",
+      "source_url": "https://www.congress.gov/committee-report/119th-congress/house-report/311?utm_source=openai",
+      "published_date": null,
+      "effective_date": null,
+      "key_provisions": [
+        "Strengthened penalties for child offenses",
+        "Enhanced preventive measures"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.8
+    },
+    {
+      "id": "US-MP-2021-006",
+      "market": "US",
+      "domain": "all",
+      "source_type": "legislation",
+      "title": "Children's Protection Act of 2021",
+      "summary": "This bill requires federal agencies to analyze how certain rules impact children, considering factors like physical safety and health.",
+      "source_url": "https://www.congress.gov/bill/117th-congress/house-bill/3716/text?utm_source=openai",
+      "published_date": null,
+      "effective_date": null,
+      "key_provisions": [
+        "Regulatory impact analysis on children",
+        "Consideration of safety and health"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.75
+    },
+    {
+      "id": "US-EC-2025-007",
+      "market": "US",
+      "domain": "all",
+      "source_type": "legislation",
+      "title": "Digital Asset Market Clarity Act of 2025",
+      "summary": "This act addresses the fragmented regulatory landscape for digital assets, establishing a compliance roadmap and enhancing consumer protection.",
+      "source_url": "https://www.congress.gov/committee-report/119th-congress/house-report/168/2?utm_source=openai",
+      "published_date": null,
+      "effective_date": null,
+      "key_provisions": [
+        "Compliance roadmap for digital assets",
+        "Federal oversight of digital commodity marketplaces"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "US-EC-2024-008",
+      "market": "US",
+      "domain": "all",
+      "source_type": "regulatory_guidance",
+      "title": "FTC's Social Media and Video Streaming Services Report",
+      "summary": "The FTC report analyzes practices of major tech companies, focusing on content moderation, data privacy, and their impact on children and teens.",
+      "source_url": "https://www.ftc.gov/system/files/ftc_gov/pdf/ocm-remarks-holyoak-09-19-2024.pdf?utm_source=openai",
+      "published_date": "2024-09-19",
+      "effective_date": null,
+      "key_provisions": [
+        "Analysis of content moderation",
+        "Impact on children and teens"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.8
+    },
+    {
+      "id": "US-EC-2024-009",
+      "market": "US",
+      "domain": "all",
+      "source_type": "regulatory_guidance",
+      "title": "FTC's Enforcement Statement on Automated Systems",
+      "summary": "The FTC emphasizes the application of existing laws to automated systems, addressing concerns about biases and discrimination.",
+      "source_url": "https://www.ftc.gov/system/files/ftc_gov/pdf/commissioner-holyoak-statement-social-media-6b.pdf?utm_source=openai",
+      "published_date": "2024-04-04",
+      "effective_date": null,
+      "key_provisions": [
+        "Application of laws to automated systems",
+        "Addressing biases and discrimination"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.8
+    },
+    {
+      "id": "US-DL-2024-010",
+      "market": "US",
+      "domain": "all",
+      "source_type": "executive_order",
+      "title": "Executive Order 14117",
+      "summary": "This order directs the DOJ to address national security threats posed by foreign adversaries accessing Americans' sensitive personal data.",
+      "source_url": "https://www.justice.gov/archives/opa/pr/justice-department-implement-groundbreaking-executive-order-addressing-national-security?utm_source=openai",
+      "published_date": "2024-02-28",
+      "effective_date": null,
+      "key_provisions": [
+        "Regulatory program for data protection",
+        "Prevention of foreign exploitation of data"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "US-DL-2024-011",
+      "market": "US",
+      "domain": "all",
+      "source_type": "regulatory_guidance",
+      "title": "DOJ's Final Rule Implementing Executive Order 14117",
+      "summary": "This rule establishes regulations to prevent foreign adversaries from accessing Americans' sensitive data, focusing on designated foreign entities.",
+      "source_url": "https://www.justice.gov/archives/opa/pr/justice-department-issues-final-rule-addressing-threat-posed-foreign-adversaries-access?utm_source=openai",
+      "published_date": "2024-12-27",
+      "effective_date": null,
+      "key_provisions": [
+        "Regulations to prevent foreign data access",
+        "Due diligence and reporting requirements"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "US-DL-2024-012",
+      "market": "US",
+      "domain": "all",
+      "source_type": "legislation",
+      "title": "Protecting Americans' Data from Foreign Adversaries Act of 2024",
+      "summary": "This act restricts data brokers from selling U.S. user data to foreign adversaries, aiming to safeguard national security.",
+      "source_url": "https://www.congress.gov/crs_external_products/R/HTML/R48023.html?utm_source=openai",
+      "published_date": null,
+      "effective_date": null,
+      "key_provisions": [
+        "Restrictions on data sales to foreign adversaries",
+        "National security safeguards"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    }
+  ]
+}
