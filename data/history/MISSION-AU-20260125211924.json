@@ -1,0 +1,124 @@
+{
+  "mission_id": "MISSION-AU-20260125211924",
+  "market": "AU",
+  "domain": "minor_protection",
+  "lookback_days": 365,
+  "created_at": "2026-01-25T21:19:24.219658",
+  "created_by": "github_actions",
+  "status": "completed",
+  "generated_queries": [
+    "site:legislation.gov.au \"children safety\" OR \"minor protection\" OR \"youth protection\" draft bill OR enacted law 2023",
+    "site:oaic.gov.au \"age verification\" OR \"parental control\" regulatory guidance OR hearing 2023",
+    "site:esafety.gov.au \"eSafety Commissioner\" \"minor protection\" OR \"youth protection\" recent court ruling 2023",
+    "site:legislation.gov.au \"ACCC\" \"children safety\" OR \"age verification\" draft bill OR enacted law 2023",
+    "site:oaic.gov.au \"OAIC\" \"parental control\" OR \"minor protection\" recent regulatory development 2023"
+  ],
+  "signals": [
+    {
+      "id": "AU-MP-2026-001",
+      "market": "AU",
+      "domain": "minor_protection",
+      "source_type": "legislation",
+      "title": "Online Safety Amendment (Social Media Minimum Age) Act 2024",
+      "summary": "This Act establishes a minimum age of 16 for access to certain age-restricted social media platforms and requires platforms to implement age verification measures. It aims to protect minors from online harms.",
+      "source_url": "https://www.esafety.gov.au/newsroom/media-releases/esafety-statement-on-the-online-safety-amendment-social-media-minimum-age-act-2024?utm_source=openai",
+      "published_date": "2024-12-11",
+      "effective_date": "2025-12-10",
+      "key_provisions": [
+        "Establishes a minimum age of 16 for social media access",
+        "Requires age verification measures"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.95
+    },
+    {
+      "id": "AU-MP-2026-002",
+      "market": "AU",
+      "domain": "minor_protection",
+      "source_type": "draft_bill",
+      "title": "Family Law Amendment (Information Sharing) Bill 2023",
+      "summary": "This bill amends the Family Law Act 1975 to enhance information sharing between family law courts and child protection systems, aiming to promote the safety and well-being of children affected by family violence and abuse.",
+      "source_url": "https://www.legislation.gov.au/bills/C2023B00051EM_1.pdf?utm_source=openai",
+      "published_date": "2023-01-01",
+      "effective_date": null,
+      "key_provisions": [
+        "Enhances information sharing between family law courts and child protection systems"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "AU-MP-2026-003",
+      "market": "AU",
+      "domain": "minor_protection",
+      "source_type": "legislation",
+      "title": "Family Law Regulations 2024",
+      "summary": "These regulations prescribe specific state and territory laws related to child welfare and aim to harmonize family law regulations nationwide.",
+      "source_url": "https://www.legislation.gov.au/F2024L01638/asmade/2024-12-13/text/original/pdf?utm_source=openai",
+      "published_date": "2024-12-13",
+      "effective_date": null,
+      "key_provisions": [
+        "Prescribes state and territory laws related to child welfare",
+        "Aims to harmonize family law regulations"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "AU-MP-2026-004",
+      "market": "AU",
+      "domain": "minor_protection",
+      "source_type": "draft_bill",
+      "title": "Privacy and Other Legislation Amendment Bill 2024",
+      "summary": "This bill requires the OAIC to develop a Children's Online Privacy Code to strengthen privacy protections for children online.",
+      "source_url": "https://www.oaic.gov.au/engage-with-us/submissions/inquiry-into-the-privacy-and-other-legislation-amendment-bill-2024-provisions?utm_source=openai",
+      "published_date": "2024-01-01",
+      "effective_date": null,
+      "key_provisions": [
+        "Requires development of a Children's Online Privacy Code"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "AU-MP-2026-005",
+      "market": "AU",
+      "domain": "minor_protection",
+      "source_type": "regulatory_guidance",
+      "title": "Online Safety Industry Standards",
+      "summary": "These standards mandate tech companies to tackle harmful online content, including child sexual abuse material, applying to various online services.",
+      "source_url": "https://www.esafety.gov.au/newsroom/media-releases/new-world-first-standards-set-new-rules-for-how-tech-giants-must-tackle-worst-of-the-worst-online-content?utm_source=openai",
+      "published_date": "2024-12-22",
+      "effective_date": null,
+      "key_provisions": [
+        "Mandates tackling harmful online content",
+        "Applies to file and photo storage services, chat and messaging services"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "AU-MP-2026-006",
+      "market": "AU",
+      "domain": "minor_protection",
+      "source_type": "regulatory_guidance",
+      "title": "Age Verification Roadmap",
+      "summary": "Developed by the eSafety Commissioner, this roadmap explores age verification and complementary measures to protect children from online harms.",
+      "source_url": "https://www.esafety.gov.au/sites/default/files/2023-08/Roadmap-for-age-verification_2.pdf?v=1726459155673&utm_source=openai",
+      "published_date": "2023-08-01",
+      "effective_date": null,
+      "key_provisions": [
+        "Explores age verification measures",
+        "Aims to protect children from online harms"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    }
+  ]
+}

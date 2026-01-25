@@ -1,0 +1,20 @@
+{
+  "assessment_id": "IMPACT-AU-MP-2026-003-20260125212135",
+  "signal_id": "AU-MP-2026-003",
+  "signal_title": "Family Law Regulations 2024",
+  "market": "AU",
+  "domain": "minor_protection",
+  "risk_level": "P3",
+  "risk_rationale": "The regulatory signal pertains to harmonizing family law regulations related to child welfare in Australia. It does not introduce specific new requirements that directly conflict with TikTok's existing minor protection standards. However, monitoring is required to ensure alignment with any future detailed provisions that may arise from this harmonization.",
+  "compliance_gaps": [],
+  "remediations": [],
+  "deadline": null,
+  "business_impact": "Minimal immediate business impact as the regulation focuses on harmonization of existing laws rather than introducing new conflicting requirements. Continued monitoring is necessary to ensure compliance with any future detailed provisions.",
+  "recommended_actions": [
+    "Monitor the development of detailed provisions under the Family Law Regulations 2024 for any specific requirements that may impact TikTok's minor protection policies.",
+    "Engage with local legal counsel in Australia to understand the implications of harmonized family law regulations on digital platforms.",
+    "Prepare to update internal policies if future detailed provisions necessitate changes to minor protection standards."
+  ],
+  "assessed_at": "2026-01-25T21:21:41.892127",
+  "assessed_by": "github_actions"
+}

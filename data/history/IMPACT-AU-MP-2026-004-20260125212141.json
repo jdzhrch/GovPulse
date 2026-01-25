@@ -1,0 +1,59 @@
+{
+  "assessment_id": "IMPACT-AU-MP-2026-004-20260125212141",
+  "signal_id": "AU-MP-2026-004",
+  "signal_title": "Privacy and Other Legislation Amendment Bill 2024",
+  "market": "AU",
+  "domain": "minor_protection",
+  "risk_level": "P2",
+  "risk_rationale": "The draft bill requires the development of a Children's Online Privacy Code, which may introduce new privacy requirements for minors that are not currently covered in the baseline. The exact requirements are not specified yet, indicating a moderate risk that can be resolved within a quarter once the code is developed.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-AU-MP-2026-004-0",
+      "signal_id": "AU-MP-2026-004",
+      "baseline_policy_id": "MP-001",
+      "baseline_requirement": "Minimum registration age is 13 years.",
+      "regulatory_requirement": "Potential new privacy requirements for children under the Children's Online Privacy Code.",
+      "gap_description": "The new code may introduce additional privacy requirements for minors that are not currently covered.",
+      "gap_severity": "major",
+      "is_blocking": false
+    },
+    {
+      "gap_id": "GAP-AU-MP-2026-004-1",
+      "signal_id": "AU-MP-2026-004",
+      "baseline_policy_id": "MP-002",
+      "baseline_requirement": "Account privacy for 13-15 years is private by default with no opt-out allowed.",
+      "regulatory_requirement": "Potential new privacy requirements for children under the Children's Online Privacy Code.",
+      "gap_description": "The new code may require changes to account privacy settings for minors.",
+      "gap_severity": "major",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-AU-MP-2026-004-0",
+      "gap_id": "GAP-AU-MP-2026-004-0",
+      "remediation_type": "product_change",
+      "title": "Prepare for Children's Online Privacy Code",
+      "description": "Monitor the development of the Children's Online Privacy Code and prepare to adjust privacy settings and policies for minors as required by the new code.",
+      "affected_features": [
+        "Account registration",
+        "Privacy settings"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Minor Protection PM",
+      "acceptance_criteria": [
+        "Monitor OAIC announcements for the release of the Children's Online Privacy Code.",
+        "Develop a plan to adjust privacy settings for minors in compliance with the new code."
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Potential need to adjust privacy settings and policies for minors, which may affect user experience and require development resources.",
+  "recommended_actions": [
+    "Monitor OAIC announcements for updates on the Children's Online Privacy Code.",
+    "Engage with OAIC during the code development process to provide input and understand potential impacts.",
+    "Prepare internal teams for potential changes to privacy settings and policies for minors."
+  ],
+  "assessed_at": "2026-01-25T21:21:50.005415",
+  "assessed_by": "github_actions"
+}

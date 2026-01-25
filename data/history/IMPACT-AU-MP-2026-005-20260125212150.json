@@ -1,0 +1,49 @@
+{
+  "assessment_id": "IMPACT-AU-MP-2026-005-20260125212150",
+  "signal_id": "AU-MP-2026-005",
+  "signal_title": "Online Safety Industry Standards",
+  "market": "AU",
+  "domain": "minor_protection",
+  "risk_level": "P2",
+  "risk_rationale": "The regulatory guidance mandates tackling harmful online content, which aligns with existing proactive detection measures but may require enhancements in specific areas like chat and messaging services.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-AU-MP-2026-005-0",
+      "signal_id": "AU-MP-2026-005",
+      "baseline_policy_id": "CM-001",
+      "baseline_requirement": "CSAM detection using PhotoDNA + proprietary classifiers",
+      "regulatory_requirement": "Mandates tackling harmful online content across various services, including chat and messaging",
+      "gap_description": "The baseline focuses on CSAM detection but may not fully cover the expanded scope of chat and messaging services as required by the new standards.",
+      "gap_severity": "major",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-AU-MP-2026-005-0",
+      "gap_id": "GAP-AU-MP-2026-005-0",
+      "remediation_type": "product_change",
+      "title": "Enhance CSAM Detection for Chat and Messaging Services",
+      "description": "Develop and integrate advanced detection algorithms specifically for chat and messaging services to comply with the new standards.",
+      "affected_features": [
+        "Chat services",
+        "Messaging services"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "PM for Safety and Security",
+      "acceptance_criteria": [
+        "Enhanced detection algorithms are deployed in chat and messaging services",
+        "Regular audits confirm compliance with new standards"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Potential increase in operational costs due to the need for enhanced detection capabilities, but aligns with global safety expectations, potentially improving brand reputation.",
+  "recommended_actions": [
+    "Conduct a gap analysis of current detection capabilities in chat and messaging services",
+    "Develop a project plan for enhancing detection algorithms",
+    "Engage with regulatory bodies to ensure compliance alignment"
+  ],
+  "assessed_at": "2026-01-25T21:21:56.332663",
+  "assessed_by": "github_actions"
+}
