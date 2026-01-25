@@ -327,6 +327,7 @@ Output the analysis result strictly in JSON format.
                     "is_blocking": risk_level == "P0"
                 })
 
+
         # Generate basic remediations
         remediations = []
         for gap in gaps:
