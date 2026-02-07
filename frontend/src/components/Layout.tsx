@@ -81,22 +81,22 @@ export default function Layout() {
       </header>
 
       {/* Mobile navigation */}
-      <nav className="md:hidden bg-white border-b border-slate-200 px-4 py-2 overflow-x-auto">
-        <div className="flex items-center gap-2">
+      <nav className="md:hidden bg-white border-b border-slate-200 px-2 py-2 overflow-x-auto scrollbar-thin">
+        <div className="flex items-center gap-1">
           {navigation.map((item) => (
             <NavLink
               key={item.name}
               to={item.to}
               className={({ isActive }) =>
                 clsx(
-                  'flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors',
+                  'flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition-colors',
                   isActive
                     ? 'bg-govpulse-50 text-govpulse-700'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                 )
               }
             >
-              <item.icon className="w-4 h-4" />
+              <item.icon className="w-3.5 h-3.5" />
               {item.name}
             </NavLink>
           ))}
@@ -104,7 +104,7 @@ export default function Layout() {
       </nav>
 
       {/* Main content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         <Outlet />
       </main>
 

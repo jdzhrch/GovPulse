@@ -521,15 +521,15 @@ export default function MissionLauncher() {
                   </span>
                 </span>
               </label>
-              <div className="flex items-center gap-3">
-                <Calendar className="w-5 h-5 text-slate-400" />
-                <div className="flex gap-2">
+              <div className="flex items-start gap-3">
+                <Calendar className="w-5 h-5 text-slate-400 mt-2 hidden sm:block" />
+                <div className="flex flex-wrap gap-2">
                   {lookbackOptions.map((option) => (
                     <button
                       key={option.value}
                       onClick={() => setLookbackDays(option.value)}
                       className={clsx(
-                        'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+                        'px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-colors',
                         lookbackDays === option.value
                           ? 'bg-govpulse-600 text-white'
                           : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
@@ -592,10 +592,10 @@ export default function MissionLauncher() {
 
     return (
       <div className="max-w-2xl mx-auto">
-        <div className="card p-12 text-center">
+        <div className="card p-6 sm:p-12 text-center">
           {/* Circular Progress */}
-          <div className="relative w-40 h-40 mx-auto mb-8">
-            <svg className="w-full h-full transform -rotate-90">
+          <div className="relative w-28 h-28 sm:w-40 sm:h-40 mx-auto mb-6 sm:mb-8">
+            <svg className="w-full h-full transform -rotate-90" viewBox="0 0 160 160">
               {/* Background circle */}
               <circle
                 cx="80"
@@ -618,7 +618,7 @@ export default function MissionLauncher() {
             </svg>
             {/* Percentage text */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-3xl font-bold text-slate-900">{progress}%</span>
+              <span className="text-2xl sm:text-3xl font-bold text-slate-900">{progress}%</span>
             </div>
           </div>
 

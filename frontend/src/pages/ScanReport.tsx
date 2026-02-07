@@ -181,63 +181,82 @@ export default function ScanReport({ missions, assessments, onPushToPM }: ScanRe
 
         {/* Filters */}
         <div className="card p-4">
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Filter className="w-4 h-4 text-slate-500" />
-              <span className="text-sm font-medium text-slate-700">Filters:</span>
-            </div>
-            
-            {/* Market Filter */}
-            <div className="flex items-center gap-2">
-              <label htmlFor="market-filter" className="text-sm text-slate-600">Market:</label>
-              <select
-                id="market-filter"
-                value={selectedMarket}
-                onChange={(e) => setSelectedMarket(e.target.value)}
-                className="text-sm border border-slate-300 rounded-md px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-govpulse-500 focus:border-govpulse-500"
-              >
-                <option value="all">All Markets</option>
-                {availableMarkets.map(code => {
-                  const market = MARKETS.find(m => m.code === code)
-                  return (
-                    <option key={code} value={code}>
-                      {market?.flag} {market?.name || code}
-                    </option>
-                  )
-                })}
-              </select>
-            </div>
-            
-            {/* Date Range Filter */}
-            <div className="flex items-center gap-2">
-              <label htmlFor="date-filter" className="text-sm text-slate-600">Time Range:</label>
-              <select
-                id="date-filter"
-                value={dateRange}
-                onChange={(e) => setDateRange(e.target.value)}
-                className="text-sm border border-slate-300 rounded-md px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-govpulse-500 focus:border-govpulse-500"
-              >
-                <option value="all">All Time</option>
-                <option value="7">Last 7 Days</option>
-                <option value="30">Last 30 Days</option>
-                <option value="90">Last 90 Days</option>
-              </select>
-            </div>
-            
-            {/* Clear Filters */}
+          <div className="flex items-center gap-2 mb-3 sm:mb-0 sm:hidden">
+            <Filter className="w-4 h-4 text-slate-500" />
+            <span className="text-sm font-medium text-slate-700">Filters</span>
             {hasActiveFilters && (
               <button
                 onClick={clearFilters}
-                className="flex items-center gap-1 text-sm text-govpulse-600 hover:text-govpulse-700"
+                className="flex items-center gap-1 text-sm text-govpulse-600 hover:text-govpulse-700 ml-auto"
               >
                 <X className="w-4 h-4" />
-                Clear Filters
+                Clear
               </button>
             )}
-            
-            {/* Results Count */}
-            <div className="ml-auto text-sm text-slate-500">
-              {filteredMissions.length} of {missions.length} reports
+          </div>
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap sm:items-center gap-3 sm:gap-4">
+            <div className="hidden sm:flex items-center gap-2">
+              <Filter className="w-4 h-4 text-slate-500" />
+              <span className="text-sm font-medium text-slate-700">Filters:</span>
+            </div>
+
+            {/* Market Filter */}
+            <div>
+              <label htmlFor="market-filter" className="text-xs text-slate-500 mb-1 block sm:hidden">Market</label>
+              <div className="flex items-center gap-2">
+                <label htmlFor="market-filter" className="text-sm text-slate-600 hidden sm:block">Market:</label>
+                <select
+                  id="market-filter"
+                  value={selectedMarket}
+                  onChange={(e) => setSelectedMarket(e.target.value)}
+                  className="text-sm border border-slate-300 rounded-md px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-govpulse-500 focus:border-govpulse-500 w-full sm:w-auto"
+                >
+                  <option value="all">All Markets</option>
+                  {availableMarkets.map(code => {
+                    const market = MARKETS.find(m => m.code === code)
+                    return (
+                      <option key={code} value={code}>
+                        {market?.flag} {market?.name || code}
+                      </option>
+                    )
+                  })}
+                </select>
+              </div>
+            </div>
+
+            {/* Date Range Filter */}
+            <div>
+              <label htmlFor="date-filter" className="text-xs text-slate-500 mb-1 block sm:hidden">Time Range</label>
+              <div className="flex items-center gap-2">
+                <label htmlFor="date-filter" className="text-sm text-slate-600 hidden sm:block">Time Range:</label>
+                <select
+                  id="date-filter"
+                  value={dateRange}
+                  onChange={(e) => setDateRange(e.target.value)}
+                  className="text-sm border border-slate-300 rounded-md px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-govpulse-500 focus:border-govpulse-500 w-full sm:w-auto"
+                >
+                  <option value="all">All Time</option>
+                  <option value="7">Last 7 Days</option>
+                  <option value="30">Last 30 Days</option>
+                  <option value="90">Last 90 Days</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Clear Filters + Results Count */}
+            <div className="col-span-2 flex items-center justify-between sm:col-span-1 sm:ml-auto sm:gap-4">
+              {hasActiveFilters && (
+                <button
+                  onClick={clearFilters}
+                  className="hidden sm:flex items-center gap-1 text-sm text-govpulse-600 hover:text-govpulse-700"
+                >
+                  <X className="w-4 h-4" />
+                  Clear Filters
+                </button>
+              )}
+              <div className="text-sm text-slate-500 ml-auto">
+                {filteredMissions.length} of {missions.length} reports
+              </div>
             </div>
           </div>
         </div>
@@ -266,13 +285,13 @@ export default function ScanReport({ missions, assessments, onPushToPM }: ScanRe
                 to={`/reports/${m.mission_id}`}
                 className="card hover:shadow-md transition-shadow"
               >
-                <div className="p-6">
+                <div className="p-4 sm:p-6">
                   <div className="flex items-start justify-between">
-                    <div className="flex items-start gap-4">
-                      <div className="text-4xl">{market?.flag || '🌐'}</div>
-                      <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="text-lg font-semibold text-slate-900">
+                    <div className="flex items-start gap-3 sm:gap-4 min-w-0">
+                      <div className="text-3xl sm:text-4xl flex-shrink-0">{market?.flag || '🌐'}</div>
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-center gap-2 mb-1">
+                          <h3 className="text-base sm:text-lg font-semibold text-slate-900">
                             {market?.name || m.market} Scan Report
                           </h3>
                           {missionAssess.length > 0 && (
@@ -364,11 +383,11 @@ export default function ScanReport({ missions, assessments, onPushToPM }: ScanRe
 
       {/* Header */}
       <div className="card">
-        <div className="p-6 border-b border-slate-200">
-          <div className="flex items-start gap-4">
-            <div className="text-5xl">{market?.flag || '🌐'}</div>
-            <div className="flex-1">
-              <h1 className="text-2xl font-bold text-slate-900 mb-2">
+        <div className="p-4 sm:p-6 border-b border-slate-200">
+          <div className="flex items-start gap-3 sm:gap-4">
+            <div className="text-4xl sm:text-5xl flex-shrink-0">{market?.flag || '🌐'}</div>
+            <div className="flex-1 min-w-0">
+              <h1 className="text-xl sm:text-2xl font-bold text-slate-900 mb-2">
                 {market?.name || mission.market} Scan Report
               </h1>
               <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-slate-600">

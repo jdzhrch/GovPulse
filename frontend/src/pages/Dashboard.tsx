@@ -173,7 +173,7 @@ export default function Dashboard({ missions, assessments }: DashboardProps) {
                       <p className="text-sm text-slate-600 mt-1 line-clamp-2">
                         {assessment.risk_rationale}
                       </p>
-                      <div className="flex items-center gap-4 mt-2 text-xs text-slate-500">
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs text-slate-500">
                         <span className="flex items-center gap-1">
                           <Clock className="w-3 h-3" />
                           {formatDistanceToNow(parseUTCDate(assessment.assessed_at), { addSuffix: true })}
