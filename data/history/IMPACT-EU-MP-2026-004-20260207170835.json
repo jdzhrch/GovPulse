@@ -1,0 +1,76 @@
+{
+  "assessment_id": "IMPACT-EU-MP-2026-004-20260207170835",
+  "signal_id": "EU-MP-2026-004",
+  "signal_title": "Italy's Draft Law on the Protection of Minors in the Digital Dimension",
+  "market": "EU",
+  "domain": "minor_protection",
+  "risk_level": "P1",
+  "risk_rationale": "The draft law in Italy proposes a restriction that conflicts with TikTok's current global baseline of allowing users aged 13 and above to access the platform. This creates a material compliance gap that requires immediate attention to align with the proposed age restriction and implement age verification mechanisms.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-EU-MP-2026-004-0",
+      "signal_id": "EU-MP-2026-004",
+      "baseline_policy_id": "1.1",
+      "baseline_requirement": "Minimum age: TikTok states service is for age 13+ (or higher where local law requires)",
+      "regulatory_requirement": "Restrict access to social media for under 15",
+      "gap_description": "The proposed Italian law requires restricting access to users under 15, which is stricter than TikTok's current policy of allowing users aged 13 and above.",
+      "gap_severity": "major",
+      "is_blocking": true
+    },
+    {
+      "gap_id": "GAP-EU-MP-2026-004-1",
+      "signal_id": "EU-MP-2026-004",
+      "baseline_policy_id": "1.5",
+      "baseline_requirement": "Detection and prevention: TikTok states it uses machine learning and safety review to identify likely under-13 users and remove/limit access",
+      "regulatory_requirement": "Mandate age verification mechanisms",
+      "gap_description": "The draft law mandates age verification mechanisms, which may require more robust systems than TikTok's current machine learning and safety review processes.",
+      "gap_severity": "major",
+      "is_blocking": true
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-EU-MP-2026-004-0",
+      "gap_id": "GAP-EU-MP-2026-004-0",
+      "remediation_type": "product_change",
+      "title": "Implement Age Restriction for Italy",
+      "description": "Develop and deploy a system to restrict access to the platform for users under 15 in Italy, in compliance with the proposed law.",
+      "affected_features": [
+        "User Registration",
+        "Age Verification"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "EU Compliance PM",
+      "acceptance_criteria": [
+        "Users under 15 in Italy cannot access the platform",
+        "System logs and reports age restriction compliance"
+      ]
+    },
+    {
+      "remediation_id": "REM-EU-MP-2026-004-1",
+      "gap_id": "GAP-EU-MP-2026-004-1",
+      "remediation_type": "product_change",
+      "title": "Enhance Age Verification Mechanisms",
+      "description": "Integrate a robust age verification system that complies with the Italian draft law requirements, potentially using third-party verification services.",
+      "affected_features": [
+        "User Registration",
+        "Age Verification"
+      ],
+      "engineering_effort": "L",
+      "pm_owner_recommendation": "EU Compliance PM",
+      "acceptance_criteria": [
+        "Age verification system is operational and compliant with Italian law",
+        "Verification success rate meets regulatory standards"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "The proposed law could limit the user base in Italy by raising the minimum age requirement, potentially reducing user growth and engagement metrics in the region.",
+  "recommended_actions": [
+    "Engage with Italian regulators to discuss compliance timelines and technical feasibility",
+    "Assess potential partnerships with age verification service providers",
+    "Prepare communication plans for affected users in Italy"
+  ],
+  "assessed_at": "2026-02-07T17:08:42.903794",
+  "assessed_by": "github_actions"
+}
