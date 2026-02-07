@@ -19,9 +19,9 @@ import {
 } from 'lucide-react'
 import clsx from 'clsx'
 import html2canvas from 'html2canvas'
+import { QRCodeSVG } from 'qrcode.react'
 import { ImpactAssessment, ComplianceGap, ProductRemediation, RISK_COLORS, MARKETS } from '../types'
 import RiskBadge from '../components/RiskBadge'
-import ShareCard from '../components/ShareCard'
 import { formatDistanceToNow, format } from 'date-fns'
 
 // Helper to parse UTC timestamp correctly
@@ -29,6 +29,8 @@ const parseUTCDate = (timestamp: string): Date => {
   const dateStr = timestamp.endsWith('Z') || timestamp.includes('+') ? timestamp : timestamp + 'Z'
   return new Date(dateStr)
 }
+
+const SITE_BASE = 'https://jdzhrch.github.io/GovPulse'
 
 interface GapAnalysisProps {
   assessments: ImpactAssessment[]
@@ -70,16 +72,24 @@ export default function GapAnalysis({
   onPushToPM
 }: GapAnalysisProps) {
   const { assessmentId } = useParams()
-  const shareCardRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
   const [isGeneratingImage, setIsGeneratingImage] = useState(false)
+  const [isCapturing, setIsCapturing] = useState(false)
+  const reportUrl = selectedAssessment
+    ? `${SITE_BASE}/analysis/${selectedAssessment.assessment_id}`
+    : ''
 
   const handleShareAsImage = useCallback(async () => {
-    if (!shareCardRef.current || !selectedAssessment) return
+    if (!contentRef.current || !selectedAssessment) return
     setIsGeneratingImage(true)
+    setIsCapturing(true)
+    // Wait for QR footer to render
+    await new Promise(r => setTimeout(r, 100))
+
     try {
-      const canvas = await html2canvas(shareCardRef.current, {
+      const canvas = await html2canvas(contentRef.current, {
         scale: 2,
-        backgroundColor: '#ffffff',
+        backgroundColor: '#f8fafc',
         useCORS: true,
       })
       const slug = selectedAssessment.signal_title
@@ -94,6 +104,7 @@ export default function GapAnalysis({
     } catch (err) {
       console.error('Failed to generate image:', err)
     } finally {
+      setIsCapturing(false)
       setIsGeneratingImage(false)
     }
   }, [selectedAssessment])
@@ -339,26 +350,16 @@ export default function GapAnalysis({
   // Detailed assessment view with side-by-side comparison
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-        <div className="min-w-0">
-          <button
-            onClick={() => onSelectAssessment(null)}
-            className="text-govpulse-600 hover:text-govpulse-700 text-sm mb-2 flex items-center gap-1"
-          >
-            <ChevronRight className="w-4 h-4 rotate-180" />
-            Back to all reports
-          </button>
-          <h1 className="text-xl sm:text-2xl font-bold text-slate-900">{selectedAssessment.signal_title}</h1>
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2">
-            <RiskBadge level={selectedAssessment.risk_level} />
-            <span className="text-slate-500">{selectedAssessment.market}</span>
-            <span className="text-slate-500">
-              Analyzed {formatDistanceToNow(parseUTCDate(selectedAssessment.assessed_at), { addSuffix: true })}
-            </span>
-          </div>
-        </div>
-        <div className="flex flex-wrap items-center gap-3 flex-shrink-0">
+      {/* Top bar with navigation and actions — not included in screenshot */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <button
+          onClick={() => onSelectAssessment(null)}
+          className="text-govpulse-600 hover:text-govpulse-700 text-sm flex items-center gap-1 self-start"
+        >
+          <ChevronRight className="w-4 h-4 rotate-180" />
+          Back to all reports
+        </button>
+        <div className="flex flex-wrap items-center gap-3">
           <button
             onClick={handleShareAsImage}
             disabled={isGeneratingImage}
@@ -390,6 +391,20 @@ export default function GapAnalysis({
           )}
         </div>
       </div>
+
+      {/* Report content — captured as screenshot for sharing */}
+      <div ref={contentRef} className="space-y-6">
+        {/* Title + Metadata */}
+        <div>
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-900">{selectedAssessment.signal_title}</h1>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2">
+            <RiskBadge level={selectedAssessment.risk_level} />
+            <span className="text-slate-500">{selectedAssessment.market}</span>
+            <span className="text-slate-500">
+              Analyzed {formatDistanceToNow(parseUTCDate(selectedAssessment.assessed_at), { addSuffix: true })}
+            </span>
+          </div>
+        </div>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -473,9 +488,29 @@ export default function GapAnalysis({
         </div>
       </div>
 
-      {/* Hidden ShareCard for image generation */}
-      <div style={{ position: 'fixed', left: -9999, top: 0 }} aria-hidden="true">
-        <ShareCard ref={shareCardRef} assessment={selectedAssessment} />
+        {/* QR Footer — visible only during image capture */}
+        {isCapturing && (
+          <div className="card p-5">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm font-semibold text-slate-700">Scan to view full report</p>
+                <p className="text-xs text-slate-400 mt-1">
+                  Generated by GovPulse · {format(new Date(), 'MMM d, yyyy')}
+                </p>
+                <p className="text-[10px] text-slate-300 mt-2 break-all max-w-[300px]">
+                  {reportUrl}
+                </p>
+              </div>
+              <QRCodeSVG
+                value={reportUrl}
+                size={72}
+                level="M"
+                bgColor="#ffffff"
+                fgColor="#0f172a"
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
