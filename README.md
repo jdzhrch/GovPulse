@@ -1,6 +1,6 @@
 # GovPulse
 
-**Geopolitical & Regulatory Impact Assessment Platform**
+**Regulatory Compliance Platform**
 
 A mission-driven compliance gap analysis system designed for policy teams to assess regulatory changes against internal compliance baselines.
 

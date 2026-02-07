@@ -40,7 +40,7 @@ export default function Layout() {
               </div>
               <div>
                 <h1 className="text-xl font-bold text-slate-900">GovPulse</h1>
-                <p className="text-xs text-slate-500">Policy Monitoring Platform</p>
+                <p className="text-xs text-slate-500">Regulatory Compliance Platform</p>
               </div>
             </div>
 

@@ -21,7 +21,7 @@ except ImportError:
     OPENAI_AVAILABLE = False
     print("Warning: OpenAI SDK not installed. Run: pip install openai")
 
-# 支持相对导入和直接导入两种方式
+# Support both relative and direct import
 try:
     from .scout_engine import ScoutMission, RegulatorySignal, Domain
 except ImportError:
@@ -265,7 +265,7 @@ Output the analysis result strictly in JSON format.
             source_type=signal.source_type.value,
             title=signal.title,
             summary=signal.summary,
-            effective_date=signal.effective_date or "未指定",
+            effective_date=signal.effective_date or "Not specified",
             source_url=signal.source_url,
             key_provisions="\n".join(f"- {p}" for p in signal.key_provisions),
             raw_excerpt=signal.raw_text_excerpt,
@@ -303,13 +303,13 @@ Output the analysis result strictly in JSON format.
         risk_level = "P3"
         risk_rationale = "Low risk: monitoring recommended"
 
-        if any(kw in signal_text for kw in ["ban", "prohibit", "suspend", "禁止"]):
+        if any(kw in signal_text for kw in ["ban", "prohibit", "suspend"]):
             risk_level = "P0"
             risk_rationale = "Existential threat detected: regulation contains prohibition language"
-        elif any(kw in signal_text for kw in ["mandatory", "require", "must", "shall", "必须"]):
+        elif any(kw in signal_text for kw in ["mandatory", "require", "must", "shall"]):
             risk_level = "P1"
             risk_rationale = "Material compliance gap: mandatory requirements detected"
-        elif any(kw in signal_text for kw in ["should", "recommend", "建议"]):
+        elif any(kw in signal_text for kw in ["should", "recommend"]):
             risk_level = "P2"
             risk_rationale = "Moderate risk: recommended changes detected"
 
@@ -370,7 +370,7 @@ class ImpactAnalyzer:
         self.llm_analyzer = None
         self._llm_available = False
         
-        # 尝试初始化 LLM 分析器，如果失败则使用 fallback
+        # Try to initialize LLM analyzer, use fallback if it fails
         try:
             self.llm_analyzer = LLMAnalyzer(baseline_path)
             self._llm_available = True

@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, useRef, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import {
   FileCheck,
@@ -13,11 +13,15 @@ import {
   Target,
   Shield,
   Filter,
-  X
+  X,
+  Image,
+  Loader2
 } from 'lucide-react'
 import clsx from 'clsx'
+import html2canvas from 'html2canvas'
 import { ImpactAssessment, ComplianceGap, ProductRemediation, RISK_COLORS, MARKETS } from '../types'
 import RiskBadge from '../components/RiskBadge'
+import ShareCard from '../components/ShareCard'
 import { formatDistanceToNow, format } from 'date-fns'
 
 // Helper to parse UTC timestamp correctly
@@ -66,7 +70,34 @@ export default function GapAnalysis({
   onPushToPM
 }: GapAnalysisProps) {
   const { assessmentId } = useParams()
-  
+  const shareCardRef = useRef<HTMLDivElement>(null)
+  const [isGeneratingImage, setIsGeneratingImage] = useState(false)
+
+  const handleShareAsImage = useCallback(async () => {
+    if (!shareCardRef.current || !selectedAssessment) return
+    setIsGeneratingImage(true)
+    try {
+      const canvas = await html2canvas(shareCardRef.current, {
+        scale: 2,
+        backgroundColor: '#ffffff',
+        useCORS: true,
+      })
+      const slug = selectedAssessment.signal_title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '')
+        .slice(0, 40)
+      const link = document.createElement('a')
+      link.download = `GovPulse-${selectedAssessment.market}-${slug}.png`
+      link.href = canvas.toDataURL('image/png')
+      link.click()
+    } catch (err) {
+      console.error('Failed to generate image:', err)
+    } finally {
+      setIsGeneratingImage(false)
+    }
+  }, [selectedAssessment])
+
   // Filter states
   const [selectedMarket, setSelectedMarket] = useState<string>('all')
   const [selectedRisk, setSelectedRisk] = useState<string>('all')
@@ -306,6 +337,18 @@ export default function GapAnalysis({
           </div>
         </div>
         <div className="flex items-center gap-3">
+          <button
+            onClick={handleShareAsImage}
+            disabled={isGeneratingImage}
+            className="btn-secondary"
+          >
+            {isGeneratingImage ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Image className="w-4 h-4" />
+            )}
+            {isGeneratingImage ? 'Generating...' : 'Share as Image'}
+          </button>
           {selectedAssessment.pushed_to_pm ? (
             <span className="flex items-center gap-2 text-green-600 bg-green-50 px-4 py-2 rounded-lg">
               <CheckCircle className="w-5 h-5" />
@@ -406,6 +449,11 @@ export default function GapAnalysis({
             ))}
           </ul>
         </div>
+      </div>
+
+      {/* Hidden ShareCard for image generation */}
+      <div style={{ position: 'fixed', left: -9999, top: 0 }} aria-hidden="true">
+        <ShareCard ref={shareCardRef} assessment={selectedAssessment} />
       </div>
     </div>
   )

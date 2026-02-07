@@ -23,7 +23,7 @@ Priority scope for this version:
 
 ---
 
-## 1. Youth Safety Baseline (未成年人保护)
+## 1. Youth Safety Baseline
 
 ### 1.1 Age and account defaults (current public policy)
 
@@ -71,7 +71,7 @@ Priority scope for this version:
 
 ---
 
-## 2. Data Privacy Baseline (数据隐私)
+## 2. Data Privacy Baseline
 
 ### 2.1 Public privacy-policy documents and dates
 
@@ -109,7 +109,7 @@ Priority scope for this version:
 
 ---
 
-## 3. E-Commerce & Payments Baseline (电商与交易)
+## 3. E-Commerce & Payments Baseline
 
 ### 3.1 Availability and legal framework (region-dependent)
 
@@ -160,7 +160,7 @@ Priority scope for this version:
 
 ---
 
-## 4. Content Moderation Baseline (内容审核)
+## 4. Content Moderation Baseline
 
 ### 4.1 Community rulebook and effective policy dates
 

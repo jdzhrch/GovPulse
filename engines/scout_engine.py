@@ -297,10 +297,10 @@ Generate 5 precise search queries as a JSON array.
 
 def fetch_real_world_data(queries: list[str], market: str) -> list[dict]:
     """
-    使用 OpenAI Responses API 的 web_search 工具获取真实监管数据。
+    Fetch real-world regulatory data using OpenAI Responses API web_search tool.
 
     Returns:
-        list[dict]: 搜索结果列表，每个结果包含 query, content, sources
+        list[dict]: List of search results, each containing query, content, sources
     """
     if not OPENAI_AVAILABLE:
         print("[ERROR] OpenAI SDK not available. Cannot perform web search.")
@@ -315,7 +315,7 @@ def fetch_real_world_data(queries: list[str], market: str) -> list[dict]:
     results = []
     market_info = MARKET_INFO.get(market, {"name": market})
     market_name = market_info.get("name", market)
-    # 获取政府网站列表作为参考，但不强制限制
+    # Get government website list as reference, without strict restriction
     gov_sites = market_info.get("government_sites", [])
     regulators = market_info.get("regulators", [])
 
@@ -325,8 +325,8 @@ def fetch_real_world_data(queries: list[str], market: str) -> list[dict]:
         try:
             print(f"  [{i}/{len(queries)}] Searching: {query[:60]}...")
 
-            # 构建更灵活的搜索 prompt，不强制限制到特定网站
-            # 这样可以找到更多相关结果，包括新闻报道、分析文章等
+            # Build a flexible search prompt without restricting to specific websites
+            # This allows finding more relevant results, including news coverage and analysis
             search_prompt = f"""Search for recent regulatory news and policy updates related to:
 
 Query: {query}
@@ -353,20 +353,20 @@ IMPORTANT: Return the most relevant and recent regulatory developments. Include:
 
 If direct government sources aren't indexed, authoritative news sources and legal publications are acceptable."""
 
-            # 检查是否支持 Responses API
+            # Check if Responses API is supported
             if hasattr(client, 'responses'):
-                # 使用 OpenAI Responses API + web_search_preview
+                # Use OpenAI Responses API + web_search_preview
                 response = client.responses.create(
                     model="gpt-4o",
                     tools=[{"type": "web_search_preview"}],
                     input=search_prompt
                 )
 
-                # 提取结果
+                # Extract results
                 content = response.output_text if hasattr(response, 'output_text') else str(response)
                 sources = []
 
-                # 从 annotations 中提取 sources
+                # Extract sources from annotations
                 if hasattr(response, 'output') and response.output:
                     for item in response.output:
                         if hasattr(item, 'content'):
@@ -383,7 +383,7 @@ If direct government sources aren't indexed, authoritative news sources and lega
                 print(f"    Content preview: {content[:200]}..." if content else "    No content")
 
             else:
-                # 回退到 Chat Completions API with web search model
+                # Fall back to Chat Completions API with web search model
                 print(f"    [Info] Responses API not available, using chat completions...")
                 response = client.chat.completions.create(
                     model="gpt-4o-search-preview",
@@ -395,7 +395,7 @@ If direct government sources aren't indexed, authoritative news sources and lega
                 content = response.choices[0].message.content
                 sources = []
                 
-                # 尝试从 annotations 提取
+                # Try to extract from annotations
                 if hasattr(response.choices[0].message, 'annotations'):
                     for ann in response.choices[0].message.annotations:
                         if hasattr(ann, 'url_citation'):
@@ -707,7 +707,7 @@ class ScoutEngine:
             raw_results = fetch_real_world_data(queries, mission.market)
             if raw_results:
                 mission.signals = self._parse_web_search_results(raw_results, mission)
-                # 如果解析后没有信号，回退到模拟数据
+                # If no signals after parsing, fall back to simulated data
                 if not mission.signals:
                     print("[Warning] Failed to extract signals from search results, using simulated data")
                     mission.signals = self._get_simulated_signals(mission)
@@ -728,7 +728,7 @@ class ScoutEngine:
         mission: ScoutMission
     ) -> list[RegulatorySignal]:
         """
-        使用 LLM 解析 web search 结果，提取结构化的监管信号。
+        Parse web search results using LLM and extract structured regulatory signals.
         """
         if not OPENAI_AVAILABLE or not os.environ.get("OPENAI_API_KEY"):
             print("[Warning] OpenAI not available for parsing, returning raw results")
@@ -737,7 +737,7 @@ class ScoutEngine:
         client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
         signals = []
 
-        # 合并所有搜索结果
+        # Combine all search results
         combined_content = "\n\n---\n\n".join([
             f"Query: {r['query']}\n\nResult:\n{r['content']}"
             for r in raw_results
@@ -802,7 +802,7 @@ Example output format:
             
             result = json.loads(content)
 
-            # 解析 JSON 结果 - 支持多种格式
+            # Parse JSON result - support multiple formats
             signal_list = []
             if isinstance(result, list):
                 signal_list = result
@@ -811,7 +811,7 @@ Example output format:
             elif "data" in result:
                 signal_list = result["data"]
             else:
-                # 尝试找到任何包含列表的键
+                # Try to find any key containing a list
                 for key, value in result.items():
                     if isinstance(value, list) and len(value) > 0:
                         signal_list = value
@@ -821,7 +821,7 @@ Example output format:
 
             for i, s in enumerate(signal_list):
                 try:
-                    # 处理 source_type，确保是有效的枚举值
+                    # Process source_type, ensure it is a valid enum value
                     source_type_str = s.get("source_type", "legislation").lower().replace(" ", "_").replace("-", "_")
                     valid_source_types = ["legislation", "executive_order", "regulatory_guidance", "court_ruling", "hearing_transcript", "draft_bill"]
                     if source_type_str not in valid_source_types:
@@ -838,7 +838,7 @@ Example output format:
                         published_date=s.get("published_date", datetime.now().strftime("%Y-%m-%d")),
                         effective_date=s.get("effective_date"),
                         key_provisions=s.get("key_provisions", []),
-                        affected_policies=[],  # 后续由 impact_analyzer 填充
+                        affected_policies=[],  # Populated later by impact_analyzer
                         raw_text_excerpt=s.get("excerpt", s.get("raw_text_excerpt", "")),
                         confidence_score=float(s.get("confidence_score", 0.7))
                     )
@@ -863,14 +863,14 @@ Example output format:
         raw_results: list[dict],
         mission: ScoutMission
     ) -> list[RegulatorySignal]:
-        """将原始搜索结果转换为信号（当 LLM 不可用时）"""
+        """Convert raw search results to signals (when LLM is unavailable)."""
         signals = []
         for i, result in enumerate(raw_results):
             sources = result.get("sources", [])
             content = result.get("content", "")
             query = result.get("query", "Unknown")
             
-            # 如果有 sources，为每个 source 创建一个信号
+            # If sources exist, create a signal for each source
             if sources:
                 for j, source in enumerate(sources[:3]):
                     signal = RegulatorySignal(
@@ -890,7 +890,7 @@ Example output format:
                     )
                     signals.append(signal)
             elif content:
-                # 如果没有 sources 但有 content，仍然创建一个信号
+                # If no sources but content exists, still create a signal
                 signal = RegulatorySignal(
                     id=f"{mission.market}-{mission.domain.value[:2].upper()}-{datetime.now().year}-{i:03d}",
                     market=mission.market,
@@ -921,10 +921,10 @@ Example output format:
         else:
             signals = list(market_signals.get(mission.domain, []))
 
-        # 更新模拟数据的日期为当前日期（确保通过 lookback 过滤）
+        # Update simulated data dates to current date (to pass lookback filter)
         updated_signals = []
         for signal in signals:
-            # 创建一个新信号，更新日期为最近的日期
+            # Create a new signal with updated recent date
             updated_signal = RegulatorySignal(
                 id=signal.id.replace("2024", str(datetime.now().year)),
                 market=signal.market,
