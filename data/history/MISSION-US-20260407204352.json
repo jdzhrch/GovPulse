@@ -1,0 +1,108 @@
+{
+  "mission_id": "MISSION-US-20260407204352",
+  "market": "US",
+  "domain": "all",
+  "lookback_days": 90,
+  "created_at": "2026-04-07T20:43:52.801093",
+  "created_by": "github_actions",
+  "status": "completed",
+  "generated_queries": [
+    "site:congress.gov \"children safety\" OR \"minor protection\" legislation passed OR introduced OR \"draft bill\" AND date:[2023-07-01 TO 2023-10-01]",
+    "site:ftc.gov \"e-commerce regulation\" OR \"social commerce\" guidance OR \"regulatory update\" AND date:[2023-07-01 TO 2023-10-01]",
+    "site:justice.gov \"data localization\" court ruling OR decision OR \"legal opinion\" AND date:[2023-07-01 TO 2023-10-01]",
+    "site:whitehouse.gov \"children safety\" OR \"minor protection\" executive order OR \"policy announcement\" AND date:[2023-07-01 TO 2023-10-01]",
+    "site:ftc.gov OR site:fcc.gov \"social commerce\" OR \"e-commerce regulation\" hearing OR \"public comment\" AND date:[2023-07-01 TO 2023-10-01]"
+  ],
+  "signals": [
+    {
+      "id": "US-MP-2026-001",
+      "market": "US",
+      "domain": "all",
+      "source_type": "draft_bill",
+      "title": "Protect Children's Innocence Act",
+      "summary": "This bill aims to prohibit certain medical procedures related to gender transition for minors, criminalizing the provision of puberty blockers, cross-sex hormones, and gender-affirming surgeries to individuals under 18.",
+      "source_url": "https://www.congress.gov/house-report/119-311",
+      "published_date": "2025-09-01",
+      "effective_date": null,
+      "key_provisions": [
+        "Prohibits medical professionals from performing gender-affirming procedures on minors.",
+        "Establishes penalties for violations, including fines and imprisonment."
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "US-MP-2026-002",
+      "market": "US",
+      "domain": "all",
+      "source_type": "legislation",
+      "title": "State-Level Legislation on Gender-Affirming Care",
+      "summary": "Several states have enacted laws either restricting or protecting access to gender-affirming care for minors, with variations in parental consent requirements.",
+      "source_url": "https://www.congress.gov/house-report/119-311",
+      "published_date": "2023-01-01",
+      "effective_date": null,
+      "key_provisions": [
+        "Washington and California allow minors to access gender-affirming care without parental consent.",
+        "Other states restrict such care citing concerns over children's safety and well-being."
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "US-EC-2026-001",
+      "market": "US",
+      "domain": "all",
+      "source_type": "regulatory_guidance",
+      "title": "INFORM Consumers Act Implementation",
+      "summary": "The FTC began enforcing the INFORM Consumers Act, requiring online marketplaces to verify the identity of high-volume third-party sellers to enhance transparency and consumer protection.",
+      "source_url": "https://www.ftc.gov/business-guidance/advertising-marketing/online-advertising-marketing?utm_source=openai",
+      "published_date": "2025-05-12",
+      "effective_date": "2025-05-12",
+      "key_provisions": [
+        "Online marketplaces must collect, verify, and disclose specific information about high-volume third-party sellers.",
+        "Consumers should have a clear mechanism to report suspicious activities."
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "US-EC-2026-002",
+      "market": "US",
+      "domain": "all",
+      "source_type": "regulatory_guidance",
+      "title": "FTC's Rule on Unfair or Deceptive Fees",
+      "summary": "The FTC implemented a rule prohibiting bait-and-switch pricing and other deceptive practices related to fees in live-event ticketing and short-term lodging sectors.",
+      "source_url": "https://www.ftc.gov/business-guidance/advertising-marketing/online-advertising-marketing?utm_source=openai",
+      "published_date": "2025-05-12",
+      "effective_date": "2025-05-12",
+      "key_provisions": [
+        "Prohibits misrepresenting total prices and fees.",
+        "Requires clear disclosure of all fees upfront."
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "US-MP-2026-003",
+      "market": "US",
+      "domain": "all",
+      "source_type": "executive_order",
+      "title": "Executive Order on Combating Cybercrime, Fraud, and Predatory Schemes Against American Citizens",
+      "summary": "This executive order mandates a comprehensive review to enhance tools against transnational criminal organizations involved in cyber-enabled crimes targeting vulnerable populations, including children.",
+      "source_url": "https://www.whitehouse.gov/presidential-actions/2026/03/combating-cybercrime-fraud-and-predatory-schemes-against-american-citizens/?utm_source=openai",
+      "published_date": "2026-03-06",
+      "effective_date": null,
+      "key_provisions": [
+        "Establishes a dedicated operational cell within the NCC.",
+        "Directs the Attorney General to prioritize prosecutions of cyber-enabled fraud and scam schemes."
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    }
+  ]
+}

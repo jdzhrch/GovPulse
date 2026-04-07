@@ -1,0 +1,75 @@
+{
+  "assessment_id": "IMPACT-US-MP-2026-003-20260407204517",
+  "signal_id": "US-MP-2026-003",
+  "signal_title": "Executive Order on Combating Cybercrime, Fraud, and Predatory Schemes Against American Citizens",
+  "market": "US",
+  "domain": "all",
+  "risk_level": "P2",
+  "risk_rationale": "The executive order focuses on enhancing tools against cyber-enabled crimes targeting vulnerable populations, including children. While TikTok's current baseline includes youth safety and data privacy measures, the order's emphasis on transnational criminal organizations and cybercrime may require additional scrutiny and enhancements to existing security and fraud prevention measures.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-US-MP-2026-003-0",
+      "signal_id": "US-MP-2026-003",
+      "baseline_policy_id": "1.1",
+      "baseline_requirement": "TikTok states service is for age 13+ (or higher where local law requires)",
+      "regulatory_requirement": "Enhance tools against transnational criminal organizations involved in cyber-enabled crimes targeting vulnerable populations, including children.",
+      "gap_description": "Current baseline does not explicitly address enhanced tools or measures against transnational cybercrime targeting children.",
+      "gap_severity": "major",
+      "is_blocking": false
+    },
+    {
+      "gap_id": "GAP-US-MP-2026-003-1",
+      "signal_id": "US-MP-2026-003",
+      "baseline_policy_id": "2.2",
+      "baseline_requirement": "Project Clover (EEA) and USDS / Project Texas (US) for data localization/security",
+      "regulatory_requirement": "Enhance tools against transnational criminal organizations involved in cyber-enabled crimes.",
+      "gap_description": "Existing data localization and security programs may need to be reviewed and potentially enhanced to address new requirements against cyber-enabled crimes.",
+      "gap_severity": "minor",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-US-MP-2026-003-0",
+      "gap_id": "GAP-US-MP-2026-003-0",
+      "remediation_type": "product_change",
+      "title": "Enhance Cybercrime Detection and Prevention Tools",
+      "description": "Develop and implement advanced detection and prevention tools specifically targeting transnational cybercrime activities, with a focus on protecting vulnerable populations, including children.",
+      "affected_features": [
+        "Youth Safety",
+        "Data Privacy"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Youth Safety PM",
+      "acceptance_criteria": [
+        "Implementation of new detection tools targeting transnational cybercrime",
+        "Demonstrated reduction in cybercrime incidents targeting vulnerable populations"
+      ]
+    },
+    {
+      "remediation_id": "REM-US-MP-2026-003-1",
+      "gap_id": "GAP-US-MP-2026-003-1",
+      "remediation_type": "product_change",
+      "title": "Review and Strengthen Data Security Measures",
+      "description": "Conduct a comprehensive review of existing data security measures under Project Clover and USDS / Project Texas to ensure alignment with new regulatory requirements against cyber-enabled crimes.",
+      "affected_features": [
+        "Data Privacy"
+      ],
+      "engineering_effort": "S",
+      "pm_owner_recommendation": "Data Privacy PM",
+      "acceptance_criteria": [
+        "Completion of data security review",
+        "Implementation of any identified enhancements to data security measures"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Potential increase in operational costs due to the development and implementation of enhanced cybercrime detection and prevention tools. However, aligning with regulatory requirements may enhance user trust and platform integrity.",
+  "recommended_actions": [
+    "Initiate a task force to assess current cybercrime detection capabilities.",
+    "Engage with legal and compliance teams to ensure alignment with the executive order.",
+    "Develop a timeline for implementing necessary enhancements to existing security measures."
+  ],
+  "assessed_at": "2026-04-07T20:45:27.121750",
+  "assessed_by": "github_actions"
+}

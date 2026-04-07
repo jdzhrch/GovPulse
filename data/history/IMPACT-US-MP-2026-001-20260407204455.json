@@ -1,0 +1,20 @@
+{
+  "assessment_id": "IMPACT-US-MP-2026-001-20260407204455",
+  "signal_id": "US-MP-2026-001",
+  "signal_title": "Protect Children's Innocence Act",
+  "market": "US",
+  "domain": "all",
+  "risk_level": "P3",
+  "risk_rationale": "The regulatory signal pertains to medical procedures and does not directly impact TikTok's current compliance baseline, which focuses on youth safety, data privacy, e-commerce, and content moderation. However, it may indirectly influence content moderation policies related to discussions or content about gender-affirming procedures.",
+  "compliance_gaps": [],
+  "remediations": [],
+  "deadline": null,
+  "business_impact": "Minimal direct business impact as the bill focuses on medical procedures outside TikTok's operational scope. Indirect impact may arise from increased scrutiny on content related to gender identity and expression.",
+  "recommended_actions": [
+    "Monitor the progression of the bill for any amendments that may impact content policies.",
+    "Review content moderation guidelines to ensure they align with potential changes in societal norms and legal standards regarding gender identity discussions.",
+    "Engage with legal and public policy teams to assess any indirect implications on community guidelines."
+  ],
+  "assessed_at": "2026-04-07T20:44:58.536443",
+  "assessed_by": "github_actions"
+}

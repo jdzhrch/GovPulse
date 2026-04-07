@@ -1,0 +1,49 @@
+{
+  "assessment_id": "IMPACT-US-EC-2026-002-20260407204513",
+  "signal_id": "US-EC-2026-002",
+  "signal_title": "FTC's Rule on Unfair or Deceptive Fees",
+  "market": "US",
+  "domain": "all",
+  "risk_level": "P2",
+  "risk_rationale": "The FTC's rule on unfair or deceptive fees introduces new requirements for clear disclosure of fees, which may impact TikTok's e-commerce and advertising practices. While TikTok's current policies focus on product listing integrity and truthful advertising, the new rule emphasizes upfront fee disclosure, which may not be fully addressed in the current baseline.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-US-EC-2026-002-0",
+      "signal_id": "US-EC-2026-002",
+      "baseline_policy_id": "EC-003",
+      "baseline_requirement": "Product Listing Policy requires truthful listings and bans deceptive claims.",
+      "regulatory_requirement": "FTC rule requires clear disclosure of all fees upfront.",
+      "gap_description": "The current policy does not explicitly require upfront disclosure of all fees, which is a new requirement under the FTC rule.",
+      "gap_severity": "major",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-US-EC-2026-002-0",
+      "gap_id": "GAP-US-EC-2026-002-0",
+      "remediation_type": "product_change",
+      "title": "Implement Upfront Fee Disclosure",
+      "description": "Update the Product Listing Policy to require sellers to disclose all fees upfront in the listing process to comply with the FTC rule.",
+      "affected_features": [
+        "Product Listing",
+        "E-commerce"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "E-commerce Product Manager",
+      "acceptance_criteria": [
+        "All product listings must include a breakdown of total prices and fees.",
+        "Listings without upfront fee disclosure are flagged for review."
+      ]
+    }
+  ],
+  "deadline": "2025-05-12",
+  "business_impact": "Failure to comply with the FTC's rule could result in regulatory scrutiny and potential fines, impacting TikTok's reputation and financial standing in the US market.",
+  "recommended_actions": [
+    "Review and update the Product Listing Policy to include fee disclosure requirements.",
+    "Conduct training sessions for sellers on the new fee disclosure requirements.",
+    "Implement automated checks to ensure compliance with fee disclosure in listings."
+  ],
+  "assessed_at": "2026-04-07T20:45:17.831420",
+  "assessed_by": "github_actions"
+}
