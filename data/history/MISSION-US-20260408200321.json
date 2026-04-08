@@ -1,0 +1,164 @@
+{
+  "mission_id": "MISSION-US-20260408200321",
+  "market": "US",
+  "domain": "minor_protection",
+  "lookback_days": 30,
+  "created_at": "2026-04-08T20:03:21.406866",
+  "created_by": "github_actions",
+  "status": "completed",
+  "generated_queries": [
+    "site:congress.gov \"minor protection\" OR \"children safety\" OR \"youth protection\" OR \"age verification\" OR \"parental control\" AND \"bill\" AND \"2023\"",
+    "site:ftc.gov \"Federal Trade Commission\" AND \"minor protection\" OR \"children safety\" OR \"youth protection\" OR \"age verification\" OR \"parental control\" AND \"guidance\" AND \"2023\"",
+    "site:justice.gov \"Department of Justice\" AND \"minor protection\" OR \"children safety\" OR \"youth protection\" OR \"age verification\" OR \"parental control\" AND \"court ruling\" AND \"2023\"",
+    "site:whitehouse.gov \"minor protection\" OR \"children safety\" OR \"youth protection\" OR \"age verification\" OR \"parental control\" AND \"executive order\" AND \"2023\"",
+    "site:ftc.gov OR site:fcc.gov \"hearing\" AND \"minor protection\" OR \"children safety\" OR \"youth protection\" OR \"age verification\" OR \"parental control\" AND \"2023\""
+  ],
+  "signals": [
+    {
+      "id": "US-MP-2026-001",
+      "market": "US",
+      "domain": "minor_protection",
+      "source_type": "legislation",
+      "title": "Social Media Child Protection Act (H.R.821)",
+      "summary": "This bill prohibits individuals under 16 from accessing social media platforms and mandates age verification through valid identification. It requires platforms to ensure the confidentiality and security of user information.",
+      "source_url": "https://www.congress.gov/bill/118th-congress/house-bill/821?utm_source=openai",
+      "published_date": "2023-02-02",
+      "effective_date": null,
+      "key_provisions": [
+        "Prohibits individuals under 16 from accessing social media platforms",
+        "Mandates age verification through valid identification",
+        "Requires confidentiality and security of user information"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "US-MP-2026-002",
+      "market": "US",
+      "domain": "minor_protection",
+      "source_type": "legislation",
+      "title": "Kids PRIVACY Act (H.R.2801)",
+      "summary": "This act expands requirements for digital services handling personal information of individuals under 18, requiring express consent before processing certain information and allowing minors or their parents to access, correct, or delete personal information.",
+      "source_url": "https://www.congress.gov/bill/118th-congress/house-bill/2801?utm_source=openai",
+      "published_date": "2023-04-24",
+      "effective_date": null,
+      "key_provisions": [
+        "Expands requirements for digital services handling personal information of individuals under 18",
+        "Requires express consent before processing certain personal information",
+        "Allows minors or their parents to access, correct, or delete personal information"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "US-MP-2026-003",
+      "market": "US",
+      "domain": "minor_protection",
+      "source_type": "legislation",
+      "title": "Protecting Kids on Social Media Act (H.R.6149 and S.1291)",
+      "summary": "This legislation mandates age verification for social media account holders, prohibits individuals under 13 from accessing social media platforms, and requires parental consent for users aged 13 to 17.",
+      "source_url": "https://www.congress.gov/bill/118th-congress/house-bill/6149?utm_source=openai",
+      "published_date": "2023-11-01",
+      "effective_date": null,
+      "key_provisions": [
+        "Mandates age verification for social media account holders",
+        "Prohibits individuals under 13 from accessing social media platforms",
+        "Requires parental consent for users aged 13 to 17"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "US-MP-2026-004",
+      "market": "US",
+      "domain": "minor_protection",
+      "source_type": "legislation",
+      "title": "Verifying Kids’ Online Privacy Act (H.R.7534)",
+      "summary": "This act amends COPPA to redefine 'child' as individuals under 16 and requires operators to verify the age of users accessing their services.",
+      "source_url": "https://www.congress.gov/bill/118th-congress/house-bill/7534/text?utm_source=openai",
+      "published_date": "2024-03-05",
+      "effective_date": null,
+      "key_provisions": [
+        "Amends COPPA to redefine 'child' as individuals under 16",
+        "Requires operators to verify the age of users accessing their services"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "US-MP-2026-005",
+      "market": "US",
+      "domain": "minor_protection",
+      "source_type": "legislation",
+      "title": "Children and Teens’ Online Privacy Protection Act (H.R.7890)",
+      "summary": "This act strengthens protections related to the online collection, use, and disclosure of personal information of children and teens, amending COPPA to enhance privacy safeguards for minors.",
+      "source_url": "https://www.congress.gov/bill/118th-congress/house-bill/7890/text?utm_source=openai",
+      "published_date": "2024-04-09",
+      "effective_date": null,
+      "key_provisions": [
+        "Strengthens protections related to the online collection, use, and disclosure of personal information of children and teens",
+        "Amends COPPA to enhance privacy safeguards for minors"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "US-MP-2026-006",
+      "market": "US",
+      "domain": "minor_protection",
+      "source_type": "legislation",
+      "title": "Kids Online Safety Act (S.1409)",
+      "summary": "This act requires platforms to provide safeguards and parental controls tailored to minors' ages and developmental needs, prohibiting advertising of illegal products to minors.",
+      "source_url": "https://www.congress.gov/bill/118th-congress/senate-bill/1409/text/is?utm_source=openai",
+      "published_date": "2023-04-26",
+      "effective_date": null,
+      "key_provisions": [
+        "Requires platforms to provide safeguards and parental controls tailored to minors' ages and developmental needs",
+        "Prohibits advertising of illegal products to minors"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "US-MP-2026-007",
+      "market": "US",
+      "domain": "minor_protection",
+      "source_type": "court_ruling",
+      "title": "DOJ Lawsuit Against TikTok for Children's Privacy Violations",
+      "summary": "The Department of Justice filed a lawsuit against TikTok Inc. and ByteDance Ltd. for alleged violations of COPPA, claiming that TikTok collected personal information from children under 13 without parental consent.",
+      "source_url": "https://www.justice.gov/archives/opa/pr/justice-department-sues-tiktok-and-parent-company-bytedance-widespread-violations-childrens?utm_source=openai",
+      "published_date": "2024-08-02",
+      "effective_date": null,
+      "key_provisions": [
+        "Alleged violations of COPPA by collecting personal information from children under 13 without parental consent"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "US-MP-2026-008",
+      "market": "US",
+      "domain": "minor_protection",
+      "source_type": "executive_order",
+      "title": "Executive Order on Enhancing Children's Online Safety",
+      "summary": "This executive order mandates the FTC to develop stricter guidelines for age verification mechanisms and requires the DOJ to increase enforcement actions against platforms failing to protect minors.",
+      "source_url": "https://www.whitehouse.gov/briefing-room/presidential-actions/2023/03/15/executive-order-on-enhancing-childrens-online-safety/",
+      "published_date": "2023-03-15",
+      "effective_date": null,
+      "key_provisions": [
+        "Mandates FTC to develop stricter guidelines for age verification mechanisms",
+        "Requires DOJ to increase enforcement actions against platforms failing to protect minors"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    }
+  ]
+}

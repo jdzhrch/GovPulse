@@ -1,0 +1,76 @@
+{
+  "assessment_id": "IMPACT-US-MP-2026-004-20260408200508",
+  "signal_id": "US-MP-2026-004",
+  "signal_title": "Verifying Kids’ Online Privacy Act (H.R.7534)",
+  "market": "US",
+  "domain": "minor_protection",
+  "risk_level": "P1",
+  "risk_rationale": "The Verifying Kids’ Online Privacy Act redefines 'child' as individuals under 16, which conflicts with TikTok's current baseline that defines the service as for age 13+. Additionally, the requirement for operators to verify the age of users introduces a compliance gap in TikTok's age assurance posture.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-US-MP-2026-004-0",
+      "signal_id": "US-MP-2026-004",
+      "baseline_policy_id": "1.1",
+      "baseline_requirement": "TikTok states service is for age 13+ (or higher where local law requires)",
+      "regulatory_requirement": "Redefine 'child' as individuals under 16",
+      "gap_description": "The current baseline allows users aged 13-15 to access the full service, which is inconsistent with the new definition of 'child' under the act.",
+      "gap_severity": "major",
+      "is_blocking": true
+    },
+    {
+      "gap_id": "GAP-US-MP-2026-004-1",
+      "signal_id": "US-MP-2026-004",
+      "baseline_policy_id": "1.5",
+      "baseline_requirement": "TikTok states it uses machine learning and safety review to identify likely under-13 users and remove/limit access",
+      "regulatory_requirement": "Requires operators to verify the age of users accessing their services",
+      "gap_description": "The current age assurance posture does not explicitly verify the age of all users, which is required by the new legislation.",
+      "gap_severity": "major",
+      "is_blocking": true
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-US-MP-2026-004-0",
+      "gap_id": "GAP-US-MP-2026-004-0",
+      "remediation_type": "product_change",
+      "title": "Update Age Access Policies",
+      "description": "Revise the age access policies to align with the new definition of 'child' as individuals under 16. Implement stricter controls for users aged 13-15 to ensure compliance.",
+      "affected_features": [
+        "Account Creation",
+        "User Access Control"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Youth Safety PM",
+      "acceptance_criteria": [
+        "Service access restricted to users 16+",
+        "Age verification process implemented for all users"
+      ]
+    },
+    {
+      "remediation_id": "REM-US-MP-2026-004-1",
+      "gap_id": "GAP-US-MP-2026-004-1",
+      "remediation_type": "product_change",
+      "title": "Implement Comprehensive Age Verification",
+      "description": "Develop and integrate a robust age verification system to ensure compliance with the requirement to verify the age of users accessing the service.",
+      "affected_features": [
+        "User Registration",
+        "Age Assurance Systems"
+      ],
+      "engineering_effort": "L",
+      "pm_owner_recommendation": "Data Privacy PM",
+      "acceptance_criteria": [
+        "Age verification system operational",
+        "Compliance with age verification requirements"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Failure to comply with the new legislation could result in significant fines and reputational damage, as well as potential restrictions on service availability for users under 16.",
+  "recommended_actions": [
+    "Revise age-related policies to comply with new legislation",
+    "Develop and implement an age verification system",
+    "Conduct a compliance audit to ensure alignment with the new requirements"
+  ],
+  "assessed_at": "2026-04-08T20:05:15.176803",
+  "assessed_by": "github_actions"
+}

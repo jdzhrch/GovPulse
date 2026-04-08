@@ -1,0 +1,75 @@
+{
+  "assessment_id": "IMPACT-US-MP-2026-006-20260408200520",
+  "signal_id": "US-MP-2026-006",
+  "signal_title": "Kids Online Safety Act (S.1409)",
+  "market": "US",
+  "domain": "minor_protection",
+  "risk_level": "P1",
+  "risk_rationale": "The Kids Online Safety Act introduces new requirements for age-tailored safeguards and prohibits advertising illegal products to minors, which may not be fully addressed by TikTok's current baseline policies.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-US-MP-2026-006-0",
+      "signal_id": "US-MP-2026-006",
+      "baseline_policy_id": "1.4",
+      "baseline_requirement": "TikTok states personalized ads are not allowed for under-18 users.",
+      "regulatory_requirement": "Prohibits advertising of illegal products to minors.",
+      "gap_description": "While TikTok does not allow personalized ads for minors, the baseline does not explicitly address the prohibition of advertising illegal products to minors.",
+      "gap_severity": "major",
+      "is_blocking": true
+    },
+    {
+      "gap_id": "GAP-US-MP-2026-006-1",
+      "signal_id": "US-MP-2026-006",
+      "baseline_policy_id": "1.3",
+      "baseline_requirement": "Parent can view selected teen settings (e.g., downloads, likes visibility, topic preferences).",
+      "regulatory_requirement": "Requires platforms to provide safeguards and parental controls tailored to minors' ages and developmental needs.",
+      "gap_description": "Current parental controls may not be sufficiently tailored to minors' developmental needs as required by the new regulation.",
+      "gap_severity": "major",
+      "is_blocking": true
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-US-MP-2026-006-0",
+      "gap_id": "GAP-US-MP-2026-006-0",
+      "remediation_type": "product_change",
+      "title": "Enhance Parental Controls",
+      "description": "Develop and implement more granular parental controls that are tailored to the developmental needs of minors, including age-specific settings and content restrictions.",
+      "affected_features": [
+        "Family Pairing",
+        "Privacy Settings"
+      ],
+      "engineering_effort": "L",
+      "pm_owner_recommendation": "Youth Safety PM",
+      "acceptance_criteria": [
+        "Parental controls include age-specific settings.",
+        "Content restrictions are adjustable based on developmental stages."
+      ]
+    },
+    {
+      "remediation_id": "REM-US-MP-2026-006-1",
+      "gap_id": "GAP-US-MP-2026-006-1",
+      "remediation_type": "product_change",
+      "title": "Prohibit Advertising of Illegal Products to Minors",
+      "description": "Implement a system to ensure that no advertisements for illegal products are shown to minors, regardless of personalization settings.",
+      "affected_features": [
+        "Ad Delivery System"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Ad Compliance PM",
+      "acceptance_criteria": [
+        "System in place to block ads for illegal products to minors.",
+        "Regular audits to ensure compliance with the prohibition."
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Failure to comply with the Kids Online Safety Act could result in significant legal penalties and damage to brand reputation in the US market.",
+  "recommended_actions": [
+    "Conduct a detailed review of current parental controls and ad policies.",
+    "Develop a compliance roadmap to address identified gaps.",
+    "Engage with legal and policy teams to ensure alignment with the new legislative requirements."
+  ],
+  "assessed_at": "2026-04-08T20:05:26.437846",
+  "assessed_by": "github_actions"
+}

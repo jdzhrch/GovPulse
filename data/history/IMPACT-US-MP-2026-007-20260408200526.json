@@ -1,0 +1,50 @@
+{
+  "assessment_id": "IMPACT-US-MP-2026-007-20260408200526",
+  "signal_id": "US-MP-2026-007",
+  "signal_title": "DOJ Lawsuit Against TikTok for Children's Privacy Violations",
+  "market": "US",
+  "domain": "minor_protection",
+  "risk_level": "P0",
+  "risk_rationale": "The DOJ lawsuit represents a critical risk due to alleged violations of COPPA, which could lead to significant fines and potential platform restrictions in the US market.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-US-MP-2026-007-0",
+      "signal_id": "US-MP-2026-007",
+      "baseline_policy_id": "1.1",
+      "baseline_requirement": "TikTok states service is for age 13+ (or higher where local law requires).",
+      "regulatory_requirement": "COPPA requires verifiable parental consent for collecting personal information from children under 13.",
+      "gap_description": "The lawsuit alleges that TikTok collected personal information from children under 13 without parental consent, which is a direct violation of COPPA.",
+      "gap_severity": "critical",
+      "is_blocking": true
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-US-MP-2026-007-0",
+      "gap_id": "GAP-US-MP-2026-007-0",
+      "remediation_type": "product_change",
+      "title": "Implement COPPA-Compliant Age Verification",
+      "description": "Develop and integrate a robust age verification system to ensure compliance with COPPA, requiring verifiable parental consent for users under 13.",
+      "affected_features": [
+        "User Registration",
+        "Data Collection Processes"
+      ],
+      "engineering_effort": "XL",
+      "pm_owner_recommendation": "Youth Safety PM",
+      "acceptance_criteria": [
+        "Age verification system is implemented and operational.",
+        "Parental consent is verifiable for all users under 13.",
+        "Regular audits confirm compliance with COPPA requirements."
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Failure to address the COPPA violations could result in substantial fines and damage to TikTok's reputation, potentially affecting user trust and market presence in the US.",
+  "recommended_actions": [
+    "Immediately halt data collection from users under 13 until compliance is verified.",
+    "Engage with legal counsel to assess the lawsuit's implications and develop a legal strategy.",
+    "Accelerate the development and deployment of age verification and parental consent mechanisms."
+  ],
+  "assessed_at": "2026-04-08T20:05:31.352812",
+  "assessed_by": "github_actions"
+}

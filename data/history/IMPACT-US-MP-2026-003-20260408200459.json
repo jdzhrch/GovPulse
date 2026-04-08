@@ -1,0 +1,103 @@
+{
+  "assessment_id": "IMPACT-US-MP-2026-003-20260408200459",
+  "signal_id": "US-MP-2026-003",
+  "signal_title": "Protecting Kids on Social Media Act (H.R.6149 and S.1291)",
+  "market": "US",
+  "domain": "minor_protection",
+  "risk_level": "P1",
+  "risk_rationale": "The new legislation introduces mandatory age verification and parental consent requirements that are not fully aligned with TikTok's current baseline, posing a material compliance gap that requires immediate product changes.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-US-MP-2026-003-0",
+      "signal_id": "US-MP-2026-003",
+      "baseline_policy_id": "1.1",
+      "baseline_requirement": "TikTok states service is for age 13+ (or higher where local law requires)",
+      "regulatory_requirement": "Prohibits individuals under 13 from accessing social media platforms",
+      "gap_description": "The baseline allows under-13 users in the US to access a limited experience, which is now prohibited by the new legislation.",
+      "gap_severity": "major",
+      "is_blocking": true
+    },
+    {
+      "gap_id": "GAP-US-MP-2026-003-1",
+      "signal_id": "US-MP-2026-003",
+      "baseline_policy_id": "1.1",
+      "baseline_requirement": "Accounts for ages 13-17 are private by default",
+      "regulatory_requirement": "Requires parental consent for users aged 13 to 17",
+      "gap_description": "The baseline does not require parental consent for users aged 13 to 17, which is now mandated by the new legislation.",
+      "gap_severity": "major",
+      "is_blocking": true
+    },
+    {
+      "gap_id": "GAP-US-MP-2026-003-2",
+      "signal_id": "US-MP-2026-003",
+      "baseline_policy_id": "1.5",
+      "baseline_requirement": "TikTok states it uses machine learning and safety review to identify likely under-13 users and remove/limit access",
+      "regulatory_requirement": "Mandates age verification for social media account holders",
+      "gap_description": "The baseline relies on machine learning and safety review rather than explicit age verification, which is now required by the new legislation.",
+      "gap_severity": "major",
+      "is_blocking": true
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-US-MP-2026-003-0",
+      "gap_id": "GAP-US-MP-2026-003-0",
+      "remediation_type": "product_change",
+      "title": "Implement Age Verification System",
+      "description": "Develop and integrate a robust age verification system to ensure compliance with the new legislation requiring age verification for all account holders.",
+      "affected_features": [
+        "Account Creation",
+        "User Onboarding"
+      ],
+      "engineering_effort": "L",
+      "pm_owner_recommendation": "User Safety PM",
+      "acceptance_criteria": [
+        "Age verification system is implemented and operational",
+        "System accurately verifies user age at account creation"
+      ]
+    },
+    {
+      "remediation_id": "REM-US-MP-2026-003-1",
+      "gap_id": "GAP-US-MP-2026-003-1",
+      "remediation_type": "product_change",
+      "title": "Parental Consent Mechanism for 13-17 Users",
+      "description": "Introduce a parental consent mechanism for users aged 13 to 17 to comply with the new legislative requirements.",
+      "affected_features": [
+        "Account Settings",
+        "Parental Controls"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Family Safety PM",
+      "acceptance_criteria": [
+        "Parental consent is required and verified for users aged 13 to 17",
+        "Consent mechanism is user-friendly and secure"
+      ]
+    },
+    {
+      "remediation_id": "REM-US-MP-2026-003-2",
+      "gap_id": "GAP-US-MP-2026-003-2",
+      "remediation_type": "product_change",
+      "title": "Restrict Under-13 Access",
+      "description": "Update platform policies and systems to ensure that users under 13 are not able to access the platform in any capacity.",
+      "affected_features": [
+        "Account Creation",
+        "User Access"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "User Safety PM",
+      "acceptance_criteria": [
+        "Users under 13 are blocked from accessing the platform",
+        "System checks and enforces age restrictions effectively"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Failure to comply with the new legislation could result in significant legal penalties and reputational damage, affecting user trust and platform growth.",
+  "recommended_actions": [
+    "Prioritize the development of an age verification system.",
+    "Engage with legal and compliance teams to ensure all new features meet regulatory requirements.",
+    "Communicate upcoming changes to users and parents to ensure smooth transition and compliance."
+  ],
+  "assessed_at": "2026-04-08T20:05:08.244273",
+  "assessed_by": "github_actions"
+}

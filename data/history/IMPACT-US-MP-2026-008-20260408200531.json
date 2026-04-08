@@ -1,0 +1,49 @@
+{
+  "assessment_id": "IMPACT-US-MP-2026-008-20260408200531",
+  "signal_id": "US-MP-2026-008",
+  "signal_title": "Executive Order on Enhancing Children's Online Safety",
+  "market": "US",
+  "domain": "minor_protection",
+  "risk_level": "P1",
+  "risk_rationale": "The executive order mandates stricter guidelines for age verification mechanisms, which may require immediate changes to TikTok's current age assurance posture. Additionally, increased enforcement actions by the DOJ could lead to significant legal and financial repercussions if compliance is not met.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-US-MP-2026-008-0",
+      "signal_id": "US-MP-2026-008",
+      "baseline_policy_id": "1.5",
+      "baseline_requirement": "TikTok states it uses machine learning and safety review to identify likely under-13 users and remove/limit access.",
+      "regulatory_requirement": "Mandates FTC to develop stricter guidelines for age verification mechanisms.",
+      "gap_description": "The current age assurance posture may not meet the upcoming stricter guidelines mandated by the FTC.",
+      "gap_severity": "major",
+      "is_blocking": true
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-US-MP-2026-008-0",
+      "gap_id": "GAP-US-MP-2026-008-0",
+      "remediation_type": "product_change",
+      "title": "Enhance Age Verification Mechanisms",
+      "description": "Develop and implement more robust age verification mechanisms in anticipation of the FTC's stricter guidelines. This may include integrating third-party verification services or enhancing existing machine learning models.",
+      "affected_features": [
+        "Age assurance systems",
+        "User onboarding process"
+      ],
+      "engineering_effort": "L",
+      "pm_owner_recommendation": "Youth Safety PM",
+      "acceptance_criteria": [
+        "Implementation of a new age verification mechanism that aligns with FTC guidelines.",
+        "Successful testing and validation of the new mechanism with a sample user base."
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Failure to comply with the upcoming FTC guidelines could result in increased scrutiny and potential legal actions, leading to financial penalties and reputational damage.",
+  "recommended_actions": [
+    "Initiate a cross-functional task force to assess current age verification mechanisms.",
+    "Engage with legal and regulatory experts to interpret the FTC's upcoming guidelines.",
+    "Develop a project plan for implementing enhanced age verification mechanisms."
+  ],
+  "assessed_at": "2026-04-08T20:05:36.126833",
+  "assessed_by": "github_actions"
+}
