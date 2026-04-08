@@ -11,6 +11,7 @@ import {
   Lightbulb
 } from 'lucide-react'
 import clsx from 'clsx'
+import { HELP_GUIDE_DESCRIPTION, HELP_GUIDE_SUMMARY } from '../brand'
 
 interface HelpGuideProps {
   isOpen: boolean
@@ -41,7 +42,7 @@ export default function HelpGuide({ isOpen, onClose }: HelpGuideProps) {
               </div>
               <div>
                 <h2 className="text-lg font-semibold text-slate-900">Help Guide</h2>
-                <p className="text-sm text-slate-500">Learn how to use GovPulse</p>
+                <p className="text-sm text-slate-500">{HELP_GUIDE_DESCRIPTION}</p>
               </div>
             </div>
             <button
@@ -83,7 +84,7 @@ export default function HelpGuide({ isOpen, onClose }: HelpGuideProps) {
                   <div>
                     <h3 className="font-medium text-govpulse-900">Getting Started</h3>
                     <p className="text-sm text-govpulse-700 mt-1">
-                      GovPulse helps you monitor regulatory changes and assess their impact on your business.
+                      {HELP_GUIDE_SUMMARY}
                     </p>
                   </div>
                 </div>

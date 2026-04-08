@@ -10,6 +10,7 @@ import {
 } from 'lucide-react'
 import clsx from 'clsx'
 import HelpGuide from './HelpGuide'
+import { BRAND_NAME, BRAND_TAGLINE } from '../brand'
 
 const navigation = [
   { name: 'Overview', to: '/', icon: LayoutDashboard },
@@ -39,8 +40,8 @@ export default function Layout() {
                 <Activity className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-slate-900">GovPulse</h1>
-                <p className="text-xs text-slate-500">Regulatory Compliance Platform</p>
+                <h1 className="text-xl font-bold text-slate-900">{BRAND_NAME}</h1>
+                <p className="text-xs text-slate-500">{BRAND_TAGLINE}</p>
               </div>
             </div>
 

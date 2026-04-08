@@ -23,6 +23,7 @@ import { ImpactAssessment, ComplianceGap, ProductRemediation, RISK_COLORS, MARKE
 import RiskBadge from '../components/RiskBadge'
 import ShareCard from '../components/ShareCard'
 import { formatDistanceToNow, format } from 'date-fns'
+import { buildShareImageFilename } from '../brand'
 
 // Helper to parse UTC timestamp correctly
 const parseUTCDate = (timestamp: string): Date => {
@@ -88,7 +89,7 @@ export default function GapAnalysis({
         .replace(/^-|-$/g, '')
         .slice(0, 40)
       const link = document.createElement('a')
-      link.download = `GovPulse-${selectedAssessment.market}-${slug}.png`
+      link.download = buildShareImageFilename(selectedAssessment.market, slug)
       link.href = canvas.toDataURL('image/png')
       link.click()
     } catch (err) {
