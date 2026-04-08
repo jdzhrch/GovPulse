@@ -25,7 +25,6 @@ const domainIcons: Record<string, React.ElementType> = {
   content_moderation: MessageSquare,
 }
 
-// User-friendly labels for domains
 const DOMAIN_LABELS: Record<string, string> = {
   all: 'All Policy Areas',
   minor_protection: 'Youth Safety',
@@ -43,7 +42,6 @@ const lookbackOptions = [
 
 type LaunchPhase = 'config' | 'running' | 'complete' | 'error'
 
-// GitHub Actions configuration
 const GITHUB_CONFIG = {
   owner: import.meta.env.VITE_GITHUB_REPO_OWNER || '',
   repo: import.meta.env.VITE_GITHUB_REPO_NAME || 'GovPulse',
@@ -58,9 +56,6 @@ interface WorkflowRun {
   created_at: string
 }
 
-/**
- * Get the latest workflow run for our workflow
- */
 async function getLatestWorkflowRun(): Promise<WorkflowRun | null> {
   const token = import.meta.env.VITE_GITHUB_TOKEN
   if (!token || !GITHUB_CONFIG.owner) return null
@@ -75,9 +70,9 @@ async function getLatestWorkflowRun(): Promise<WorkflowRun | null> {
         },
       }
     )
-    
+
     if (!response.ok) return null
-    
+
     const data = await response.json()
     if (data.workflow_runs && data.workflow_runs.length > 0) {
       const run = data.workflow_runs[0]
@@ -95,9 +90,6 @@ async function getLatestWorkflowRun(): Promise<WorkflowRun | null> {
   }
 }
 
-/**
- * Get workflow run by ID
- */
 async function getWorkflowRunById(runId: number): Promise<WorkflowRun | null> {
   const token = import.meta.env.VITE_GITHUB_TOKEN
   if (!token || !GITHUB_CONFIG.owner) return null
@@ -112,9 +104,9 @@ async function getWorkflowRunById(runId: number): Promise<WorkflowRun | null> {
         },
       }
     )
-    
+
     if (!response.ok) return null
-    
+
     const run = await response.json()
     return {
       id: run.id,
@@ -128,9 +120,6 @@ async function getWorkflowRunById(runId: number): Promise<WorkflowRun | null> {
   }
 }
 
-/**
- * Get workflow jobs to track progress of individual jobs
- */
 async function getWorkflowJobs(runId: number): Promise<{scoutCompleted: boolean, deployCompleted: boolean, allCompleted: boolean}> {
   const token = import.meta.env.VITE_GITHUB_TOKEN
   if (!token || !GITHUB_CONFIG.owner) return { scoutCompleted: false, deployCompleted: false, allCompleted: false }
@@ -145,15 +134,15 @@ async function getWorkflowJobs(runId: number): Promise<{scoutCompleted: boolean,
         },
       }
     )
-    
+
     if (!response.ok) return { scoutCompleted: false, deployCompleted: false, allCompleted: false }
-    
+
     const data = await response.json()
     const jobs = data.jobs || []
-    
+
     const scoutJob = jobs.find((j: { name: string }) => j.name === 'scout-mission')
     const deployJob = jobs.find((j: { name: string }) => j.name === 'deploy-dashboard')
-    
+
     return {
       scoutCompleted: scoutJob?.status === 'completed' && scoutJob?.conclusion === 'success',
       deployCompleted: deployJob?.status === 'completed' && deployJob?.conclusion === 'success',
@@ -164,9 +153,6 @@ async function getWorkflowJobs(runId: number): Promise<{scoutCompleted: boolean,
   }
 }
 
-/**
- * Trigger GitHub Actions workflow
- */
 async function triggerGitHubWorkflow(params: {
   market: string
   domain: string
@@ -207,10 +193,10 @@ async function triggerGitHubWorkflow(params: {
 
     if (response.status === 204) {
       return { success: true }
-    } else {
-      const errorData = await response.json().catch(() => ({}))
-      return { success: false, error: errorData.message || 'Failed to start scan' }
     }
+
+    const errorData = await response.json().catch(() => ({}))
+    return { success: false, error: errorData.message || 'Failed to start scan' }
   } catch (error) {
     return { success: false, error: error instanceof Error ? error.message : 'Network error' }
   }
@@ -228,14 +214,12 @@ export default function MissionLauncher() {
   const [triggerEvent, setTriggerEvent] = useState('')
   const [phase, setPhase] = useState<LaunchPhase>('config')
   const [errorMessage, setErrorMessage] = useState('')
-  
-  // Progress tracking state
+
   const [progress, setProgress] = useState(0)
   const [progressMessage, setProgressMessage] = useState('')
   const [workflowRunId, setWorkflowRunId] = useState<number | null>(null)
   const [workflowRunUrl, setWorkflowRunUrl] = useState('')
 
-  // Check if GitHub integration is available
   const isGitHubConfigured = Boolean(
     import.meta.env.VITE_GITHUB_TOKEN && import.meta.env.VITE_GITHUB_REPO_OWNER
   )
@@ -249,21 +233,18 @@ export default function MissionLauncher() {
     }
   }, [searchParams])
 
-  // Polling for workflow status
   const pollWorkflowStatus = useCallback(async () => {
     if (!workflowRunId) return
 
     const run = await getWorkflowRunById(workflowRunId)
     if (!run) return
 
-    // Get job-level status for more accurate progress
     const jobs = await getWorkflowJobs(workflowRunId)
 
     if (run.status === 'completed') {
       if (run.conclusion === 'success') {
         setProgress(100)
         setProgressMessage('Complete! Redirecting to results...')
-        // Navigate directly to scan reports after a brief delay
         setTimeout(() => {
           navigate('/reports')
         }, 1500)
@@ -272,16 +253,13 @@ export default function MissionLauncher() {
         setPhase('error')
       }
     } else if (run.status === 'in_progress') {
-      // Track progress based on which jobs have completed
       if (jobs.deployCompleted) {
         setProgress(98)
         setProgressMessage('Almost done...')
       } else if (jobs.scoutCompleted) {
-        // Scout completed, deploy should be fast - show higher progress
         setProgress(prev => Math.max(prev, 90))
         setProgressMessage('Publishing results...')
       } else {
-        // Scout job still running - increment gradually
         setProgress(prev => {
           if (prev < 70) return Math.min(prev + 8, 70)
           return prev
@@ -297,7 +275,6 @@ export default function MissionLauncher() {
   useEffect(() => {
     if (phase !== 'running') return
 
-    // Poll more frequently (every 5 seconds) to catch completion faster
     const interval = setInterval(pollWorkflowStatus, 5000)
     return () => clearInterval(interval)
   }, [phase, pollWorkflowStatus])
@@ -326,10 +303,9 @@ export default function MissionLauncher() {
     if (result.success) {
       setProgress(10)
       setProgressMessage('Scan started. Waiting for analysis to begin...')
-      
-      // Wait a moment then get the run ID
+
       await new Promise(resolve => setTimeout(resolve, 3000))
-      
+
       const latestRun = await getLatestWorkflowRun()
       if (latestRun) {
         setWorkflowRunId(latestRun.id)
@@ -356,134 +332,147 @@ export default function MissionLauncher() {
     setWorkflowRunUrl('')
   }
 
-  // Error Phase
+  const selectedMarketInfo = MARKETS.find(m => m.code === selectedMarket)
+  const selectedDomainLabel = DOMAIN_LABELS[selectedDomain] || selectedDomain
+
   if (phase === 'error') {
     return (
-      <div className="max-w-2xl mx-auto">
-        <div className="card p-8 border-red-200 bg-red-50">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-              <AlertCircle className="w-6 h-6 text-red-600" />
+      <div className="max-w-3xl mx-auto">
+        <div className="editorial-panel p-8 sm:p-10">
+          <p className="section-kicker mb-3">Mission Interrupted</p>
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-3xl border border-red-200 bg-[var(--critical-soft)]">
+              <AlertCircle className="h-8 w-8 text-[#7d2d21]" />
             </div>
-            <div>
-              <h2 className="text-xl font-bold text-red-900">Scan Failed</h2>
-              <p className="text-red-700">We couldn't complete the policy scan</p>
+            <div className="flex-1">
+              <h2 className="section-title text-[2rem]">Scan failed</h2>
+              <p className="mt-2 text-[15px] leading-7 text-[var(--ink-soft)]">
+                The workflow stopped before results could be published. Review the error below and restart the mission when ready.
+              </p>
+              <div className="mt-5 rounded-3xl border border-red-200 bg-[var(--critical-soft)] p-5 text-sm leading-6 text-[#7d2d21]">
+                {errorMessage}
+              </div>
+              <div className="mt-6 flex justify-end">
+                <button onClick={handleNewScan} className="btn-secondary">
+                  Try Again
+                </button>
+              </div>
             </div>
-          </div>
-          <div className="bg-red-100 rounded-lg p-4 mb-6">
-            <p className="text-sm text-red-800">{errorMessage}</p>
-          </div>
-          <div className="flex justify-end">
-            <button onClick={handleNewScan} className="btn-secondary">
-              Try Again
-            </button>
           </div>
         </div>
       </div>
     )
   }
 
-  // Configuration Phase
   if (phase === 'config') {
-    return (
-      <div className="max-w-4xl mx-auto space-y-8">
-        {/* Header */}
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">New Policy Scan</h1>
-          <p className="text-slate-600 mt-1">
-            Monitor regulatory changes and assess their impact on your operations
-          </p>
-        </div>
+    const summaryItems = [
+      ['Region / Market', selectedMarketInfo?.name || 'Select a target market'],
+      ['Policy Area', selectedDomainLabel],
+      ['Date Range', `Past ${lookbackDays} days`],
+      ['Trigger Note', triggerEvent || 'No note added'],
+      ['Estimated Time', '2-5 minutes'],
+    ]
 
-        {/* GitHub Status Notice */}
-        {!isGitHubConfigured && (
-          <div className="card border-amber-200 bg-amber-50">
-            <div className="card-body">
-              <div className="flex items-start gap-3">
-                <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-sm text-amber-800 font-medium">Setup Required</p>
-                  <p className="text-sm text-amber-700 mt-1">
-                    Live scanning requires GitHub integration. Please configure VITE_GITHUB_TOKEN and VITE_GITHUB_REPO_OWNER, or run scans directly from{' '}
-                    <a 
-                      href={`https://github.com/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/actions`}
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="text-amber-900 underline hover:no-underline"
-                    >
-                      GitHub Actions
-                    </a>.
-                  </p>
+    return (
+      <div className="space-y-6">
+        <section className="editorial-panel p-6 sm:p-8">
+          <p className="section-kicker mb-3">Scan Workbench</p>
+          <div className="max-w-3xl">
+            <h1 className="briefing-title">Launch a targeted policy scan.</h1>
+            <p className="mt-4 text-[15px] leading-7 text-[var(--ink-soft)]">
+              Configure a single monitoring mission for one market, one policy scope, and one observation window. The workflow stays the same; the page now reads like an operator brief instead of a back-office form.
+            </p>
+          </div>
+        </section>
+
+        <div className="scan-workbench">
+          <div className="space-y-5">
+            {!isGitHubConfigured && (
+              <div className="editorial-panel p-6">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="mt-1 h-5 w-5 shrink-0 text-[#8a531c]" />
+                  <div>
+                    <p className="section-kicker mb-2">Setup Required</p>
+                    <p className="text-sm leading-6 text-[var(--ink-soft)]">
+                      Live scanning requires GitHub integration. Configure `VITE_GITHUB_TOKEN` and `VITE_GITHUB_REPO_OWNER`, or trigger scans directly from{' '}
+                      <a
+                        href={`https://github.com/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/actions`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-medium text-[var(--accent)] underline hover:no-underline"
+                      >
+                        GitHub Actions
+                      </a>.
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-        )}
+            )}
 
-        {/* Scan Parameters */}
-        <div className="card">
-          <div className="card-header">
-            <h2 className="text-lg font-semibold text-slate-900">Scan Parameters</h2>
-          </div>
-          <div className="card-body space-y-6">
-            {/* Context (optional) */}
-            <div>
-              <label className="label">What prompted this scan? (Optional)</label>
+            <section className="editorial-panel p-6">
+              <div className="mb-5 flex items-start gap-4">
+                <span className="status-stamp shrink-0">01</span>
+                <div>
+                  <p className="section-kicker mb-2">Context</p>
+                  <h2 className="section-title text-[1.7rem]">What prompted this scan?</h2>
+                </div>
+              </div>
+              <label className="label">Optional note</label>
               <input
                 type="text"
                 className="input"
-                placeholder="e.g., 'New data protection law announced' or 'Quarterly compliance review'"
+                placeholder="e.g., New data protection law announced"
                 value={triggerEvent}
                 onChange={(e) => setTriggerEvent(e.target.value)}
               />
-              <p className="text-xs text-slate-500 mt-1">
-                This helps contextualize results in your reports
+              <p className="mt-3 text-sm leading-6 text-[var(--ink-soft)]">
+                This note is included in the mission context so the report reads like a specific business brief instead of a generic scan.
               </p>
-            </div>
+            </section>
 
-            {/* Market Selection */}
-            <div>
-              <label className="label flex items-center gap-1">
-                Region / Market *
-                <span className="group relative">
-                  <HelpCircle className="w-4 h-4 text-slate-400 cursor-help" />
-                  <span className="absolute left-6 top-1/2 -translate-y-1/2 w-64 p-2 bg-slate-800 text-white text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
-                    Select the country or region to monitor for regulatory changes. Each scan focuses on one market for depth.
-                  </span>
-                </span>
-              </label>
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+            <section className="editorial-panel p-6">
+              <div className="mb-5 flex items-start gap-4">
+                <span className="status-stamp shrink-0">02</span>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <p className="section-kicker">Market</p>
+                    <HelpCircle className="h-4 w-4 text-[var(--ink-soft)]" />
+                  </div>
+                  <h2 className="section-title text-[1.7rem]">Choose the region under review.</h2>
+                </div>
+              </div>
+              <div className="decision-grid">
                 {MARKETS.map((market) => (
                   <button
                     key={market.code}
                     onClick={() => setSelectedMarket(market.code)}
                     className={clsx(
-                      'p-3 rounded-lg border-2 text-left transition-all',
+                      'rounded-3xl border p-4 text-left transition-all',
                       selectedMarket === market.code
-                        ? 'border-govpulse-500 bg-govpulse-50'
-                        : 'border-slate-200 hover:border-slate-300'
+                        ? 'border-[var(--accent)] bg-[var(--accent-soft)] shadow-[inset_0_1px_0_rgba(255,255,255,0.45)]'
+                        : 'border-[var(--line)] bg-white/55 hover:border-[var(--line-strong)] hover:bg-white/75'
                     )}
                   >
-                    <span className="text-2xl">{market.flag}</span>
-                    <p className="font-medium text-slate-900 mt-1">{market.code}</p>
-                    <p className="text-xs text-slate-500">{market.name}</p>
+                    <div className="text-2xl">{market.flag}</div>
+                    <p className="mt-3 font-medium text-[var(--ink)]">{market.code}</p>
+                    <p className="mt-1 text-sm leading-6 text-[var(--ink-soft)]">{market.name}</p>
                   </button>
                 ))}
               </div>
-            </div>
+            </section>
 
-            {/* Domain Selection */}
-            <div>
-              <label className="label flex items-center gap-1">
-                Policy Area
-                <span className="group relative">
-                  <HelpCircle className="w-4 h-4 text-slate-400 cursor-help" />
-                  <span className="absolute left-6 top-1/2 -translate-y-1/2 w-64 p-2 bg-slate-800 text-white text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
-                    Choose a specific policy domain to focus on, or "All Policy Areas" for comprehensive coverage.
-                  </span>
-                </span>
-              </label>
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+            <section className="editorial-panel p-6">
+              <div className="mb-5 flex items-start gap-4">
+                <span className="status-stamp shrink-0">03</span>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <p className="section-kicker">Policy Area</p>
+                    <HelpCircle className="h-4 w-4 text-[var(--ink-soft)]" />
+                  </div>
+                  <h2 className="section-title text-[1.7rem]">Define the policy focus.</h2>
+                </div>
+              </div>
+              <div className="decision-grid">
                 {DOMAINS.map((domain) => {
                   const Icon = domainIcons[domain.value]
                   return (
@@ -491,155 +480,149 @@ export default function MissionLauncher() {
                       key={domain.value}
                       onClick={() => setSelectedDomain(domain.value)}
                       className={clsx(
-                        'p-3 rounded-lg border-2 text-left transition-all',
+                        'rounded-3xl border p-4 text-left transition-all',
                         selectedDomain === domain.value
-                          ? 'border-govpulse-500 bg-govpulse-50'
-                          : 'border-slate-200 hover:border-slate-300'
+                          ? 'border-[var(--accent)] bg-[var(--accent-soft)] shadow-[inset_0_1px_0_rgba(255,255,255,0.45)]'
+                          : 'border-[var(--line)] bg-white/55 hover:border-[var(--line-strong)] hover:bg-white/75'
                       )}
                     >
                       <Icon className={clsx(
-                        'w-6 h-6',
-                        selectedDomain === domain.value ? 'text-govpulse-600' : 'text-slate-400'
+                        'h-6 w-6',
+                        selectedDomain === domain.value ? 'text-[var(--accent)]' : 'text-[var(--ink-soft)]'
                       )} />
-                      <p className="font-medium text-slate-900 mt-2 text-sm">
+                      <p className="mt-3 font-medium text-[var(--ink)]">
                         {DOMAIN_LABELS[domain.value] || domain.label}
                       </p>
                     </button>
                   )
                 })}
               </div>
-            </div>
+            </section>
 
-            {/* Lookback Period */}
-            <div>
-              <label className="label flex items-center gap-1">
-                Policy Date Range
-                <span className="group relative">
-                  <HelpCircle className="w-4 h-4 text-slate-400 cursor-help" />
-                  <span className="absolute left-6 top-1/2 -translate-y-1/2 w-64 p-2 bg-slate-800 text-white text-xs rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
-                    How far back to search for policy updates. 3 months is recommended for regular monitoring.
-                  </span>
-                </span>
-              </label>
-              <div className="flex items-start gap-3">
-                <Calendar className="w-5 h-5 text-slate-400 mt-2 hidden sm:block" />
-                <div className="flex flex-wrap gap-2">
-                  {lookbackOptions.map((option) => (
-                    <button
-                      key={option.value}
-                      onClick={() => setLookbackDays(option.value)}
-                      className={clsx(
-                        'px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-colors',
-                        lookbackDays === option.value
-                          ? 'bg-govpulse-600 text-white'
-                          : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                      )}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
+            <section className="editorial-panel p-6">
+              <div className="mb-5 flex items-start gap-4">
+                <span className="status-stamp shrink-0">04</span>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <p className="section-kicker">Time Window</p>
+                    <Calendar className="h-4 w-4 text-[var(--ink-soft)]" />
+                  </div>
+                  <h2 className="section-title text-[1.7rem]">Set the observation range.</h2>
                 </div>
               </div>
-              <p className="text-xs text-slate-500 mt-2">
-                Search for policies published or updated within this time period
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Preview */}
-        {selectedMarket && (
-          <div className="card border-govpulse-200 bg-govpulse-50">
-            <div className="card-body">
-              <h3 className="font-semibold text-govpulse-900 mb-2">Scan Summary</h3>
-              <div className="text-sm text-govpulse-700 space-y-1">
-                <p>
-                  <strong>Region:</strong> {MARKETS.find(m => m.code === selectedMarket)?.name}
-                </p>
-                <p>
-                  <strong>Policy Area:</strong> {DOMAIN_LABELS[selectedDomain] || selectedDomain}
-                </p>
-                <p>
-                  <strong>Date Range:</strong> Policies from the past {lookbackDays} days (published or updated)
-                </p>
-                <p>
-                  <strong>Estimated Time:</strong> 2-5 minutes
-                </p>
+              <div className="flex flex-wrap gap-2">
+                {lookbackOptions.map((option) => (
+                  <button
+                    key={option.value}
+                    onClick={() => setLookbackDays(option.value)}
+                    className={clsx(
+                      'rounded-full border px-4 py-2 text-sm font-semibold transition-colors',
+                      lookbackDays === option.value
+                        ? 'border-[var(--accent)] bg-[var(--accent)] text-[#f7f3eb]'
+                        : 'border-[var(--line)] bg-white/60 text-[var(--ink-soft)] hover:border-[var(--line-strong)] hover:text-[var(--ink)]'
+                    )}
+                  >
+                    {option.label}
+                  </button>
+                ))}
               </div>
-            </div>
+              <p className="mt-3 text-sm leading-6 text-[var(--ink-soft)]">
+                Search for policies published or updated within this time period.
+              </p>
+            </section>
           </div>
-        )}
 
-        {/* Launch Button */}
-        <div className="flex justify-end gap-3">
-          <button
-            onClick={handleLaunch}
-            disabled={!selectedMarket || !isGitHubConfigured}
-            className="btn-primary text-lg px-8 py-3"
-          >
-            <Rocket className="w-5 h-5" />
-            Start Scan
-          </button>
+          <aside className="editorial-panel p-6 lg:sticky lg:top-28">
+            <p className="section-kicker mb-3">Mission Brief</p>
+            <h2 className="section-title text-[1.8rem]">Ready to launch?</h2>
+            <p className="mt-3 text-sm leading-6 text-[var(--ink-soft)]">
+              Review the parameters below. Once launched, the scan will follow the existing GitHub workflow and publish results to the same report views.
+            </p>
+
+            <div className="rule-divider my-5" />
+
+            <dl className="space-y-4">
+              {summaryItems.map(([label, value]) => (
+                <div key={label}>
+                  <dt className="label !mb-1">{label}</dt>
+                  <dd className="text-sm leading-6 text-[var(--ink)]">{value}</dd>
+                </div>
+              ))}
+            </dl>
+
+            {!isGitHubConfigured && (
+              <div className="mt-5 rounded-3xl border border-amber-200 bg-[var(--high-soft)] p-4 text-sm leading-6 text-[#8a531c]">
+                Launch is disabled until GitHub integration is configured.
+              </div>
+            )}
+
+            <button
+              onClick={handleLaunch}
+              disabled={!selectedMarket || !isGitHubConfigured}
+              className="btn-primary mt-6 w-full justify-center py-3 text-base"
+            >
+              <Rocket className="w-5 h-5" />
+              Start Scan
+            </button>
+          </aside>
         </div>
       </div>
     )
   }
 
-  // Running Phase - Progress Tracker
   if (phase === 'running') {
-    const circumference = 2 * Math.PI * 45 // radius = 45
+    const circumference = 2 * Math.PI * 45
     const strokeDashoffset = circumference - (progress / 100) * circumference
 
     return (
-      <div className="max-w-2xl mx-auto">
-        <div className="card p-6 sm:p-12 text-center">
-          {/* Circular Progress */}
-          <div className="relative w-28 h-28 sm:w-40 sm:h-40 mx-auto mb-6 sm:mb-8">
-            <svg className="w-full h-full transform -rotate-90" viewBox="0 0 160 160">
-              {/* Background circle */}
-              <circle
-                cx="80"
-                cy="80"
-                r="45"
-                className="fill-none stroke-slate-200"
-                strokeWidth="8"
-              />
-              {/* Progress circle */}
-              <circle
-                cx="80"
-                cy="80"
-                r="45"
-                className="fill-none stroke-govpulse-500 transition-all duration-500"
-                strokeWidth="8"
-                strokeLinecap="round"
-                strokeDasharray={circumference}
-                strokeDashoffset={strokeDashoffset}
-              />
-            </svg>
-            {/* Percentage text */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-2xl sm:text-3xl font-bold text-slate-900">{progress}%</span>
+      <div className="max-w-3xl mx-auto">
+        <div className="editorial-panel p-8 sm:p-10 text-center">
+          <p className="section-kicker mb-3">Mission Tracker</p>
+          <h2 className="section-title text-[2.1rem]">Scanning policy changes</h2>
+          <p className="mx-auto mt-3 max-w-xl text-[15px] leading-7 text-[var(--ink-soft)]">
+            The pipeline is running through the existing scout and deployment steps. This page only changes the presentation, not the workflow beneath it.
+          </p>
+
+          <div className="mx-auto mt-8 flex h-40 w-40 items-center justify-center rounded-full border border-[var(--line)] bg-white/65">
+            <div className="relative h-28 w-28 sm:h-40 sm:w-40">
+              <svg className="h-full w-full -rotate-90 transform" viewBox="0 0 160 160">
+                <circle
+                  cx="80"
+                  cy="80"
+                  r="45"
+                  className="fill-none stroke-[var(--line)]"
+                  strokeWidth="8"
+                />
+                <circle
+                  cx="80"
+                  cy="80"
+                  r="45"
+                  className="fill-none stroke-[var(--accent)] transition-all duration-500"
+                  strokeWidth="8"
+                  strokeLinecap="round"
+                  strokeDasharray={circumference}
+                  strokeDashoffset={strokeDashoffset}
+                />
+              </svg>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-2xl sm:text-3xl font-semibold text-[var(--ink)]">{progress}%</span>
+              </div>
             </div>
           </div>
 
-          <h2 className="text-xl font-bold text-slate-900 mb-2">
-            Scanning Policy Changes
-          </h2>
-          <p className="text-slate-600 mb-4">
-            {progressMessage}
-          </p>
-          
-          <div className="text-sm text-slate-500">
-            {MARKETS.find(m => m.code === selectedMarket)?.name} • {DOMAIN_LABELS[selectedDomain]}
+          <p className="mt-6 text-base text-[var(--ink)]">{progressMessage}</p>
+          <div className="mt-3 inline-flex flex-wrap items-center justify-center gap-2">
+            <span className="status-stamp">{selectedMarketInfo?.name || selectedMarket}</span>
+            <span className="status-stamp">{selectedDomainLabel}</span>
           </div>
 
           {workflowRunUrl && (
-            <div className="mt-6 pt-6 border-t border-slate-200">
+            <div className="mt-8 pt-6 border-t border-[var(--line)]">
               <a
                 href={workflowRunUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm text-govpulse-600 hover:text-govpulse-700"
+                className="inline-flex items-center gap-2 text-sm font-medium text-[var(--accent)] hover:text-[var(--accent-deep)]"
               >
                 <Github className="w-4 h-4" />
                 View detailed progress
@@ -652,27 +635,23 @@ export default function MissionLauncher() {
     )
   }
 
-  // Complete Phase
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="card p-8 text-center">
-        <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-          <CheckCircle className="w-8 h-8 text-green-600" />
+    <div className="max-w-3xl mx-auto">
+      <div className="editorial-panel p-8 sm:p-10 text-center">
+        <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-green-200 bg-[var(--low-soft)]">
+          <CheckCircle className="h-8 w-8 text-[var(--low)]" />
         </div>
-        <h2 className="text-2xl font-bold text-slate-900 mb-2">Scan Complete!</h2>
-        <p className="text-slate-600 mb-6">
-          Your policy scan for {MARKETS.find(m => m.code === selectedMarket)?.name} has finished. 
-          The results are being deployed and will be available shortly.
+        <p className="section-kicker mb-3">Mission Complete</p>
+        <h2 className="section-title text-[2.2rem]">Scan complete</h2>
+        <p className="mx-auto mt-3 max-w-xl text-[15px] leading-7 text-[var(--ink-soft)]">
+          Your policy scan for {selectedMarketInfo?.name} has finished. The workflow is publishing the results now and the dashboard will update shortly.
         </p>
-        
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
-          <p className="text-sm text-amber-800">
-            <strong>Note:</strong> It may take 1-2 minutes for the new reports to appear on the dashboard 
-            as the deployment is completing in the background.
-          </p>
+
+        <div className="mx-auto mt-6 max-w-xl rounded-3xl border border-amber-200 bg-[var(--high-soft)] p-4 text-sm leading-6 text-[#8a531c]">
+          It may take 1-2 minutes for the new reports to appear while the deployment finishes in the background.
         </div>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+        <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <button
             onClick={() => window.location.href = '/GovPulse/reports'}
             className="btn-primary"
@@ -685,12 +664,12 @@ export default function MissionLauncher() {
         </div>
 
         {workflowRunUrl && (
-          <div className="mt-6 pt-6 border-t border-slate-200">
+          <div className="mt-8 pt-6 border-t border-[var(--line)]">
             <a
               href={workflowRunUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm text-govpulse-600 hover:text-govpulse-700"
+              className="inline-flex items-center gap-2 text-sm font-medium text-[var(--accent)] hover:text-[var(--accent-deep)]"
             >
               <Github className="w-4 h-4" />
               View workflow details

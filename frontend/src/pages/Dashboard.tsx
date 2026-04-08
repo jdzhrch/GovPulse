@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 import {
   Search,
-  AlertTriangle,
   FileCheck,
   TrendingUp,
   Globe,
@@ -17,7 +16,6 @@ import { ScoutMission, ImpactAssessment, RISK_COLORS } from '../types'
 import RiskBadge from '../components/RiskBadge'
 import { formatDistanceToNow } from 'date-fns'
 
-// Helper to parse UTC timestamp correctly
 const parseUTCDate = (timestamp: string): Date => {
   const dateStr = timestamp.endsWith('Z') || timestamp.includes('+') ? timestamp : timestamp + 'Z'
   return new Date(dateStr)
@@ -28,7 +26,6 @@ interface DashboardProps {
   assessments: ImpactAssessment[]
 }
 
-// User-friendly labels for domains
 const DOMAIN_LABELS: Record<string, string> = {
   all: 'All Policy Areas',
   minor_protection: 'Youth Safety',
@@ -38,42 +35,10 @@ const DOMAIN_LABELS: Record<string, string> = {
 }
 
 export default function Dashboard({ missions, assessments }: DashboardProps) {
-  // Calculate stats
   const p0Count = assessments.filter(a => a.risk_level === 'P0').length
   const p1Count = assessments.filter(a => a.risk_level === 'P1').length
   const pendingReview = assessments.filter(a => !a.pushed_to_pm).length
   const totalActionItems = assessments.reduce((sum, a) => sum + a.compliance_gaps.length, 0)
-
-  const stats = [
-    {
-      name: 'Urgent Actions',
-      value: p0Count,
-      icon: AlertTriangle,
-      color: 'text-red-600 bg-red-100',
-      change: 'Needs immediate attention'
-    },
-    {
-      name: 'High Priority',
-      value: p1Count,
-      icon: TrendingUp,
-      color: 'text-orange-600 bg-orange-100',
-      change: 'Review within 2 weeks'
-    },
-    {
-      name: 'Pending Review',
-      value: pendingReview,
-      icon: FileCheck,
-      color: 'text-govpulse-600 bg-govpulse-100',
-      change: 'Action needed'
-    },
-    {
-      name: 'Action Items',
-      value: totalActionItems,
-      icon: Shield,
-      color: 'text-purple-600 bg-purple-100',
-      change: 'Across all markets'
-    }
-  ]
 
   const domainIcons = {
     minor_protection: Shield,
@@ -83,163 +48,228 @@ export default function Dashboard({ missions, assessments }: DashboardProps) {
     all: Globe
   }
 
+  const summaryCards = [
+    {
+      label: 'High Priority',
+      value: p1Count,
+      detail: 'Needs a review plan in the next two weeks',
+      tone: 'text-[#8a531c] bg-[var(--high-soft)] border-orange-200',
+      icon: TrendingUp,
+    },
+    {
+      label: 'Pending Review',
+      value: pendingReview,
+      detail: 'Assessments still waiting for a named owner',
+      tone: 'text-[var(--accent)] bg-[var(--accent-soft)] border-[var(--line-strong)]',
+      icon: FileCheck,
+    },
+    {
+      label: 'Action Items',
+      value: totalActionItems,
+      detail: 'Open remediation tasks across current reports',
+      tone: 'text-[#2e4b41] bg-[var(--low-soft)] border-green-200',
+      icon: Shield,
+    },
+  ]
+
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">Policy Overview</h1>
-          <p className="text-slate-600 mt-1">
-            Track regulatory changes and their impact on your operations
-          </p>
-        </div>
-        <Link to="/launch" className="btn-primary">
-          <Search className="w-4 h-4" />
-          New Scan
-        </Link>
-      </div>
-
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((stat) => (
-          <div key={stat.name} className="card p-6">
-            <div className="flex items-center justify-between">
-              <div className={`p-2 rounded-lg ${stat.color}`}>
-                <stat.icon className="w-5 h-5" />
-              </div>
-              <span className="text-xs text-slate-500">{stat.change}</span>
+      <section className="hero-summary-grid">
+        <div className="editorial-panel p-6 sm:p-8">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-3xl">
+              <p className="section-kicker mb-3">Executive Radar</p>
+              <h1 className="briefing-title">Where policy pressure is building now.</h1>
+              <p className="mt-4 max-w-2xl text-[15px] leading-7 text-[var(--ink-soft)]">
+                Review the most urgent assessments, see what still requires a decision, and move directly into the next scan without wading through a generic dashboard.
+              </p>
             </div>
-            <div className="mt-4">
-              <p className="text-3xl font-bold text-slate-900">{stat.value}</p>
-              <p className="text-sm text-slate-600 mt-1">{stat.name}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recent Assessments */}
-        <div className="lg:col-span-2 card">
-          <div className="card-header flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-slate-900">Recent Impact Reports</h2>
-            <Link to="/analysis" className="text-sm text-govpulse-600 hover:text-govpulse-700 font-medium">
-              View all
+            <Link to="/launch" className="btn-primary self-start lg:self-auto">
+              <Search className="w-4 h-4" />
+              Launch New Scan
             </Link>
           </div>
-          <div className="divide-y divide-slate-200">
-            {assessments.length === 0 ? (
-              <div className="p-8 text-center">
-                <div className="w-12 h-12 rounded-full bg-govpulse-100 flex items-center justify-center mx-auto mb-4">
-                  <Lightbulb className="w-6 h-6 text-govpulse-600" />
+
+          <div className="rule-divider my-6" />
+
+          <div className="grid gap-6 md:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)]">
+            <div className="rounded-[1.4rem] border border-red-200 bg-[var(--critical-soft)] p-6">
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="status-stamp border-red-200 bg-white/70 text-[#7d2d21]">
+                  Critical Attention
+                </span>
+                <span className="text-sm text-[#7d2d21]/80">Items requiring immediate action</span>
+              </div>
+              <div className="mt-6 flex flex-wrap items-end gap-4">
+                <div className="font-serif text-[4.75rem] leading-none text-[#7d2d21]">{p0Count}</div>
+                <div className="pb-2">
+                  <h2 className="section-title text-[2rem] text-[#4f1c15]">Urgent actions</h2>
+                  <p className="mt-2 max-w-md text-sm leading-6 text-[#7d2d21]/80">
+                    Confirm the highest-risk reports, assign owners, and clear blockers before they age into execution debt.
+                  </p>
                 </div>
-                <h3 className="font-medium text-slate-900 mb-2">No reports yet</h3>
-                <p className="text-sm text-slate-600 mb-4">
-                  Run your first policy scan to start tracking regulatory changes.
+              </div>
+            </div>
+
+            <div className="rounded-[1.4rem] border border-[var(--line)] bg-white/60 p-6">
+              <p className="section-kicker mb-3">Decision Queue</p>
+              <div className="space-y-4">
+                <div>
+                  <div className="text-sm text-[var(--ink-soft)]">Pending review</div>
+                  <div className="mt-1 text-3xl font-semibold text-[var(--ink)]">{pendingReview}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-[var(--ink-soft)]">High priority</div>
+                  <div className="mt-1 text-3xl font-semibold text-[var(--ink)]">{p1Count}</div>
+                </div>
+                <div>
+                  <div className="text-sm text-[var(--ink-soft)]">Action items</div>
+                  <div className="mt-1 text-3xl font-semibold text-[var(--ink)]">{totalActionItems}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="metric-rail">
+          {summaryCards.slice(0, 2).map((card) => (
+            <div key={card.label} className={`editorial-panel p-5 ${card.tone}`}>
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="section-kicker mb-2 !text-current/70">{card.label}</p>
+                  <div className="text-4xl font-semibold leading-none">{card.value}</div>
+                </div>
+                <div className="rounded-2xl border border-current/15 bg-white/70 p-2">
+                  <card.icon className="w-5 h-5" />
+                </div>
+              </div>
+              <p className="mt-3 text-sm leading-6 text-current/80">{card.detail}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.8fr)_minmax(310px,0.9fr)]">
+        <section className="editorial-panel overflow-hidden">
+          <div className="flex items-end justify-between gap-4 px-6 py-5">
+            <div>
+              <p className="section-kicker mb-2">Impact Briefing</p>
+              <h2 className="section-title">Recent impact reports</h2>
+            </div>
+            <Link to="/analysis" className="btn-secondary">
+              View All Reports
+            </Link>
+          </div>
+          <div className="rule-divider" />
+          <div className="divide-y divide-[var(--line)]">
+            {assessments.length === 0 ? (
+              <div className="px-6 py-12 text-center">
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-[var(--line)] bg-white/70">
+                  <Lightbulb className="h-6 w-6 text-[var(--accent)]" />
+                </div>
+                <h3 className="section-title text-[1.75rem]">No reports yet</h3>
+                <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-[var(--ink-soft)]">
+                  Run your first policy scan to start generating executive-facing risk briefs for the monitored markets.
                 </p>
-                <Link to="/launch" className="btn-primary inline-flex">
+                <Link to="/launch" className="btn-primary mt-6 inline-flex">
                   <Rocket className="w-4 h-4" />
                   Start First Scan
                 </Link>
               </div>
             ) : (
-            assessments.slice(0, 5).map((assessment) => {
-              const DomainIcon = domainIcons[assessment.domain as keyof typeof domainIcons] || Globe
-              return (
-                <Link
-                  key={assessment.assessment_id}
-                  to={`/analysis/${assessment.assessment_id}`}
-                  className="block p-4 hover:bg-slate-50 transition-colors"
-                >
-                  <div className="flex items-start gap-4">
-                    <div className={`p-2 rounded-lg ${RISK_COLORS[assessment.risk_level].bg}`}>
-                      <DomainIcon className={`w-5 h-5 ${RISK_COLORS[assessment.risk_level].text}`} />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <RiskBadge level={assessment.risk_level} size="sm" showLabel={false} />
-                        <span className="text-sm font-medium text-slate-500">
-                          {assessment.market}
-                        </span>
-                        {assessment.pushed_to_pm && (
-                          <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
-                            Reviewed
+              assessments.slice(0, 5).map((assessment) => {
+                const DomainIcon = domainIcons[assessment.domain as keyof typeof domainIcons] || Globe
+                const riskBorder = {
+                  P0: 'bg-[var(--critical)]',
+                  P1: 'bg-[var(--high)]',
+                  P2: 'bg-[var(--moderate)]',
+                  P3: 'bg-[var(--low)]',
+                }[assessment.risk_level]
+
+                return (
+                  <Link
+                    key={assessment.assessment_id}
+                    to={`/analysis/${assessment.assessment_id}`}
+                    className="report-list-row"
+                  >
+                    <span className={`absolute left-0 top-4 bottom-4 w-1 rounded-r-full ${riskBorder}`} />
+                    <div className="flex items-start gap-4">
+                      <div className={`mt-1 rounded-2xl border border-[var(--line)] p-2 ${RISK_COLORS[assessment.risk_level].bg}`}>
+                        <DomainIcon className={`h-5 w-5 ${RISK_COLORS[assessment.risk_level].text}`} />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <RiskBadge level={assessment.risk_level} size="sm" showLabel={false} />
+                          <span className="text-sm font-medium text-[var(--ink)]">{assessment.market}</span>
+                          {assessment.pushed_to_pm && (
+                            <span className="status-stamp bg-white/70 text-[var(--low)] border-green-200">Reviewed</span>
+                          )}
+                        </div>
+                        <h3 className="mt-3 font-serif text-[1.45rem] leading-tight text-[var(--ink)]">
+                          {assessment.signal_title}
+                        </h3>
+                        <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--ink-soft)]">
+                          {assessment.risk_rationale}
+                        </p>
+                        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs uppercase tracking-[0.12em] text-[var(--ink-soft)]">
+                          <span className="inline-flex items-center gap-1.5">
+                            <Clock className="w-3 h-3" />
+                            {formatDistanceToNow(parseUTCDate(assessment.assessed_at), { addSuffix: true })}
                           </span>
-                        )}
+                          <span>{assessment.compliance_gaps.length} action items</span>
+                          <span>{assessment.remediations.length} recommendations</span>
+                        </div>
                       </div>
-                      <h3 className="font-medium text-slate-900 truncate">
-                        {assessment.signal_title}
-                      </h3>
-                      <p className="text-sm text-slate-600 mt-1 line-clamp-2">
-                        {assessment.risk_rationale}
-                      </p>
-                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs text-slate-500">
-                        <span className="flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          {formatDistanceToNow(parseUTCDate(assessment.assessed_at), { addSuffix: true })}
-                        </span>
-                        <span>{assessment.compliance_gaps.length} action items</span>
-                        <span>{assessment.remediations.length} recommendations</span>
-                      </div>
+                      <ChevronRight className="mt-2 h-5 w-5 flex-shrink-0 text-[var(--ink-soft)]" />
                     </div>
-                    <ChevronRight className="w-5 h-5 text-slate-400 flex-shrink-0" />
-                  </div>
-                </Link>
-              )
-            })
+                  </Link>
+                )
+              })
             )}
           </div>
-        </div>
+        </section>
 
-        {/* Recent Scans */}
-        <div className="card">
-          <div className="card-header flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-slate-900">Recent Scans</h2>
-            <Link to="/reports" className="text-sm text-govpulse-600 hover:text-govpulse-700 font-medium">
-              View all
-            </Link>
+        <aside className="editorial-panel overflow-hidden">
+          <div className="px-6 py-5">
+            <p className="section-kicker mb-2">Activity Feed</p>
+            <h2 className="section-title">Recent scans</h2>
           </div>
-          <div className="divide-y divide-slate-200">
+          <div className="rule-divider" />
+          <div className="divide-y divide-[var(--line)]">
             {missions.length === 0 ? (
-              <div className="p-6 text-center">
-                <p className="text-sm text-slate-500">
-                  No scans yet. Start monitoring your target markets.
-                </p>
+              <div className="p-6 text-sm leading-6 text-[var(--ink-soft)]">
+                No scans yet. Start monitoring your target markets to begin filling this activity rail.
               </div>
             ) : (
-            missions.slice(0, 5).map((mission) => {
-              const DomainIcon = domainIcons[mission.domain] || Globe
-              return (
-                <div key={mission.mission_id} className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-slate-100">
-                      <DomainIcon className="w-4 h-4 text-slate-600" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium text-slate-900">{mission.market}</span>
-                        <span className={`text-xs px-2 py-0.5 rounded-full ${
-                          mission.status === 'completed' ? 'bg-green-100 text-green-700' :
-                          mission.status === 'running' ? 'bg-blue-100 text-blue-700' :
-                          'bg-slate-100 text-slate-600'
-                        }`}>
-                          {mission.status}
-                        </span>
+              missions.slice(0, 5).map((mission) => {
+                const DomainIcon = domainIcons[mission.domain] || Globe
+                return (
+                  <div key={mission.mission_id} className="activity-row">
+                    <div className="flex items-start gap-3">
+                      <div className="rounded-2xl border border-[var(--line)] bg-white/70 p-2">
+                        <DomainIcon className="h-4 w-4 text-[var(--accent)]" />
                       </div>
-                      <p className="text-sm text-slate-500 mt-0.5">
-                        {DOMAIN_LABELS[mission.domain] || mission.domain} • {mission.lookback_days} days
-                      </p>
-                      <p className="text-xs text-slate-400 mt-1">
-                        {formatDistanceToNow(parseUTCDate(mission.created_at), { addSuffix: true })}
-                      </p>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between gap-3">
+                          <span className="font-medium text-[var(--ink)]">{mission.market}</span>
+                          <span className="status-stamp">
+                            {mission.status}
+                          </span>
+                        </div>
+                        <p className="mt-1 text-sm leading-6 text-[var(--ink-soft)]">
+                          {DOMAIN_LABELS[mission.domain] || mission.domain} • {mission.lookback_days} days
+                        </p>
+                        <p className="mt-2 text-xs uppercase tracking-[0.12em] text-[var(--ink-soft)]">
+                          {formatDistanceToNow(parseUTCDate(mission.created_at), { addSuffix: true })}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )
-            })
+                )
+              })
             )}
           </div>
-        </div>
+        </aside>
       </div>
     </div>
   )

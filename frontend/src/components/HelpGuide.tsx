@@ -27,34 +27,35 @@ export default function HelpGuide({ isOpen, onClose }: HelpGuideProps) {
     <div className="fixed inset-0 z-50 overflow-y-auto">
       {/* Backdrop */}
       <div 
-        className="fixed inset-0 bg-black/50 transition-opacity"
+        className="fixed inset-0 bg-[rgba(23,33,49,0.55)] backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
       
       {/* Modal */}
       <div className="relative min-h-screen flex items-center justify-center p-4">
-        <div className="relative bg-white rounded-2xl shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
+        <div className="editorial-panel relative max-w-3xl w-full max-h-[85vh] overflow-hidden">
           {/* Header */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200">
+          <div className="flex items-center justify-between gap-4 px-6 py-5 border-b border-[var(--line)] bg-white/55">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-govpulse-100 flex items-center justify-center">
-                <HelpCircle className="w-5 h-5 text-govpulse-600" />
+              <div className="w-11 h-11 rounded-2xl border border-[var(--line-strong)] bg-white/80 flex items-center justify-center">
+                <HelpCircle className="w-5 h-5 text-[var(--accent)]" />
               </div>
               <div>
-                <h2 className="text-lg font-semibold text-slate-900">Help Guide</h2>
-                <p className="text-sm text-slate-500">{HELP_GUIDE_DESCRIPTION}</p>
+                <p className="section-kicker mb-1">Reference Notes</p>
+                <h2 className="section-title text-[1.9rem]">Help Guide</h2>
+                <p className="text-sm text-[var(--ink-soft)] mt-1">{HELP_GUIDE_DESCRIPTION}</p>
               </div>
             </div>
             <button
               onClick={onClose}
-              className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[var(--line-strong)] bg-white/70 text-[var(--ink-soft)] hover:text-[var(--accent)] transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
           </div>
 
           {/* Tabs */}
-          <div className="flex border-b border-slate-200 px-6">
+          <div className="flex border-b border-[var(--line)] px-6 bg-[rgba(244,239,230,0.4)]">
             {[
               { id: 'quickstart', label: 'Quick Start' },
               { id: 'concepts', label: 'Key Concepts' },
@@ -66,8 +67,8 @@ export default function HelpGuide({ isOpen, onClose }: HelpGuideProps) {
                 className={clsx(
                   'px-4 py-3 text-sm font-medium border-b-2 -mb-px transition-colors',
                   activeTab === tab.id
-                    ? 'border-govpulse-600 text-govpulse-600'
-                    : 'border-transparent text-slate-500 hover:text-slate-700'
+                    ? 'border-[var(--accent)] text-[var(--accent)]'
+                    : 'border-transparent text-[var(--ink-soft)] hover:text-[var(--ink)]'
                 )}
               >
                 {tab.label}
@@ -76,25 +77,31 @@ export default function HelpGuide({ isOpen, onClose }: HelpGuideProps) {
           </div>
 
           {/* Content */}
-          <div className="p-6 overflow-y-auto max-h-[calc(80vh-180px)]">
+          <div className="p-6 overflow-y-auto max-h-[calc(85vh-190px)]">
             {activeTab === 'quickstart' && (
               <div className="space-y-6">
-                <div className="flex items-start gap-4 p-4 bg-govpulse-50 rounded-xl">
-                  <Lightbulb className="w-5 h-5 text-govpulse-600 flex-shrink-0 mt-0.5" />
+                <div className="rounded-2xl border border-[var(--line)] bg-[rgba(255,255,255,0.55)] p-5">
+                  <p className="section-kicker mb-3">Orientation</p>
+                  <div className="flex items-start gap-4">
+                  <Lightbulb className="w-5 h-5 text-[var(--accent)] flex-shrink-0 mt-0.5" />
                   <div>
-                    <h3 className="font-medium text-govpulse-900">Getting Started</h3>
-                    <p className="text-sm text-govpulse-700 mt-1">
+                    <h3 className="section-title text-[1.55rem]">Getting Started</h3>
+                    <p className="text-sm text-[var(--ink-soft)] mt-2">
                       {HELP_GUIDE_SUMMARY}
                     </p>
                   </div>
                 </div>
+                </div>
 
                 <div className="space-y-4">
-                  <h3 className="font-semibold text-slate-900">How to Run Your First Scan</h3>
+                  <div>
+                    <p className="section-kicker mb-2">Quick Start</p>
+                    <h3 className="section-title text-[1.6rem]">How to Run Your First Scan</h3>
+                  </div>
                   
                   <div className="space-y-3">
                     <div className="flex items-start gap-3">
-                      <div className="w-6 h-6 rounded-full bg-govpulse-100 text-govpulse-600 flex items-center justify-center text-sm font-medium flex-shrink-0">
+                      <div className="w-7 h-7 rounded-full border border-[var(--line-strong)] bg-white text-[var(--accent)] flex items-center justify-center text-sm font-semibold flex-shrink-0">
                         1
                       </div>
                       <div>
@@ -104,7 +111,7 @@ export default function HelpGuide({ isOpen, onClose }: HelpGuideProps) {
                     </div>
                     
                     <div className="flex items-start gap-3">
-                      <div className="w-6 h-6 rounded-full bg-govpulse-100 text-govpulse-600 flex items-center justify-center text-sm font-medium flex-shrink-0">
+                      <div className="w-7 h-7 rounded-full border border-[var(--line-strong)] bg-white text-[var(--accent)] flex items-center justify-center text-sm font-semibold flex-shrink-0">
                         2
                       </div>
                       <div>
@@ -114,7 +121,7 @@ export default function HelpGuide({ isOpen, onClose }: HelpGuideProps) {
                     </div>
                     
                     <div className="flex items-start gap-3">
-                      <div className="w-6 h-6 rounded-full bg-govpulse-100 text-govpulse-600 flex items-center justify-center text-sm font-medium flex-shrink-0">
+                      <div className="w-7 h-7 rounded-full border border-[var(--line-strong)] bg-white text-[var(--accent)] flex items-center justify-center text-sm font-semibold flex-shrink-0">
                         3
                       </div>
                       <div>
@@ -124,7 +131,7 @@ export default function HelpGuide({ isOpen, onClose }: HelpGuideProps) {
                     </div>
                     
                     <div className="flex items-start gap-3">
-                      <div className="w-6 h-6 rounded-full bg-govpulse-100 text-govpulse-600 flex items-center justify-center text-sm font-medium flex-shrink-0">
+                      <div className="w-7 h-7 rounded-full border border-[var(--line-strong)] bg-white text-[var(--accent)] flex items-center justify-center text-sm font-semibold flex-shrink-0">
                         4
                       </div>
                       <div>
@@ -135,9 +142,10 @@ export default function HelpGuide({ isOpen, onClose }: HelpGuideProps) {
                   </div>
                 </div>
 
-                <div className="p-4 bg-slate-50 rounded-xl">
-                  <h4 className="font-medium text-slate-900 mb-2">What happens during a scan?</h4>
-                  <div className="flex items-center gap-2 text-sm text-slate-600">
+                <div className="rounded-2xl border border-[var(--line)] bg-[rgba(255,255,255,0.55)] p-5">
+                  <p className="section-kicker mb-2">Scan Flow</p>
+                  <h4 className="font-medium text-slate-900 mb-3">What happens during a scan?</h4>
+                  <div className="flex flex-wrap items-center gap-2 text-sm text-[var(--ink-soft)]">
                     <Search className="w-4 h-4" />
                     <span>Scout Engine searches policy sources</span>
                     <ArrowRight className="w-4 h-4" />
@@ -154,21 +162,22 @@ export default function HelpGuide({ isOpen, onClose }: HelpGuideProps) {
             {activeTab === 'concepts' && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="font-semibold text-slate-900 mb-3">Risk Levels</h3>
+                  <p className="section-kicker mb-2">Reference</p>
+                  <h3 className="section-title text-[1.6rem] mb-3">Risk Levels</h3>
                   <div className="space-y-2">
-                    <div className="flex items-center gap-3 p-3 rounded-lg bg-red-50">
+                    <div className="flex items-center gap-3 p-3 rounded-2xl border border-red-200 bg-[var(--critical-soft)]">
                       <span className="px-2 py-1 rounded text-xs font-medium bg-red-100 text-red-700">Critical</span>
                       <span className="text-sm text-slate-700">Law effective soon, directly impacts core business. Respond within 24-48h.</span>
                     </div>
-                    <div className="flex items-center gap-3 p-3 rounded-lg bg-orange-50">
+                    <div className="flex items-center gap-3 p-3 rounded-2xl border border-orange-200 bg-[var(--high-soft)]">
                       <span className="px-2 py-1 rounded text-xs font-medium bg-orange-100 text-orange-700">High</span>
                       <span className="text-sm text-slate-700">Confirmed regulation, requires product changes. Plan within 1-2 weeks.</span>
                     </div>
-                    <div className="flex items-center gap-3 p-3 rounded-lg bg-yellow-50">
+                    <div className="flex items-center gap-3 p-3 rounded-2xl border border-yellow-200 bg-[var(--moderate-soft)]">
                       <span className="px-2 py-1 rounded text-xs font-medium bg-yellow-100 text-yellow-700">Medium</span>
                       <span className="text-sm text-slate-700">Draft stage, may impact business. Monitor over 1-3 months.</span>
                     </div>
-                    <div className="flex items-center gap-3 p-3 rounded-lg bg-green-50">
+                    <div className="flex items-center gap-3 p-3 rounded-2xl border border-green-200 bg-[var(--low-soft)]">
                       <span className="px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-700">Low</span>
                       <span className="text-sm text-slate-700">Early discussion or limited impact. Review quarterly.</span>
                     </div>
@@ -176,21 +185,21 @@ export default function HelpGuide({ isOpen, onClose }: HelpGuideProps) {
                 </div>
 
                 <div>
-                  <h3 className="font-semibold text-slate-900 mb-3">Policy Domains</h3>
+                  <h3 className="section-title text-[1.45rem] mb-3">Policy Domains</h3>
                   <div className="grid grid-cols-2 gap-3">
-                    <div className="p-3 rounded-lg border border-slate-200">
+                    <div className="p-3 rounded-2xl border border-[var(--line)] bg-white/55">
                       <p className="font-medium text-slate-900">🛡️ Youth Safety</p>
                       <p className="text-sm text-slate-600">Minor protection, age verification, parental controls</p>
                     </div>
-                    <div className="p-3 rounded-lg border border-slate-200">
+                    <div className="p-3 rounded-2xl border border-[var(--line)] bg-white/55">
                       <p className="font-medium text-slate-900">🛒 Digital Commerce</p>
                       <p className="text-sm text-slate-600">E-commerce, payments, live gifting</p>
                     </div>
-                    <div className="p-3 rounded-lg border border-slate-200">
+                    <div className="p-3 rounded-2xl border border-[var(--line)] bg-white/55">
                       <p className="font-medium text-slate-900">🗄️ Data & Privacy</p>
                       <p className="text-sm text-slate-600">Data protection, localization, cross-border transfer</p>
                     </div>
-                    <div className="p-3 rounded-lg border border-slate-200">
+                    <div className="p-3 rounded-2xl border border-[var(--line)] bg-white/55">
                       <p className="font-medium text-slate-900">💬 Content Policy</p>
                       <p className="text-sm text-slate-600">Content moderation, harmful content, transparency</p>
                     </div>
@@ -198,7 +207,7 @@ export default function HelpGuide({ isOpen, onClose }: HelpGuideProps) {
                 </div>
 
                 <div>
-                  <h3 className="font-semibold text-slate-900 mb-3">Key Terms</h3>
+                  <h3 className="section-title text-[1.45rem] mb-3">Key Terms</h3>
                   <dl className="space-y-3">
                     <div>
                       <dt className="font-medium text-slate-900">Compliance Gap</dt>
@@ -219,7 +228,7 @@ export default function HelpGuide({ isOpen, onClose }: HelpGuideProps) {
 
             {activeTab === 'faq' && (
               <div className="space-y-4">
-                <div className="p-4 rounded-lg border border-slate-200">
+                <div className="rounded-2xl border border-[var(--line)] bg-white/55 p-4">
                   <h4 className="font-medium text-slate-900 flex items-center gap-2">
                     <Clock className="w-4 h-4 text-slate-400" />
                     How long does a scan take?
@@ -230,7 +239,7 @@ export default function HelpGuide({ isOpen, onClose }: HelpGuideProps) {
                   </p>
                 </div>
 
-                <div className="p-4 rounded-lg border border-slate-200">
+                <div className="rounded-2xl border border-[var(--line)] bg-white/55 p-4">
                   <h4 className="font-medium text-slate-900 flex items-center gap-2">
                     <AlertTriangle className="w-4 h-4 text-slate-400" />
                     What if the AI analysis seems inaccurate?
@@ -241,7 +250,7 @@ export default function HelpGuide({ isOpen, onClose }: HelpGuideProps) {
                   </p>
                 </div>
 
-                <div className="p-4 rounded-lg border border-slate-200">
+                <div className="rounded-2xl border border-[var(--line)] bg-white/55 p-4">
                   <h4 className="font-medium text-slate-900 flex items-center gap-2">
                     <Search className="w-4 h-4 text-slate-400" />
                     Where does the policy data come from?
@@ -252,7 +261,7 @@ export default function HelpGuide({ isOpen, onClose }: HelpGuideProps) {
                   </p>
                 </div>
 
-                <div className="p-4 rounded-lg border border-slate-200">
+                <div className="rounded-2xl border border-[var(--line)] bg-white/55 p-4">
                   <h4 className="font-medium text-slate-900 flex items-center gap-2">
                     <FileCheck className="w-4 h-4 text-slate-400" />
                     How do I update the internal baseline?
@@ -263,7 +272,7 @@ export default function HelpGuide({ isOpen, onClose }: HelpGuideProps) {
                   </p>
                 </div>
 
-                <div className="p-4 rounded-lg border border-slate-200">
+                <div className="rounded-2xl border border-[var(--line)] bg-white/55 p-4">
                   <h4 className="font-medium text-slate-900 flex items-center gap-2">
                     <CheckCircle className="w-4 h-4 text-slate-400" />
                     What does "Mark as Reviewed" do?

@@ -159,18 +159,19 @@ export default function GapAnalysis({
   if (!selectedAssessment) {
     return (
       <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-900">Impact Reports</h1>
-          <p className="text-slate-600 mt-1">
-            Review how regulatory changes affect your operations
+        <section className="editorial-panel p-6 sm:p-8">
+          <p className="section-kicker mb-3">Impact Briefing Archive</p>
+          <h1 className="briefing-title">Review the policy reports that need attention.</h1>
+          <p className="mt-4 max-w-2xl text-[15px] leading-7 text-[var(--ink-soft)]">
+            Use the filters to narrow the archive, then open an individual report for the full gap analysis, remediation notes, and review actions.
           </p>
-        </div>
+        </section>
 
         {/* Filters */}
-        <div className="card p-4">
+        <div className="editorial-panel p-4 sm:p-5">
           <div className="flex items-center gap-2 mb-3 sm:mb-0 sm:hidden">
             <Filter className="w-4 h-4 text-slate-500" />
-            <span className="text-sm font-medium text-slate-700">Filters</span>
+            <span className="section-kicker !tracking-[0.14em]">Filters</span>
             {hasActiveFilters && (
               <button
                 onClick={clearFilters}
@@ -184,7 +185,7 @@ export default function GapAnalysis({
           <div className="grid grid-cols-2 sm:flex sm:flex-wrap sm:items-center gap-3 sm:gap-4">
             <div className="hidden sm:flex items-center gap-2">
               <Filter className="w-4 h-4 text-slate-500" />
-              <span className="text-sm font-medium text-slate-700">Filters:</span>
+              <span className="section-kicker !tracking-[0.14em]">Filters</span>
             </div>
 
             {/* Market Filter */}
@@ -196,7 +197,7 @@ export default function GapAnalysis({
                   id="market-filter"
                   value={selectedMarket}
                   onChange={(e) => setSelectedMarket(e.target.value)}
-                  className="text-sm border border-slate-300 rounded-md px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-govpulse-500 focus:border-govpulse-500 w-full sm:w-auto"
+                  className="select text-sm w-full sm:w-auto"
                 >
                   <option value="all">All Markets</option>
                   {availableMarkets.map(code => {
@@ -220,7 +221,7 @@ export default function GapAnalysis({
                   id="risk-filter"
                   value={selectedRisk}
                   onChange={(e) => setSelectedRisk(e.target.value)}
-                  className="text-sm border border-slate-300 rounded-md px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-govpulse-500 focus:border-govpulse-500 w-full sm:w-auto"
+                  className="select text-sm w-full sm:w-auto"
                 >
                   <option value="all">All Levels</option>
                   <option value="P0">P0 - Critical</option>
@@ -240,7 +241,7 @@ export default function GapAnalysis({
                   id="date-filter"
                   value={dateRange}
                   onChange={(e) => setDateRange(e.target.value)}
-                  className="text-sm border border-slate-300 rounded-md px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-govpulse-500 focus:border-govpulse-500 w-full sm:w-auto"
+                  className="select text-sm w-full sm:w-auto"
                 >
                   <option value="all">All Time</option>
                   <option value="7">Last 7 Days</option>
@@ -268,21 +269,29 @@ export default function GapAnalysis({
           </div>
         </div>
 
-        <div className="card">
-          <div className="card-header">
-            <h2 className="text-lg font-semibold text-slate-900">Select a Report</h2>
+        <div className="editorial-panel overflow-hidden">
+          <div className="card-header bg-white/35">
+            <p className="section-kicker mb-2">Report Archive</p>
+            <h2 className="section-title text-[1.7rem]">Select a report</h2>
           </div>
-          <div className="divide-y divide-slate-200">
+          <div className="divide-y divide-[var(--line)]">
             {filteredAssessments.map((assessment) => (
               <button
                 key={assessment.assessment_id}
                 onClick={() => onSelectAssessment(assessment)}
-                className="w-full p-4 text-left hover:bg-slate-50 transition-colors"
+                className="report-list-row w-full text-left"
               >
+                <span className={clsx(
+                  'absolute left-0 top-4 bottom-4 w-1 rounded-r-full',
+                  assessment.risk_level === 'P0' && 'bg-[var(--critical)]',
+                  assessment.risk_level === 'P1' && 'bg-[var(--high)]',
+                  assessment.risk_level === 'P2' && 'bg-[var(--moderate)]',
+                  assessment.risk_level === 'P3' && 'bg-[var(--low)]',
+                )} />
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <div className={clsx(
-                      'p-2 rounded-lg',
+                      'rounded-2xl border border-[var(--line)] p-2',
                       RISK_COLORS[assessment.risk_level].bg
                     )}>
                       <FileCheck className={clsx(
@@ -293,15 +302,15 @@ export default function GapAnalysis({
                     <div>
                       <div className="flex items-center gap-2 mb-1">
                         <RiskBadge level={assessment.risk_level} size="sm" showLabel={false} />
-                        <span className="font-medium text-slate-900">{assessment.market}</span>
+                        <span className="font-medium text-[var(--ink)]">{assessment.market}</span>
                         {assessment.pushed_to_pm && (
-                          <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
+                          <span className="status-stamp border-green-200 bg-white/70 text-[var(--low)]">
                             Reviewed
                           </span>
                         )}
                       </div>
-                      <p className="text-slate-700">{assessment.signal_title}</p>
-                      <p className="text-sm text-slate-500 mt-1">
+                      <p className="font-serif text-[1.35rem] leading-tight text-[var(--ink)]">{assessment.signal_title}</p>
+                      <p className="mt-2 text-sm text-[var(--ink-soft)]">
                         {assessment.compliance_gaps.length} action items • {assessment.remediations.length} recommendations
                       </p>
                     </div>
@@ -340,9 +349,9 @@ export default function GapAnalysis({
   // Detailed assessment view with side-by-side comparison
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-        <div className="min-w-0">
+      <section className="report-hero">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+          <div className="min-w-0">
           <button
             onClick={() => onSelectAssessment(null)}
             className="text-govpulse-600 hover:text-govpulse-700 text-sm mb-2 flex items-center gap-1"
@@ -350,62 +359,64 @@ export default function GapAnalysis({
             <ChevronRight className="w-4 h-4 rotate-180" />
             Back to all reports
           </button>
-          <h1 className="text-xl sm:text-2xl font-bold text-slate-900">{selectedAssessment.signal_title}</h1>
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2">
-            <RiskBadge level={selectedAssessment.risk_level} />
-            <span className="text-slate-500">{selectedAssessment.market}</span>
-            <span className="text-slate-500">
+            <p className="section-kicker mb-3">Impact Report</p>
+            <h1 className="section-title text-[2.5rem] sm:text-[3rem]">{selectedAssessment.signal_title}</h1>
+            <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+              <RiskBadge level={selectedAssessment.risk_level} />
+              <span className="status-stamp">{selectedAssessment.market}</span>
+              <span className="status-stamp">
               Analyzed {formatDistanceToNow(parseUTCDate(selectedAssessment.assessed_at), { addSuffix: true })}
             </span>
           </div>
         </div>
-        <div className="flex flex-wrap items-center gap-3 flex-shrink-0">
-          <button
-            onClick={handleShareAsImage}
-            disabled={isGeneratingImage}
-            className="btn-secondary"
-          >
-            {isGeneratingImage ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <Image className="w-4 h-4" />
-            )}
-            {isGeneratingImage ? 'Generating...' : 'Share as Image'}
-          </button>
-          {selectedAssessment.pushed_to_pm ? (
-            <span className="flex items-center gap-2 text-green-600 bg-green-50 px-4 py-2 rounded-lg">
-              <CheckCircle className="w-5 h-5" />
-              Reviewed
-              <span className="text-sm text-green-500">
-                {selectedAssessment.pushed_at && format(parseUTCDate(selectedAssessment.pushed_at), 'MMM d, HH:mm')}
-              </span>
-            </span>
-          ) : (
+          <div className="flex flex-wrap items-center gap-3 flex-shrink-0">
             <button
-              onClick={() => onPushToPM(selectedAssessment.assessment_id)}
-              className="btn-primary"
+              onClick={handleShareAsImage}
+              disabled={isGeneratingImage}
+              className="btn-secondary"
             >
-              <Send className="w-4 h-4" />
-              Mark as Reviewed
+              {isGeneratingImage ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Image className="w-4 h-4" />
+              )}
+              {isGeneratingImage ? 'Generating...' : 'Share as Image'}
             </button>
-          )}
+            {selectedAssessment.pushed_to_pm ? (
+              <span className="status-stamp border-green-200 bg-white/70 text-[var(--low)]">
+                <CheckCircle className="w-4 h-4" />
+                Reviewed
+                <span className="text-[11px] tracking-normal normal-case">
+                  {selectedAssessment.pushed_at && format(parseUTCDate(selectedAssessment.pushed_at), 'MMM d, HH:mm')}
+                </span>
+              </span>
+            ) : (
+              <button
+                onClick={() => onPushToPM(selectedAssessment.assessment_id)}
+                className="btn-primary"
+              >
+                <Send className="w-4 h-4" />
+                Mark as Reviewed
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className={clsx('card p-4', `risk-${selectedAssessment.risk_level.toLowerCase()}`)}>
-          <h3 className="text-sm font-medium opacity-75">Risk Summary</h3>
-          <p className="mt-1 font-medium">{selectedAssessment.risk_rationale}</p>
+      <div className="report-summary-grid">
+        <div className={clsx('editorial-panel p-5', `risk-${selectedAssessment.risk_level.toLowerCase()}`)}>
+          <p className="section-kicker mb-2 !text-current/70">Risk Summary</p>
+          <p className="text-[15px] leading-7 font-medium">{selectedAssessment.risk_rationale}</p>
         </div>
-        <div className="card p-4">
-          <h3 className="text-sm font-medium text-slate-500">Business Impact</h3>
-          <p className="mt-1 text-slate-900">{selectedAssessment.business_impact}</p>
+        <div className="editorial-panel p-5">
+          <p className="section-kicker mb-2">Business Impact</p>
+          <p className="text-[15px] leading-7 text-[var(--ink)]">{selectedAssessment.business_impact}</p>
         </div>
-        <div className="card p-4">
-          <h3 className="text-sm font-medium text-slate-500">Action Deadline</h3>
-          <p className="mt-1 text-slate-900 flex items-center gap-2">
-            <Clock className="w-4 h-4 text-slate-400" />
+        <div className="editorial-panel p-5">
+          <p className="section-kicker mb-2">Action Deadline</p>
+          <p className="mt-1 flex items-center gap-2 text-[var(--ink)]">
+            <Clock className="w-4 h-4 text-[var(--ink-soft)]" />
             {selectedAssessment.deadline
               ? format(parseUTCDate(selectedAssessment.deadline), 'MMMM d, yyyy')
               : 'No fixed deadline'}
@@ -414,11 +425,12 @@ export default function GapAnalysis({
       </div>
 
       {/* Action Items - Side by Side View */}
-      <div className="card">
+      <div className="editorial-panel">
         <div className="card-header">
-          <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-            <FileCheck className="w-5 h-5 text-govpulse-600" />
-            What Changed vs. Current Practice
+          <p className="section-kicker mb-2">Gap Analysis</p>
+          <h2 className="section-title text-[1.9rem] flex items-center gap-2">
+            <FileCheck className="w-5 h-5 text-[var(--accent)]" />
+            What changed vs. current practice
           </h2>
         </div>
         <div className="p-4">
@@ -438,14 +450,15 @@ export default function GapAnalysis({
       </div>
 
       {/* Remediations */}
-      <div className="card">
+      <div className="editorial-panel">
         <div className="card-header">
-          <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-            <Wrench className="w-5 h-5 text-govpulse-600" />
+          <p className="section-kicker mb-2">Recommended Response</p>
+          <h2 className="section-title text-[1.9rem] flex items-center gap-2">
+            <Wrench className="w-5 h-5 text-[var(--accent)]" />
             Recommended Changes
           </h2>
         </div>
-        <div className="divide-y divide-slate-200">
+        <div className="divide-y divide-[var(--line)]">
           {selectedAssessment.remediations.map((remediation) => (
             <RemediationCard key={remediation.remediation_id} remediation={remediation} />
           ))}
@@ -453,10 +466,11 @@ export default function GapAnalysis({
       </div>
 
       {/* Recommended Actions */}
-      <div className="card">
+      <div className="editorial-panel">
         <div className="card-header">
-          <h2 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-            <Target className="w-5 h-5 text-govpulse-600" />
+          <p className="section-kicker mb-2">Execution</p>
+          <h2 className="section-title text-[1.9rem] flex items-center gap-2">
+            <Target className="w-5 h-5 text-[var(--accent)]" />
             Next Steps
           </h2>
         </div>
@@ -464,7 +478,7 @@ export default function GapAnalysis({
           <ul className="space-y-3">
             {selectedAssessment.recommended_actions.map((action, index) => (
               <li key={index} className="flex items-start gap-3">
-                <span className="w-6 h-6 rounded-full bg-govpulse-100 text-govpulse-700 flex items-center justify-center text-sm font-medium flex-shrink-0">
+                <span className="w-7 h-7 rounded-full border border-[var(--line-strong)] bg-white text-[var(--accent)] flex items-center justify-center text-sm font-semibold flex-shrink-0">
                   {index + 1}
                 </span>
                 <span className="text-slate-700">{action}</span>
@@ -486,21 +500,21 @@ export default function GapAnalysis({
 function GapComparisonCard({ gap }: { gap: ComplianceGap }) {
   return (
     <div className={clsx(
-      'rounded-lg border-2 overflow-hidden',
-      gap.is_blocking ? 'border-red-300' : 'border-slate-200'
+      'overflow-hidden rounded-[1.4rem] border-2 bg-white/55',
+      gap.is_blocking ? 'border-red-300' : 'border-[var(--line)]'
     )}>
       {/* Header */}
-      <div className="bg-slate-50 px-4 py-3 flex items-center justify-between">
+      <div className="bg-[rgba(244,239,230,0.72)] px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <span className={clsx(
-            'px-2 py-0.5 rounded text-xs font-medium uppercase',
+            'px-2 py-1 rounded-full text-xs font-semibold uppercase tracking-[0.08em]',
             severityColors[gap.gap_severity]
           )}>
             {severityLabels[gap.gap_severity]}
           </span>
-          <span className="font-mono text-sm text-slate-600">{gap.baseline_policy_id}</span>
+          <span className="font-mono text-sm text-[var(--ink-soft)]">{gap.baseline_policy_id}</span>
           {gap.is_blocking && (
-            <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full flex items-center gap-1">
+            <span className="status-stamp border-red-200 bg-white/70 text-[#7d2d21]">
               <AlertTriangle className="w-3 h-3" />
               Immediate Action Required
             </span>
@@ -511,33 +525,33 @@ function GapComparisonCard({ gap }: { gap: ComplianceGap }) {
       {/* Side-by-side comparison */}
       <div className="gap-comparison p-4">
         {/* Current Practice */}
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+        <div className="rounded-2xl border border-amber-200 bg-[var(--high-soft)] p-4">
           <div className="flex items-center gap-2 mb-3">
-            <Shield className="w-4 h-4 text-amber-600" />
-            <span className="text-sm font-medium text-amber-800">Current Practice</span>
+            <Shield className="w-4 h-4 text-[#8a531c]" />
+            <span className="text-sm font-medium text-[#8a531c]">Current Practice</span>
           </div>
-          <p className="text-amber-900">{gap.baseline_requirement}</p>
+          <p className="text-[#6f4620]">{gap.baseline_requirement}</p>
         </div>
 
         {/* Arrow indicator (hidden on mobile) */}
-        <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-white rounded-full border-2 border-slate-300 items-center justify-center z-10">
-          <ArrowRight className="w-4 h-4 text-slate-400" />
+        <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-white rounded-full border-2 border-[var(--line-strong)] items-center justify-center z-10">
+          <ArrowRight className="w-4 h-4 text-[var(--ink-soft)]" />
         </div>
 
         {/* New Requirement */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div className="rounded-2xl border border-[var(--line-strong)] bg-[var(--accent-soft)] p-4">
           <div className="flex items-center gap-2 mb-3">
-            <FileText className="w-4 h-4 text-blue-600" />
-            <span className="text-sm font-medium text-blue-800">New Requirement</span>
+            <FileText className="w-4 h-4 text-[var(--accent)]" />
+            <span className="text-sm font-medium text-[var(--accent)]">New Requirement</span>
           </div>
-          <p className="text-blue-900">{gap.regulatory_requirement}</p>
+          <p className="text-[var(--accent-deep)]">{gap.regulatory_requirement}</p>
         </div>
       </div>
 
       {/* Gap Description */}
       <div className="px-4 pb-4">
-        <div className="bg-slate-100 rounded-lg p-3">
-          <p className="text-sm text-slate-700">
+        <div className="rounded-2xl border border-[var(--line)] bg-[rgba(244,239,230,0.5)] p-4">
+          <p className="text-sm leading-6 text-[var(--ink)]">
             <strong>What needs to change:</strong> {gap.gap_description}
           </p>
         </div>
@@ -549,29 +563,29 @@ function GapComparisonCard({ gap }: { gap: ComplianceGap }) {
 // Remediation Card Component
 function RemediationCard({ remediation }: { remediation: ProductRemediation }) {
   return (
-    <div className="p-4">
+    <div className="p-5">
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-2 mb-2">
             <span className={clsx(
-              'px-2 py-0.5 rounded text-xs font-medium',
+              'px-2.5 py-1 rounded-full text-xs font-semibold uppercase tracking-[0.08em]',
               effortColors[remediation.engineering_effort]
             )}>
               {effortLabels[remediation.engineering_effort]}
             </span>
-            <span className="text-xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+            <span className="status-stamp text-[10px]">
               {remediation.remediation_type.replace('_', ' ')}
             </span>
           </div>
-          <h3 className="font-medium text-slate-900">{remediation.title}</h3>
-          <p className="text-sm text-slate-600 mt-1 whitespace-pre-line">{remediation.description}</p>
+          <h3 className="font-serif text-[1.35rem] leading-tight text-[var(--ink)]">{remediation.title}</h3>
+          <p className="text-sm leading-6 text-[var(--ink-soft)] mt-2 whitespace-pre-line">{remediation.description}</p>
 
           {/* Affected Features */}
           <div className="mt-3">
-            <p className="text-xs text-slate-500 mb-1">Products/Services Affected:</p>
+            <p className="label !mb-2">Products / Services Affected</p>
             <div className="flex flex-wrap gap-1">
               {remediation.affected_features.map((feature, i) => (
-                <span key={i} className="text-xs bg-slate-100 text-slate-600 px-2 py-0.5 rounded">
+                <span key={i} className="status-stamp text-[10px]">
                   {feature}
                 </span>
               ))}
@@ -580,11 +594,11 @@ function RemediationCard({ remediation }: { remediation: ProductRemediation }) {
 
           {/* Acceptance Criteria */}
           <div className="mt-3">
-            <p className="text-xs text-slate-500 mb-1">How to verify completion:</p>
+            <p className="label !mb-2">How to verify completion</p>
             <ul className="space-y-1">
               {remediation.acceptance_criteria.map((criteria, i) => (
                 <li key={i} className="text-sm text-slate-600 flex items-start gap-2">
-                  <CheckCircle className="w-4 h-4 text-slate-400 flex-shrink-0 mt-0.5" />
+                  <CheckCircle className="w-4 h-4 text-[var(--accent)] flex-shrink-0 mt-0.5" />
                   {criteria}
                 </li>
               ))}
@@ -592,9 +606,9 @@ function RemediationCard({ remediation }: { remediation: ProductRemediation }) {
           </div>
         </div>
 
-        <div className="sm:text-right flex-shrink-0 border-t sm:border-t-0 pt-3 sm:pt-0">
-          <p className="text-xs text-slate-500">Suggested Owner</p>
-          <p className="text-sm font-medium text-slate-900">{remediation.pm_owner_recommendation}</p>
+        <div className="sm:text-right flex-shrink-0 border-t border-[var(--line)] sm:border-t-0 pt-3 sm:pt-0">
+          <p className="label !mb-1">Suggested Owner</p>
+          <p className="text-sm font-medium text-[var(--ink)]">{remediation.pm_owner_recommendation}</p>
         </div>
       </div>
     </div>

@@ -51,19 +51,22 @@ const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(({ assessment }, re
       ref={ref}
       style={{
         width: 480,
-        fontFamily: "'Inter', 'Helvetica Neue', Arial, sans-serif",
-        backgroundColor: '#ffffff',
-        color: '#1e293b',
+        fontFamily: "'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif",
+        backgroundColor: '#f4efe6',
+        color: '#172131',
         lineHeight: 1.5,
         overflow: 'hidden',
+        border: '1px solid #d8cfbf',
+        borderRadius: 24,
       }}
     >
       {/* Branded Header */}
       <div
         style={{
-          background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+          backgroundColor: '#f8f4ec',
           padding: '24px 28px',
-          color: '#ffffff',
+          color: '#172131',
+          borderBottom: '3px solid #22455f',
         }}
       >
         <table style={{ borderCollapse: 'collapse', marginBottom: 8 }}>
@@ -75,7 +78,8 @@ const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(({ assessment }, re
                     width: 32,
                     height: 32,
                     borderRadius: 8,
-                    backgroundColor: 'rgba(255,255,255,0.2)',
+                    backgroundColor: '#ffffff',
+                    border: '1px solid #bba993',
                     textAlign: 'center',
                     lineHeight: '32px',
                     fontSize: 18,
@@ -86,16 +90,16 @@ const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(({ assessment }, re
                 </div>
               </td>
               <td style={{ verticalAlign: 'middle' }}>
-                <span style={{ fontSize: 18, fontWeight: 700, letterSpacing: '-0.02em' }}>{BRAND_NAME}</span>
+                <span style={{ fontSize: 22, fontWeight: 600, letterSpacing: '-0.03em', fontFamily: "'Newsreader', Georgia, serif" }}>{BRAND_NAME}</span>
               </td>
             </tr>
           </tbody>
         </table>
-        <div style={{ fontSize: 13, opacity: 0.85 }}>Impact Assessment Report</div>
+        <div style={{ fontSize: 11, opacity: 0.72, letterSpacing: '0.16em', textTransform: 'uppercase' as const }}>Impact Assessment Report</div>
       </div>
 
       {/* Risk Level + Title */}
-      <div style={{ padding: '20px 28px', borderBottom: '1px solid #e2e8f0' }}>
+      <div style={{ padding: '22px 28px', borderBottom: '1px solid #d8cfbf', backgroundColor: 'rgba(255,255,255,0.62)' }}>
         <div style={{ marginBottom: 12 }}>
           <span
             style={{
@@ -129,7 +133,7 @@ const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(({ assessment }, re
           </span>
         </div>
         <div style={{ fontSize: 18, fontWeight: 700, color: '#0f172a', lineHeight: 1.4 }}>
-          {assessment.signal_title}
+          <span style={{ fontFamily: "'Newsreader', Georgia, serif", fontSize: 28, lineHeight: 1.05, letterSpacing: '-0.03em' }}>{assessment.signal_title}</span>
         </div>
         <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 8 }}>
           Analyzed {format(parseUTCDate(assessment.assessed_at), 'MMMM d, yyyy')}
@@ -137,13 +141,14 @@ const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(({ assessment }, re
       </div>
 
       {/* Summary Cards */}
-      <div style={{ padding: '16px 28px', borderBottom: '1px solid #e2e8f0' }}>
+      <div style={{ padding: '18px 28px', borderBottom: '1px solid #d8cfbf' }}>
         <div
           style={{
-            backgroundColor: risk.bg,
-            borderLeft: `3px solid ${risk.accent}`,
-            borderRadius: 8,
-            padding: '12px 16px',
+            backgroundColor: '#fcfaf6',
+            border: `1px solid ${risk.accent}30`,
+            borderTop: `3px solid ${risk.accent}`,
+            borderRadius: 16,
+            padding: '14px 16px',
             marginBottom: 12,
           }}
         >
@@ -155,9 +160,10 @@ const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(({ assessment }, re
 
         <div
           style={{
-            backgroundColor: '#f8fafc',
-            borderRadius: 8,
-            padding: '12px 16px',
+            backgroundColor: '#fcfaf6',
+            borderRadius: 16,
+            border: '1px solid #d8cfbf',
+            padding: '14px 16px',
             marginBottom: 12,
           }}
         >
@@ -170,9 +176,10 @@ const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(({ assessment }, re
         {assessment.deadline && (
           <div
             style={{
-              backgroundColor: '#f8fafc',
-              borderRadius: 8,
-              padding: '12px 16px',
+              backgroundColor: '#fcfaf6',
+              borderRadius: 16,
+              border: '1px solid #d8cfbf',
+              padding: '14px 16px',
             }}
           >
             <div style={{ fontSize: 11, fontWeight: 600, color: '#64748b', textTransform: 'uppercase' as const, letterSpacing: '0.05em', marginBottom: 4 }}>
@@ -187,8 +194,8 @@ const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(({ assessment }, re
 
       {/* Compliance Gaps */}
       {assessment.compliance_gaps.length > 0 && (
-        <div style={{ padding: '16px 28px', borderBottom: '1px solid #e2e8f0' }}>
-          <div style={{ fontSize: 14, fontWeight: 700, color: '#0f172a', marginBottom: 12 }}>
+        <div style={{ padding: '18px 28px', borderBottom: '1px solid #d8cfbf' }}>
+          <div style={{ fontSize: 12, fontWeight: 700, color: '#6f5f49', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.16em' }}>
             Compliance Gaps ({assessment.compliance_gaps.length})
           </div>
           {assessment.compliance_gaps.map((gap, i) => {
@@ -197,10 +204,10 @@ const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(({ assessment }, re
               <div
                 key={gap.gap_id || i}
                 style={{
-                  border: '1px solid #e2e8f0',
-                  borderRadius: 8,
-                  padding: '10px 14px',
-                  backgroundColor: gap.is_blocking ? '#fef2f2' : '#ffffff',
+                  border: '1px solid #d8cfbf',
+                  borderRadius: 16,
+                  padding: '12px 14px',
+                  backgroundColor: gap.is_blocking ? '#fff1ed' : '#fcfaf6',
                   marginBottom: i < assessment.compliance_gaps.length - 1 ? 8 : 0,
                 }}
               >
@@ -237,8 +244,8 @@ const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(({ assessment }, re
 
       {/* Remediations */}
       {assessment.remediations.length > 0 && (
-        <div style={{ padding: '16px 28px', borderBottom: '1px solid #e2e8f0' }}>
-          <div style={{ fontSize: 14, fontWeight: 700, color: '#0f172a', marginBottom: 12 }}>
+        <div style={{ padding: '18px 28px', borderBottom: '1px solid #d8cfbf' }}>
+          <div style={{ fontSize: 12, fontWeight: 700, color: '#6f5f49', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.16em' }}>
             Recommended Changes ({assessment.remediations.length})
           </div>
           {assessment.remediations.map((rem, i) => (
@@ -247,7 +254,7 @@ const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(({ assessment }, re
               style={{
                 borderCollapse: 'collapse',
                 width: '100%',
-                borderBottom: i < assessment.remediations.length - 1 ? '1px solid #f1f5f9' : 'none',
+                borderBottom: i < assessment.remediations.length - 1 ? '1px solid #e5ddd0' : 'none',
                 marginBottom: i < assessment.remediations.length - 1 ? 8 : 0,
                 paddingBottom: 8,
               }}
@@ -255,7 +262,7 @@ const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(({ assessment }, re
               <tbody>
                 <tr>
                   <td style={{ width: 24, verticalAlign: 'top', paddingTop: 2, paddingRight: 8 }}>
-                    <span style={{ fontSize: 13, fontWeight: 700, color: '#0284c7' }}>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: '#22455f' }}>
                       {i + 1}.
                     </span>
                   </td>
@@ -275,8 +282,8 @@ const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(({ assessment }, re
 
       {/* Next Steps */}
       {assessment.recommended_actions.length > 0 && (
-        <div style={{ padding: '16px 28px', borderBottom: '1px solid #e2e8f0' }}>
-          <div style={{ fontSize: 14, fontWeight: 700, color: '#0f172a', marginBottom: 12 }}>
+        <div style={{ padding: '18px 28px', borderBottom: '1px solid #d8cfbf' }}>
+          <div style={{ fontSize: 12, fontWeight: 700, color: '#6f5f49', marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.16em' }}>
             Next Steps
           </div>
           {assessment.recommended_actions.map((action, i) => (
@@ -292,8 +299,9 @@ const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(({ assessment }, re
                         width: 22,
                         height: 22,
                         borderRadius: '50%',
-                        backgroundColor: '#e0f2fe',
-                        color: '#0369a1',
+                        backgroundColor: '#ffffff',
+                        border: '1px solid #bba993',
+                        color: '#22455f',
                         fontSize: 12,
                         fontWeight: 600,
                         textAlign: 'center',
@@ -317,7 +325,7 @@ const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(({ assessment }, re
       <div
         style={{
           padding: '20px 28px',
-          backgroundColor: '#f8fafc',
+          backgroundColor: '#efe8db',
         }}
       >
         <table style={{ borderCollapse: 'collapse', width: '100%' }}>
@@ -339,7 +347,7 @@ const ShareCard = forwardRef<HTMLDivElement, ShareCardProps>(({ assessment }, re
                   value={reportUrl}
                   size={72}
                   level="M"
-                  bgColor="#f8fafc"
+                  bgColor="#efe8db"
                   fgColor="#0f172a"
                 />
               </td>

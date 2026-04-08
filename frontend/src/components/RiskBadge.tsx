@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import { AlertTriangle, AlertCircle, AlertOctagon, CheckCircle } from 'lucide-react'
-import { RiskLevel, RISK_COLORS, RISK_LABELS } from '../types'
+import { RiskLevel, RISK_LABELS } from '../types'
 
 interface RiskBadgeProps {
   level: RiskLevel
@@ -27,22 +27,27 @@ const iconSizes = {
   lg: 'w-5 h-5',
 }
 
+const toneClasses = {
+  P0: 'border-red-200 bg-[var(--critical-soft)] text-[#7d2d21]',
+  P1: 'border-orange-200 bg-[var(--high-soft)] text-[#8a531c]',
+  P2: 'border-yellow-200 bg-[var(--moderate-soft)] text-[#615a32]',
+  P3: 'border-green-200 bg-[var(--low-soft)] text-[#2e4b41]',
+}
+
 export default function RiskBadge({ level, size = 'md', showLabel = true }: RiskBadgeProps) {
   const Icon = icons[level]
-  const colors = RISK_COLORS[level]
 
   return (
     <span
       className={clsx(
-        'inline-flex items-center gap-1 font-semibold rounded-full',
-        colors.bg,
-        colors.text,
+        'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 font-semibold tracking-[0.08em] uppercase',
+        toneClasses[level],
         sizes[size]
       )}
     >
       <Icon className={iconSizes[size]} />
       <span>{level}</span>
-      {showLabel && <span className="font-normal">({RISK_LABELS[level]})</span>}
+      {showLabel && <span className="font-normal tracking-normal normal-case">({RISK_LABELS[level]})</span>}
     </span>
   )
 }
