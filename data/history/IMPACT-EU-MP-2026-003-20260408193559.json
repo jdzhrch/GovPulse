@@ -1,0 +1,50 @@
+{
+  "assessment_id": "IMPACT-EU-MP-2026-003-20260408193559",
+  "signal_id": "EU-MP-2026-003",
+  "signal_title": "European Commission's Guidance on Age Assurance",
+  "market": "EU",
+  "domain": "minor_protection",
+  "risk_level": "P1",
+  "risk_rationale": "The European Commission's guidance on age assurance introduces new requirements for third-party verification and registration processes that are not currently addressed in TikTok's internal baseline, which relies on machine learning and telecom partnerships for age estimation.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-EU-MP-2026-003-0",
+      "signal_id": "EU-MP-2026-003",
+      "baseline_policy_id": "1.5",
+      "baseline_requirement": "TikTok states it uses machine learning and safety review to identify likely under-13 users and remove/limit access.",
+      "regulatory_requirement": "Third-party verification and registration processes for age assurance.",
+      "gap_description": "The current baseline does not include third-party verification or registration processes for age assurance as required by the new EU guidance.",
+      "gap_severity": "major",
+      "is_blocking": true
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-EU-MP-2026-003-0",
+      "gap_id": "GAP-EU-MP-2026-003-0",
+      "remediation_type": "product_change",
+      "title": "Implement Third-Party Age Verification",
+      "description": "Integrate third-party age verification services to comply with EU guidance on age assurance, ensuring transparency and effectiveness in protecting minors.",
+      "affected_features": [
+        "User Registration",
+        "Age Verification"
+      ],
+      "engineering_effort": "L",
+      "pm_owner_recommendation": "Youth Safety PM",
+      "acceptance_criteria": [
+        "Integration with at least one third-party age verification service",
+        "Updated user registration process to include third-party verification",
+        "Compliance with EU transparency requirements for age assurance"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Failure to comply with the new EU guidance on age assurance could result in regulatory scrutiny and potential fines, impacting TikTok's operations in the EU market.",
+  "recommended_actions": [
+    "Engage with third-party age verification providers to explore integration options.",
+    "Update the user registration process to incorporate third-party verification.",
+    "Ensure transparency in age assurance methods to align with EU guidance."
+  ],
+  "assessed_at": "2026-04-08T19:36:04.370369",
+  "assessed_by": "github_actions"
+}

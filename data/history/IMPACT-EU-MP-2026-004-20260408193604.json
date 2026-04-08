@@ -1,0 +1,50 @@
+{
+  "assessment_id": "IMPACT-EU-MP-2026-004-20260408193604",
+  "signal_id": "EU-MP-2026-004",
+  "signal_title": "EU-Harmonised Age Verification Approach",
+  "market": "EU",
+  "domain": "minor_protection",
+  "risk_level": "P2",
+  "risk_rationale": "The introduction of a harmonised age verification method by the European Commission presents a medium risk as it requires adaptation to new regulatory standards but does not pose an immediate existential threat or high material compliance gap.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-EU-MP-2026-004-0",
+      "signal_id": "EU-MP-2026-004",
+      "baseline_policy_id": "1.5",
+      "baseline_requirement": "Detection and prevention using machine learning and safety review to identify likely under-13 users.",
+      "regulatory_requirement": "Blueprint for age verification and interoperability with EU Digital Identity Wallets.",
+      "gap_description": "The current baseline relies on machine learning and safety reviews, which may not align with the new EU harmonised age verification method and its interoperability requirements.",
+      "gap_severity": "major",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-EU-MP-2026-004-0",
+      "gap_id": "GAP-EU-MP-2026-004-0",
+      "remediation_type": "product_change",
+      "title": "Implement EU Harmonised Age Verification",
+      "description": "Develop and integrate a system that complies with the EU's harmonised age verification blueprint, ensuring interoperability with EU Digital Identity Wallets.",
+      "affected_features": [
+        "Age verification system",
+        "User onboarding process"
+      ],
+      "engineering_effort": "L",
+      "pm_owner_recommendation": "EU Compliance Product Manager",
+      "acceptance_criteria": [
+        "Age verification system is compliant with EU harmonised standards.",
+        "System interoperates with EU Digital Identity Wallets.",
+        "Successful testing and validation with EU regulatory bodies."
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Adapting to the EU's harmonised age verification method may require significant development resources and could affect user onboarding processes in the EU market.",
+  "recommended_actions": [
+    "Initiate a project to assess the technical requirements for compliance with the EU harmonised age verification method.",
+    "Engage with EU regulatory bodies to ensure alignment with the new standards.",
+    "Develop a timeline and resource allocation plan for implementing the necessary changes."
+  ],
+  "assessed_at": "2026-04-08T19:36:08.557010",
+  "assessed_by": "github_actions"
+}

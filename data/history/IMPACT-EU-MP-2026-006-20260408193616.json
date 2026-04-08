@@ -1,0 +1,51 @@
+{
+  "assessment_id": "IMPACT-EU-MP-2026-006-20260408193616",
+  "signal_id": "EU-MP-2026-006",
+  "signal_title": "European Commission Investigates Snapchat's Compliance with Child Protection Rules",
+  "market": "EU",
+  "domain": "minor_protection",
+  "risk_level": "P2",
+  "risk_rationale": "The investigation into Snapchat's compliance with child protection rules under the Digital Services Act highlights potential scrutiny on similar platforms like TikTok. While TikTok's current baseline includes youth safety measures, the evolving regulatory landscape under the DSA may introduce new requirements or stricter enforcement.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-EU-MP-2026-006-0",
+      "signal_id": "EU-MP-2026-006",
+      "baseline_policy_id": "1.1",
+      "baseline_requirement": "Minimum age is 13+; under-13 users in the US have a limited experience.",
+      "regulatory_requirement": "Compliance with Digital Services Act child protection rules.",
+      "gap_description": "The DSA may introduce new or stricter requirements for child protection that are not currently addressed in TikTok's baseline.",
+      "gap_severity": "moderate",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-EU-MP-2026-006-0",
+      "gap_id": "GAP-EU-MP-2026-006-0",
+      "remediation_type": "product_change",
+      "title": "Enhance Youth Safety Compliance",
+      "description": "Conduct a comprehensive review of TikTok's youth safety measures against the DSA child protection rules to identify any gaps. Implement necessary changes to align with potential new requirements.",
+      "affected_features": [
+        "Youth Safety",
+        "Family Pairing",
+        "Age Assurance"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Youth Safety PM",
+      "acceptance_criteria": [
+        "Complete a gap analysis report comparing TikTok's youth safety measures with DSA requirements.",
+        "Implement changes to address identified gaps within one quarter.",
+        "Ensure ongoing monitoring and updates to maintain compliance with evolving DSA regulations."
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Potential increased scrutiny and regulatory requirements under the DSA could necessitate changes to TikTok's youth safety features, impacting development timelines and resource allocation.",
+  "recommended_actions": [
+    "Conduct a detailed analysis of the DSA child protection rules.",
+    "Engage with legal and compliance teams to understand potential regulatory changes.",
+    "Prepare a roadmap for implementing necessary changes to maintain compliance."
+  ],
+  "assessed_at": "2026-04-08T19:36:22.100893",
+  "assessed_by": "github_actions"
+}

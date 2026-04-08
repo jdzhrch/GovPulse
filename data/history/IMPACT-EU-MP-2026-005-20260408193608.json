@@ -1,0 +1,86 @@
+{
+  "assessment_id": "IMPACT-EU-MP-2026-005-20260408193608",
+  "signal_id": "EU-MP-2026-005",
+  "signal_title": "Guidelines on the Protection of Minors",
+  "market": "EU",
+  "domain": "minor_protection",
+  "risk_level": "P1",
+  "risk_rationale": "The new EU guidelines introduce requirements that are not fully aligned with TikTok's current baseline, particularly concerning the reduction of exposure to addictive features and empowerment against cyberbullying. These gaps could lead to significant compliance risks if not addressed promptly.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-EU-MP-2026-005-0",
+      "signal_id": "EU-MP-2026-005",
+      "baseline_policy_id": "1.1",
+      "baseline_requirement": "Accounts for ages 13-17 are private by default",
+      "regulatory_requirement": "Private accounts by default",
+      "gap_description": "The baseline aligns with the regulatory requirement for private accounts by default, so no gap exists here.",
+      "gap_severity": "minor",
+      "is_blocking": false
+    },
+    {
+      "gap_id": "GAP-EU-MP-2026-005-1",
+      "signal_id": "EU-MP-2026-005",
+      "baseline_policy_id": "1.2",
+      "baseline_requirement": "Daily screen-time default is set to 60 minutes for under-18 accounts",
+      "regulatory_requirement": "Reducing exposure to addictive features",
+      "gap_description": "The baseline does not explicitly address reducing exposure to addictive features beyond screen-time limits.",
+      "gap_severity": "major",
+      "is_blocking": true
+    },
+    {
+      "gap_id": "GAP-EU-MP-2026-005-2",
+      "signal_id": "EU-MP-2026-005",
+      "baseline_policy_id": "1.3",
+      "baseline_requirement": "Teen reporting escalation to trusted adult",
+      "regulatory_requirement": "Empowering minors against cyberbullying",
+      "gap_description": "While the baseline includes reporting escalation, it may not fully empower minors against cyberbullying as required by the new guidelines.",
+      "gap_severity": "major",
+      "is_blocking": true
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-EU-MP-2026-005-0",
+      "gap_id": "GAP-EU-MP-2026-005-0",
+      "remediation_type": "product_change",
+      "title": "Implement Addictive Feature Controls",
+      "description": "Introduce features to monitor and limit addictive behaviors, such as content consumption patterns and time spent on specific features.",
+      "affected_features": [
+        "Content Consumption",
+        "Screen Time Management"
+      ],
+      "engineering_effort": "L",
+      "pm_owner_recommendation": "Youth Safety PM",
+      "acceptance_criteria": [
+        "New controls are implemented to monitor addictive behaviors",
+        "Users receive notifications when addictive patterns are detected"
+      ]
+    },
+    {
+      "remediation_id": "REM-EU-MP-2026-005-1",
+      "gap_id": "GAP-EU-MP-2026-005-1",
+      "remediation_type": "product_change",
+      "title": "Enhance Cyberbullying Protections",
+      "description": "Develop tools and resources to empower minors against cyberbullying, including educational content and enhanced reporting mechanisms.",
+      "affected_features": [
+        "Reporting Tools",
+        "Educational Content"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Youth Safety PM",
+      "acceptance_criteria": [
+        "New educational content on cyberbullying is available",
+        "Improved reporting tools for cyberbullying incidents"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Failure to comply with the new guidelines could result in regulatory scrutiny and potential fines, impacting TikTok's operations in the EU market.",
+  "recommended_actions": [
+    "Prioritize the development of addictive feature controls",
+    "Enhance cyberbullying protections and educational resources",
+    "Conduct a comprehensive review of existing youth safety features to ensure alignment with new guidelines"
+  ],
+  "assessed_at": "2026-04-08T19:36:16.246993",
+  "assessed_by": "github_actions"
+}

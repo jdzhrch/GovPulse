@@ -1,0 +1,103 @@
+{
+  "assessment_id": "IMPACT-EU-MP-2026-001-20260408193543",
+  "signal_id": "EU-MP-2026-001",
+  "signal_title": "Spain's Draft Organic Law for the Protection of Minors in Digital Environments",
+  "market": "EU",
+  "domain": "minor_protection",
+  "risk_level": "P1",
+  "risk_rationale": "The draft bill introduces new requirements for parental controls, age verification, and prohibition of loot boxes for minors, which are not fully aligned with TikTok's current baseline policies. These gaps could lead to significant compliance challenges in the EU market if not addressed promptly.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-EU-MP-2026-001-0",
+      "signal_id": "EU-MP-2026-001",
+      "baseline_policy_id": "1.3",
+      "baseline_requirement": "Parent can view teen follower/following context and blocked-account settings.",
+      "regulatory_requirement": "Parental controls by default.",
+      "gap_description": "The baseline allows parental visibility but does not mandate parental controls by default.",
+      "gap_severity": "major",
+      "is_blocking": true
+    },
+    {
+      "gap_id": "GAP-EU-MP-2026-001-1",
+      "signal_id": "EU-MP-2026-001",
+      "baseline_policy_id": "1.4",
+      "baseline_requirement": "Personalized ads are not allowed for under-18 users.",
+      "regulatory_requirement": "Prohibition of loot boxes for minors.",
+      "gap_description": "The baseline does not address loot boxes, which are a form of digital content that could be considered gambling.",
+      "gap_severity": "major",
+      "is_blocking": true
+    },
+    {
+      "gap_id": "GAP-EU-MP-2026-001-2",
+      "signal_id": "EU-MP-2026-001",
+      "baseline_policy_id": "1.5",
+      "baseline_requirement": "Detection and prevention using machine learning and safety review to identify likely under-13 users.",
+      "regulatory_requirement": "Age verification systems.",
+      "gap_description": "The baseline uses estimation techniques but does not include explicit age verification systems.",
+      "gap_severity": "major",
+      "is_blocking": true
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-EU-MP-2026-001-0",
+      "gap_id": "GAP-EU-MP-2026-001-0",
+      "remediation_type": "product_change",
+      "title": "Implement Default Parental Controls",
+      "description": "Develop and implement a system where parental controls are enabled by default for all minor accounts in the EU.",
+      "affected_features": [
+        "Family Pairing",
+        "Account Settings"
+      ],
+      "engineering_effort": "L",
+      "pm_owner_recommendation": "Family Safety PM",
+      "acceptance_criteria": [
+        "Parental controls are enabled by default for all minor accounts",
+        "Parents can manage these controls through the app"
+      ]
+    },
+    {
+      "remediation_id": "REM-EU-MP-2026-001-1",
+      "gap_id": "GAP-EU-MP-2026-001-1",
+      "remediation_type": "product_change",
+      "title": "Prohibit Loot Boxes for Minors",
+      "description": "Update content policies to explicitly prohibit loot boxes for users under 18 in the EU.",
+      "affected_features": [
+        "In-App Purchases",
+        "Content Policies"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Monetization PM",
+      "acceptance_criteria": [
+        "Loot boxes are not accessible to users under 18",
+        "Compliance with EU regulations on digital content for minors"
+      ]
+    },
+    {
+      "remediation_id": "REM-EU-MP-2026-001-2",
+      "gap_id": "GAP-EU-MP-2026-001-2",
+      "remediation_type": "product_change",
+      "title": "Implement Age Verification Systems",
+      "description": "Introduce robust age verification systems to ensure compliance with the new regulatory requirements in Spain.",
+      "affected_features": [
+        "User Registration",
+        "Age Assurance"
+      ],
+      "engineering_effort": "XL",
+      "pm_owner_recommendation": "User Safety PM",
+      "acceptance_criteria": [
+        "Age verification is required for all new accounts",
+        "Existing accounts are verified for age compliance"
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Failure to comply with the new regulations could result in fines and restrictions on TikTok's operations in Spain, impacting user growth and revenue in the EU market.",
+  "recommended_actions": [
+    "Initiate a cross-functional task force to address compliance gaps.",
+    "Engage with Spanish regulators to clarify requirements and timelines.",
+    "Develop a communication plan to inform users and stakeholders of upcoming changes."
+  ],
+  "assessed_at": "2026-04-08T19:35:52.360020",
+  "assessed_by": "github_actions"
+}
