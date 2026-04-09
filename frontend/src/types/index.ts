@@ -74,6 +74,7 @@ export interface ProductRemediation {
 
 export interface ImpactAssessment {
   assessment_id: string;
+  mission_id?: string | null;
   signal_id: string;
   signal_title: string;
   market: string;

@@ -6,6 +6,7 @@ import MissionLauncher from './pages/MissionLauncher'
 import GapAnalysis from './pages/GapAnalysis'
 import ScanReport from './pages/ScanReport'
 import { ImpactAssessment, ScoutMission, RegulatorySignal } from './types'
+import { normalizeRegulatoryTitle } from './lib/regulatoryTitles'
 
 // Use base URL from Vite config
 const BASE_URL = import.meta.env.BASE_URL || '/'
@@ -83,6 +84,7 @@ async function loadHistoryData(): Promise<{
           status: data.status,
           signals: (data.signals || []).map((s: RegulatorySignal) => ({
             ...s,
+            title: normalizeRegulatoryTitle(s.title),
             effective_date: s.effective_date || null
           }))
         }
@@ -90,6 +92,8 @@ async function loadHistoryData(): Promise<{
       } else if (file.startsWith('IMPACT-')) {
         const assessment: ImpactAssessment = {
           ...data,
+          mission_id: data.mission_id || null,
+          signal_title: normalizeRegulatoryTitle(data.signal_title),
           deadline: data.deadline || null,
           pushed_to_pm: false
         }

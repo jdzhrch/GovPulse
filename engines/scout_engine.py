@@ -7,10 +7,14 @@ Uses LLM for intelligent query generation and signal detection.
 
 import json
 import os
+import re
 from datetime import datetime, timedelta
 from dataclasses import dataclass, asdict
+from html import unescape
 from typing import Optional
 from enum import Enum
+from urllib.parse import urlparse
+from urllib.request import Request, urlopen
 
 try:
     from openai import OpenAI
@@ -645,6 +649,195 @@ class ScoutEngine:
         self.missions: dict[str, ScoutMission] = {}
         self.query_generator = QueryGenerator()
 
+    @staticmethod
+    def _normalize_source_url(url: str) -> str:
+        if not url:
+            return ""
+
+        parsed = urlparse(url)
+        return parsed._replace(query="", fragment="").geturl()
+
+    @staticmethod
+    def _is_placeholder_title(title: str) -> bool:
+        normalized = title.strip()
+        if not normalized:
+            return True
+
+        lowered = normalized.lower()
+        if lowered in {"unknown", "title not specified"}:
+            return True
+
+        if "[title not specified]" in lowered:
+            return True
+
+        return bool(re.fullmatch(r"(h\.r\.|s\.)\s*\d+", normalized, flags=re.IGNORECASE))
+
+    @staticmethod
+    def _extract_congress_bill_page_url(url: str) -> Optional[str]:
+        if not url:
+            return None
+
+        cleaned_url = ScoutEngine._normalize_source_url(url)
+        parsed = urlparse(cleaned_url)
+
+        bill_match = re.search(r"/(?P<congress>\d+)/bills/(?P<prefix>[a-z]+)(?P<number>\d+)/", parsed.path)
+        if not bill_match:
+            return None
+
+        bill_type = {
+            "hr": "house-bill",
+            "s": "senate-bill",
+            "hjres": "house-joint-resolution",
+            "sjres": "senate-joint-resolution",
+            "hres": "house-resolution",
+            "sres": "senate-resolution",
+        }.get(bill_match.group("prefix").lower())
+
+        if not bill_type:
+            return None
+
+        congress = bill_match.group("congress")
+        number = bill_match.group("number")
+        return f"https://www.congress.gov/bill/{congress}th-congress/{bill_type}/{number}"
+
+    @staticmethod
+    def _clean_candidate_title(title: str) -> str:
+        normalized = unescape(title or "").strip()
+        if not normalized:
+            return ""
+
+        normalized = re.sub(r"\s+\|\s+Congress\.gov.*$", "", normalized, flags=re.IGNORECASE)
+        normalized = re.sub(r"\s+\|\s+Federal Trade Commission.*$", "", normalized, flags=re.IGNORECASE)
+
+        congress_colon_match = re.search(r"\d{3}(?:st|nd|rd|th)\s+Congress.*?:\s*(.+)$", normalized)
+        if congress_colon_match:
+            return congress_colon_match.group(1).strip()
+
+        bill_prefix_match = re.match(r"^(H\.R\.|S\.)\s*[\d.]+\s*-\s*(.+)$", normalized, flags=re.IGNORECASE)
+        if bill_prefix_match:
+            normalized = bill_prefix_match.group(2).strip()
+
+        normalized = re.sub(r"\s+\d{3}(?:st|nd|rd|th)\s+Congress.*$", "", normalized)
+        normalized = re.sub(r"\s*[–-]\s*\[Title Not Specified\]\s*$", "", normalized, flags=re.IGNORECASE)
+
+        return normalized.strip()
+
+    def _fetch_page_title(self, url: str) -> str:
+        request = Request(url, headers={"User-Agent": "GovPulse/1.0"})
+        with urlopen(request, timeout=10) as response:
+            html = response.read().decode("utf-8", errors="ignore")
+
+        meta_match = re.search(
+            r'<meta[^>]+(?:property|name)=["\']og:title["\'][^>]+content=["\']([^"\']+)["\']',
+            html,
+            flags=re.IGNORECASE,
+        )
+        if meta_match:
+            return meta_match.group(1)
+
+        title_match = re.search(r"<title>(.*?)</title>", html, flags=re.IGNORECASE | re.DOTALL)
+        if title_match:
+            return title_match.group(1)
+
+        return ""
+
+    def _build_source_title_index(self, raw_results: list[dict]) -> dict[str, str]:
+        source_titles: dict[str, str] = {}
+
+        for result in raw_results:
+            for source in result.get("sources", []):
+                source_url = self._normalize_source_url(source.get("url", ""))
+                source_title = self._clean_candidate_title(source.get("title", ""))
+                if source_url and source_title and source_url not in source_titles:
+                    source_titles[source_url] = source_title
+
+        return source_titles
+
+    def _enrich_signal_metadata(
+        self,
+        signal: RegulatorySignal,
+        source_titles: dict[str, str]
+    ) -> RegulatorySignal:
+        signal.source_url = self._normalize_source_url(signal.source_url)
+
+        if self._is_placeholder_title(signal.title):
+            source_title = source_titles.get(signal.source_url, "")
+            if source_title and not self._is_placeholder_title(source_title):
+                signal.title = source_title
+                return signal
+
+            congress_bill_url = self._extract_congress_bill_page_url(signal.source_url)
+            if congress_bill_url:
+                try:
+                    fetched_title = self._clean_candidate_title(self._fetch_page_title(congress_bill_url))
+                except Exception as error:
+                    print(f"[Warning] Failed to resolve Congress bill title for {signal.source_url}: {error}")
+                    fetched_title = ""
+
+                if fetched_title and not self._is_placeholder_title(fetched_title):
+                    signal.title = fetched_title
+                    signal.source_url = congress_bill_url
+                    return signal
+
+            signal.title = self._clean_candidate_title(signal.title)
+
+        return signal
+
+    @staticmethod
+    def _parse_signal_date(date_str: Optional[str]) -> Optional[datetime]:
+        """Parse supported date formats for signal publication dates."""
+        if not date_str:
+            return None
+
+        normalized = date_str.strip()
+        if not normalized:
+            return None
+
+        if normalized.endswith("Z"):
+            normalized = normalized[:-1] + "+00:00"
+
+        try:
+            return datetime.fromisoformat(normalized)
+        except ValueError:
+            pass
+
+        for fmt in ("%Y-%m-%d", "%Y/%m/%d", "%Y-%m-%d %H:%M:%S"):
+            try:
+                return datetime.strptime(normalized, fmt)
+            except ValueError:
+                continue
+
+        return None
+
+    def _filter_signals_by_lookback(
+        self,
+        signals: list[RegulatorySignal],
+        lookback_days: int
+    ) -> list[RegulatorySignal]:
+        """Keep only signals whose published_date falls within the lookback window."""
+        if lookback_days <= 0:
+            return list(signals)
+
+        cutoff_date = (datetime.now() - timedelta(days=lookback_days)).date()
+        filtered_signals = []
+
+        for signal in signals:
+            published_at = self._parse_signal_date(signal.published_date)
+            if not published_at:
+                print(f"[Filter] Excluding signal with missing/invalid published date: {signal.title}")
+                continue
+
+            if published_at.date() < cutoff_date:
+                print(
+                    f"[Filter] Excluding out-of-window signal: {signal.title} "
+                    f"({signal.published_date} < {cutoff_date.isoformat()})"
+                )
+                continue
+
+            filtered_signals.append(signal)
+
+        return filtered_signals
+
     def create_mission(
         self,
         market: str,
@@ -706,17 +899,19 @@ class ScoutEngine:
             # Use OpenAI Responses API with web_search
             raw_results = fetch_real_world_data(queries, mission.market)
             if raw_results:
-                mission.signals = self._parse_web_search_results(raw_results, mission)
+                parsed_signals = self._parse_web_search_results(raw_results, mission)
                 # If no signals after parsing, fall back to simulated data
-                if not mission.signals:
+                if not parsed_signals:
                     print("[Warning] Failed to extract signals from search results, using simulated data")
-                    mission.signals = self._get_simulated_signals(mission)
+                    parsed_signals = self._get_simulated_signals(mission)
             else:
                 print("[Warning] Web search returned no results, using simulated data")
-                mission.signals = self._get_simulated_signals(mission)
+                parsed_signals = self._get_simulated_signals(mission)
         else:
             # Demo mode: use simulated data
-            mission.signals = self._get_simulated_signals(mission)
+            parsed_signals = self._get_simulated_signals(mission)
+
+        mission.signals = self._filter_signals_by_lookback(parsed_signals, mission.lookback_days)
 
         mission.status = "completed"
         print(f"Mission completed. Found {len(mission.signals)} signals.")
@@ -739,11 +934,20 @@ class ScoutEngine:
 
         # Combine all search results
         combined_content = "\n\n---\n\n".join([
-            f"Query: {r['query']}\n\nResult:\n{r['content']}"
+            (
+                f"Query: {r['query']}\n\n"
+                f"Sources:\n" +
+                ("\n".join(
+                    f"- {source.get('title', 'Untitled source')} ({source.get('url', '')})"
+                    for source in r.get("sources", [])[:10]
+                ) or "- No source metadata captured") +
+                f"\n\nResult:\n{r['content']}"
+            )
             for r in raw_results
         ])
 
         print(f"[Parser] Processing {len(raw_results)} search results, total {len(combined_content)} chars")
+        source_titles = self._build_source_title_index(raw_results)
 
         # Improved parsing prompt
         parse_prompt = f"""You are a regulatory intelligence analyst. Analyze the following search results about {mission.market} market {mission.domain.value} domain and extract all regulatory signals.
@@ -835,13 +1039,14 @@ Example output format:
                         title=s.get("title", "Unknown"),
                         summary=s.get("summary", ""),
                         source_url=s.get("source_url", ""),
-                        published_date=s.get("published_date", datetime.now().strftime("%Y-%m-%d")),
+                        published_date=s.get("published_date") or "",
                         effective_date=s.get("effective_date"),
                         key_provisions=s.get("key_provisions", []),
                         affected_policies=[],  # Populated later by impact_analyzer
                         raw_text_excerpt=s.get("excerpt", s.get("raw_text_excerpt", "")),
                         confidence_score=float(s.get("confidence_score", 0.7))
                     )
+                    signal = self._enrich_signal_metadata(signal, source_titles)
                     signals.append(signal)
                     print(f"[Parser] ✓ Parsed signal: {signal.title[:50]}...")
                 except Exception as e:
@@ -881,7 +1086,7 @@ Example output format:
                         title=source.get("title", query),
                         summary=content[:500] if content else "",
                         source_url=source.get("url", ""),
-                        published_date=datetime.now().strftime("%Y-%m-%d"),
+                        published_date="",
                         effective_date=None,
                         key_provisions=[],
                         affected_policies=[],
@@ -899,7 +1104,7 @@ Example output format:
                     title=query,
                     summary=content[:500],
                     source_url="",
-                    published_date=datetime.now().strftime("%Y-%m-%d"),
+                    published_date="",
                     effective_date=None,
                     key_provisions=[],
                     affected_policies=[],
@@ -921,28 +1126,27 @@ Example output format:
         else:
             signals = list(market_signals.get(mission.domain, []))
 
-        # Update simulated data dates to current date (to pass lookback filter)
-        updated_signals = []
+        # Return copied signal objects while preserving original metadata.
+        copied_signals = []
         for signal in signals:
-            # Create a new signal with updated recent date
-            updated_signal = RegulatorySignal(
-                id=signal.id.replace("2024", str(datetime.now().year)),
+            copied_signal = RegulatorySignal(
+                id=signal.id,
                 market=signal.market,
                 domain=signal.domain,
                 source_type=signal.source_type,
                 title=signal.title,
                 summary=signal.summary,
                 source_url=signal.source_url,
-                published_date=(datetime.now() - timedelta(days=7)).strftime("%Y-%m-%d"),
+                published_date=signal.published_date,
                 effective_date=signal.effective_date,
                 key_provisions=signal.key_provisions,
                 affected_policies=signal.affected_policies,
                 raw_text_excerpt=signal.raw_text_excerpt,
                 confidence_score=signal.confidence_score
             )
-            updated_signals.append(updated_signal)
+            copied_signals.append(copied_signal)
 
-        return updated_signals
+        return copied_signals
 
     def _parse_real_signals(
         self,
@@ -964,7 +1168,7 @@ Example output format:
                     title=data.get("title", "Unknown"),
                     summary=data.get("summary", ""),
                     source_url=data.get("url", ""),
-                    published_date=data.get("date", datetime.now().strftime("%Y-%m-%d")),
+                    published_date=data.get("date") or "",
                     effective_date=data.get("effective_date"),
                     key_provisions=data.get("provisions", []),
                     affected_policies=data.get("affected_policies", []),

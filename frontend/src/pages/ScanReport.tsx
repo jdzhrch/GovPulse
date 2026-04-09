@@ -24,14 +24,7 @@ import clsx from 'clsx'
 import { ScoutMission, ImpactAssessment, RISK_COLORS, MARKETS } from '../types'
 import RiskBadge from '../components/RiskBadge'
 import { format } from 'date-fns'
-
-// Helper to parse UTC timestamp correctly
-// Backend saves timestamps without timezone info but they are UTC
-const parseUTCDate = (timestamp: string): Date => {
-  // If timestamp doesn't have timezone info, treat as UTC by appending Z
-  const dateStr = timestamp.endsWith('Z') || timestamp.includes('+') ? timestamp : timestamp + 'Z'
-  return new Date(dateStr)
-}
+import { getRelatedAssessments, parseUTCDate } from '../lib/scanReportAssociations'
 
 interface ScanReportProps {
   missions: ScoutMission[]
@@ -130,31 +123,7 @@ export default function ScanReport({ missions, assessments, onPushToPM }: ScanRe
   // Find the mission
   const mission = missions.find(m => m.mission_id === missionId)
   
-  // Find all assessments for this mission's signals
-  const missionAssessments = mission 
-    ? assessments.filter(a => 
-        mission.signals.some(s => s.id === a.signal_id)
-      )
-    : []
-
-  // Also try to match by timestamp prefix if signal_id matching fails
-  const assessmentsByTimestamp = assessments.filter(a => 
-    a.assessment_id.includes(missionId?.split('-').slice(1, 2).join('-') || 'NOMATCH') &&
-    a.assessed_at.startsWith(mission?.created_at?.slice(0, 10) || 'NOMATCH')
-  )
-
-  // Combine both methods
-  const relatedAssessments = missionAssessments.length > 0 
-    ? missionAssessments 
-    : assessmentsByTimestamp.length > 0 
-      ? assessmentsByTimestamp
-      : assessments.filter(a => {
-          // Match by market and close timestamp
-          if (!mission) return false
-          const missionTime = new Date(mission.created_at).getTime()
-          const assessTime = new Date(a.assessed_at).getTime()
-          return a.market === mission.market && Math.abs(assessTime - missionTime) < 3600000 // within 1 hour
-        })
+  const relatedAssessments = getRelatedAssessments(mission, assessments)
 
   const togglePolicy = (assessmentId: string) => {
     setExpandedPolicies(prev => {
@@ -265,10 +234,7 @@ export default function ScanReport({ missions, assessments, onPushToPM }: ScanRe
           {filteredMissions.map((m) => {
             const market = MARKETS.find(mk => mk.code === m.market)
             const DomainIcon = domainIcons[m.domain] || Globe
-            const missionAssess = assessments.filter(a => 
-              a.market === m.market && 
-              Math.abs(parseUTCDate(a.assessed_at).getTime() - parseUTCDate(m.created_at).getTime()) < 3600000
-            )
+            const missionAssess = getRelatedAssessments(m, assessments)
             const highestRisk = missionAssess.reduce((max, a) => {
               const riskOrder = ['P0', 'P1', 'P2', 'P3']
               return riskOrder.indexOf(a.risk_level) < riskOrder.indexOf(max) ? a.risk_level : max

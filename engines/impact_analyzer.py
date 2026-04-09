@@ -88,6 +88,7 @@ class ImpactAssessment:
     recommended_actions: list[str]
     assessed_at: str
     assessed_by: str
+    mission_id: Optional[str] = None
 
 
 class BaselineParser:
@@ -383,6 +384,7 @@ class ImpactAnalyzer:
     def analyze_signal(
         self,
         signal: RegulatorySignal,
+        mission_id: Optional[str] = None,
         analyst: str = "system",
         use_llm: bool = True
     ) -> ImpactAssessment:
@@ -399,20 +401,22 @@ class ImpactAnalyzer:
                 return self._build_assessment_from_llm(
                     assessment_id=assessment_id,
                     signal=signal,
+                    mission_id=mission_id,
                     llm_result=llm_result,
                     analyst=analyst
                 )
             except Exception as e:
                 print(f"[Warning] LLM analysis failed: {e}, falling back to rule-based analysis")
-                return self._analyze_signal_rules(signal, analyst)
+                return self._analyze_signal_rules(signal, mission_id, analyst)
         else:
             # Use rule-based analysis (legacy)
-            return self._analyze_signal_rules(signal, analyst)
+            return self._analyze_signal_rules(signal, mission_id, analyst)
 
     def _build_assessment_from_llm(
         self,
         assessment_id: str,
         signal: RegulatorySignal,
+        mission_id: Optional[str],
         llm_result: dict,
         analyst: str
     ) -> ImpactAssessment:
@@ -462,6 +466,7 @@ class ImpactAnalyzer:
 
         assessment = ImpactAssessment(
             assessment_id=assessment_id,
+            mission_id=mission_id,
             signal_id=signal.id,
             signal_title=signal.title,
             market=signal.market,
@@ -483,13 +488,14 @@ class ImpactAnalyzer:
     def _analyze_signal_rules(
         self,
         signal: RegulatorySignal,
+        mission_id: Optional[str],
         analyst: str
     ) -> ImpactAssessment:
         """Legacy rule-based analysis (kept for fallback)."""
         # Use fallback analysis from LLM analyzer
         result = self.llm_analyzer._fallback_analysis(signal)
         assessment_id = f"IMPACT-{signal.id}-{datetime.now().strftime('%Y%m%d%H%M%S')}"
-        return self._build_assessment_from_llm(assessment_id, signal, result, analyst)
+        return self._build_assessment_from_llm(assessment_id, signal, mission_id, result, analyst)
 
     def analyze_mission(
         self,
@@ -501,7 +507,7 @@ class ImpactAnalyzer:
         assessments = []
 
         for signal in mission.signals:
-            assessment = self.analyze_signal(signal, analyst, use_llm)
+            assessment = self.analyze_signal(signal, mission.mission_id, analyst, use_llm)
             assessments.append(assessment)
 
         return assessments
@@ -516,6 +522,7 @@ class ImpactAnalyzer:
 
         assessment_dict = {
             "assessment_id": assessment.assessment_id,
+            "mission_id": assessment.mission_id,
             "signal_id": assessment.signal_id,
             "signal_title": assessment.signal_title,
             "market": assessment.market,
