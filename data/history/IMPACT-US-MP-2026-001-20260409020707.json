@@ -1,0 +1,50 @@
+{
+  "assessment_id": "IMPACT-US-MP-2026-001-20260409020707",
+  "signal_id": "US-MP-2026-001",
+  "signal_title": "FTC Policy Statement on Age Verification Technologies",
+  "market": "US",
+  "domain": "minor_protection",
+  "risk_level": "P2",
+  "risk_rationale": "The FTC's policy statement introduces new requirements for age verification technologies that may require adjustments to TikTok's current age assurance posture. While TikTok already uses machine learning and safety reviews for age detection, the new guidelines emphasize exclusive use of data for age verification, limited data retention, and clear notices, which may not be fully aligned with current practices.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-US-MP-2026-001-0",
+      "signal_id": "US-MP-2026-001",
+      "baseline_policy_id": "1.5",
+      "baseline_requirement": "TikTok states it uses machine learning and safety review to identify likely under-13 users and remove/limit access.",
+      "regulatory_requirement": "Use collected information exclusively for age verification, do not retain information longer than necessary, provide clear notices to parents and children, implement reasonable security safeguards.",
+      "gap_description": "TikTok's current age assurance posture may not fully comply with the FTC's emphasis on exclusive use of data for age verification and limited data retention.",
+      "gap_severity": "major",
+      "is_blocking": false
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-US-MP-2026-001-0",
+      "gap_id": "GAP-US-MP-2026-001-0",
+      "remediation_type": "product_change",
+      "title": "Enhance Age Verification Compliance",
+      "description": "Update age verification processes to ensure data is used exclusively for age verification and not retained longer than necessary. Provide clear notices to parents and children about data use and implement additional security safeguards.",
+      "affected_features": [
+        "Age Verification",
+        "Data Retention Policies"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Youth Safety PM",
+      "acceptance_criteria": [
+        "Data used for age verification is not used for other purposes.",
+        "Data retention policies are updated to minimize retention time.",
+        "Clear notices are provided to parents and children regarding data use."
+      ]
+    }
+  ],
+  "deadline": null,
+  "business_impact": "Potential need for adjustments in age verification processes and data handling practices, which may require resource allocation and could impact user experience.",
+  "recommended_actions": [
+    "Review and update age verification processes to align with FTC guidelines.",
+    "Implement training for staff on new data handling and notification requirements.",
+    "Monitor compliance with updated processes and adjust as necessary."
+  ],
+  "assessed_at": "2026-04-09T02:07:11.745485",
+  "assessed_by": "github_actions"
+}

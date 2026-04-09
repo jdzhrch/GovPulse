@@ -1,0 +1,112 @@
+{
+  "mission_id": "MISSION-US-20260409020558",
+  "market": "US",
+  "domain": "minor_protection",
+  "lookback_days": 30,
+  "created_at": "2026-04-09T02:05:58.593687",
+  "created_by": "github_actions",
+  "status": "completed",
+  "generated_queries": [
+    "site:congress.gov \"minor protection\" OR \"children safety\" OR \"youth protection\" OR \"age verification\" OR \"parental control\" AND (\"draft bill\" OR \"enacted law\") AND date:[2023-09-15 TO 2023-10-15]",
+    "site:ftc.gov \"minor protection\" OR \"children safety\" OR \"youth protection\" OR \"age verification\" OR \"parental control\" AND \"regulatory guidance\" AND date:[2023-09-15 TO 2023-10-15]",
+    "site:justice.gov \"minor protection\" OR \"children safety\" OR \"youth protection\" OR \"age verification\" OR \"parental control\" AND (\"court ruling\" OR \"legal decision\") AND date:[2023-09-15 TO 2023-10-15]",
+    "site:whitehouse.gov \"minor protection\" OR \"children safety\" OR \"youth protection\" OR \"age verification\" OR \"parental control\" AND \"executive order\" AND date:[2023-09-15 TO 2023-10-15]",
+    "site:ftc.gov OR site:fcc.gov \"minor protection\" OR \"children safety\" OR \"youth protection\" OR \"age verification\" OR \"parental control\" AND \"public hearing\" AND date:[2023-09-15 TO 2023-10-15]"
+  ],
+  "signals": [
+    {
+      "id": "US-MP-2026-001",
+      "market": "US",
+      "domain": "minor_protection",
+      "source_type": "regulatory_guidance",
+      "title": "FTC Policy Statement on Age Verification Technologies",
+      "summary": "The FTC issued a policy statement indicating it will not enforce actions under COPPA against operators using personal information solely for age verification, provided they meet specific conditions.",
+      "source_url": "https://www.ftc.gov/news-events/news/press-releases/2026/02/ftc-issues-coppa-policy-statement-incentivize-use-age-verification-technologies-protect-children?utm_source=openai",
+      "published_date": "2026-02-25",
+      "effective_date": null,
+      "key_provisions": [
+        "Use collected information exclusively for age verification",
+        "Do not retain information longer than necessary",
+        "Provide clear notices to parents and children",
+        "Implement reasonable security safeguards"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "US-MP-2026-002",
+      "market": "US",
+      "domain": "minor_protection",
+      "source_type": "draft_bill",
+      "title": "H.R. 10364 – [Title Not Specified]",
+      "summary": "A bill introduced to define 'verifiable parental consent' and outline requirements for obtaining such consent, including conditions for collecting and using age verification data.",
+      "source_url": "https://www.congress.gov/118/bills/hr10364/BILLS-118hr10364ih.pdf?utm_source=openai",
+      "published_date": "2026-03-01",
+      "effective_date": null,
+      "key_provisions": [
+        "Defines 'verifiable parental consent'",
+        "Specifies conditions for age verification data collection and use"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "US-MP-2026-003",
+      "market": "US",
+      "domain": "minor_protection",
+      "source_type": "draft_bill",
+      "title": "Parents Over Platforms Act (Discussion Draft)",
+      "summary": "A draft bill prohibiting personalized advertising to minors and requiring developers to implement age verification mechanisms.",
+      "source_url": "https://www.congress.gov/119/meeting/house/118714/documents/BILLS-119pih-HR____ParentsOverPlatformsActRepsAuchinclossandHouchin.pdf?utm_source=openai",
+      "published_date": "2025-11-24",
+      "effective_date": null,
+      "key_provisions": [
+        "Prohibits personalized advertising to minors",
+        "Requires age verification mechanisms",
+        "Mandates non-sharing of age verification data with third parties"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.8
+    },
+    {
+      "id": "US-MP-2026-004",
+      "market": "US",
+      "domain": "minor_protection",
+      "source_type": "draft_bill",
+      "title": "S. 2714 – [Title Not Specified]",
+      "summary": "A bill requiring entities to verify users' ages using commercially available methods and mandating parental consent for minors accessing certain online services.",
+      "source_url": "https://www.congress.gov/119/bills/s2714/BILLS-119s2714is.pdf?utm_source=openai",
+      "published_date": "2025-09-04",
+      "effective_date": null,
+      "key_provisions": [
+        "Requires age verification using commercially available methods",
+        "Mandates parental consent for minors",
+        "Prohibits minors' access to AI chatbots with explicit content"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    },
+    {
+      "id": "US-MP-2026-005",
+      "market": "US",
+      "domain": "minor_protection",
+      "source_type": "regulatory_guidance",
+      "title": "FTC Workshop on Age Verification Technologies",
+      "summary": "The FTC hosted a virtual workshop to discuss age verification technologies and their role in complying with COPPA.",
+      "source_url": "https://www.ftc.gov/terms/childrens-online-privacy-protection-act-coppa?utm_source=openai",
+      "published_date": "2026-01-28",
+      "effective_date": null,
+      "key_provisions": [
+        "Discussed effectiveness and challenges of age verification methods",
+        "Explored balance between user privacy and child protection"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.8
+    }
+  ]
+}
