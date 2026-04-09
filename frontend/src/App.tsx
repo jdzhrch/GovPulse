@@ -183,6 +183,7 @@ function App() {
           element={
             <GapAnalysis
               assessments={assessments}
+              missions={missions}
               selectedAssessment={selectedAssessment}
               onSelectAssessment={setSelectedAssessment}
               onPushToPM={handlePushToPM}
@@ -194,6 +195,7 @@ function App() {
           element={
             <GapAnalysis
               assessments={assessments}
+              missions={missions}
               selectedAssessment={selectedAssessment}
               onSelectAssessment={setSelectedAssessment}
               onPushToPM={handlePushToPM}

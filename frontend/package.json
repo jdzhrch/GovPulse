@@ -9,6 +9,7 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "check:design": "node scripts/check-editorial-redesign.mjs",
     "check:reports": "node --experimental-strip-types scripts/check-scan-report-associations.ts",
+    "check:sorting": "node --experimental-strip-types scripts/check-assessment-sorting.ts",
     "preview": "vite preview"
   },
   "dependencies": {

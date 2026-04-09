@@ -25,6 +25,7 @@ import { ScoutMission, ImpactAssessment, RISK_COLORS, MARKETS } from '../types'
 import RiskBadge from '../components/RiskBadge'
 import { format } from 'date-fns'
 import { getRelatedAssessments, parseUTCDate } from '../lib/scanReportAssociations'
+import { sortAssessmentsByPriority } from '../lib/assessmentSorting'
 
 interface ScanReportProps {
   missions: ScoutMission[]
@@ -123,7 +124,10 @@ export default function ScanReport({ missions, assessments, onPushToPM }: ScanRe
   // Find the mission
   const mission = missions.find(m => m.mission_id === missionId)
   
-  const relatedAssessments = getRelatedAssessments(mission, assessments)
+  const relatedAssessments = useMemo(
+    () => sortAssessmentsByPriority(getRelatedAssessments(mission, assessments)),
+    [mission, assessments]
+  )
 
   const togglePolicy = (assessmentId: string) => {
     setExpandedPolicies(prev => {
@@ -234,7 +238,7 @@ export default function ScanReport({ missions, assessments, onPushToPM }: ScanRe
           {filteredMissions.map((m) => {
             const market = MARKETS.find(mk => mk.code === m.market)
             const DomainIcon = domainIcons[m.domain] || Globe
-            const missionAssess = getRelatedAssessments(m, assessments)
+            const missionAssess = sortAssessmentsByPriority(getRelatedAssessments(m, assessments))
             const highestRisk = missionAssess.reduce((max, a) => {
               const riskOrder = ['P0', 'P1', 'P2', 'P3']
               return riskOrder.indexOf(a.risk_level) < riskOrder.indexOf(max) ? a.risk_level : max

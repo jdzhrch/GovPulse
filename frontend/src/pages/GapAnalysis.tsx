@@ -19,11 +19,12 @@ import {
 } from 'lucide-react'
 import clsx from 'clsx'
 import html2canvas from 'html2canvas'
-import { ImpactAssessment, ComplianceGap, ProductRemediation, RISK_COLORS, MARKETS } from '../types'
+import { ImpactAssessment, ComplianceGap, ProductRemediation, RISK_COLORS, MARKETS, ScoutMission } from '../types'
 import RiskBadge from '../components/RiskBadge'
 import ShareCard from '../components/ShareCard'
 import { formatDistanceToNow, format } from 'date-fns'
 import { buildShareImageFilename } from '../brand'
+import { sortAssessmentsForGapAnalysis } from '../lib/assessmentSorting'
 
 // Helper to parse UTC timestamp correctly
 const parseUTCDate = (timestamp: string): Date => {
@@ -33,6 +34,7 @@ const parseUTCDate = (timestamp: string): Date => {
 
 interface GapAnalysisProps {
   assessments: ImpactAssessment[]
+  missions: ScoutMission[]
   selectedAssessment: ImpactAssessment | null
   onSelectAssessment: (assessment: ImpactAssessment | null) => void
   onPushToPM: (assessmentId: string) => void
@@ -66,6 +68,7 @@ const effortLabels = {
 
 export default function GapAnalysis({
   assessments,
+  missions,
   selectedAssessment,
   onSelectAssessment,
   onPushToPM
@@ -137,6 +140,11 @@ export default function GapAnalysis({
       return true
     })
   }, [assessments, selectedMarket, selectedRisk, dateRange])
+
+  const sortedFilteredAssessments = useMemo(
+    () => sortAssessmentsForGapAnalysis(filteredAssessments, missions),
+    [filteredAssessments, missions]
+  )
   
   const hasActiveFilters = selectedMarket !== 'all' || selectedRisk !== 'all' || dateRange !== 'all'
   
@@ -263,7 +271,7 @@ export default function GapAnalysis({
                 </button>
               )}
               <div className="text-sm text-slate-500 ml-auto">
-                {filteredAssessments.length} of {assessments.length} reports
+                {sortedFilteredAssessments.length} of {assessments.length} reports
               </div>
             </div>
           </div>
@@ -275,7 +283,7 @@ export default function GapAnalysis({
             <h2 className="section-title text-[1.7rem]">Select a report</h2>
           </div>
           <div className="divide-y divide-[var(--line)]">
-            {filteredAssessments.map((assessment) => (
+            {sortedFilteredAssessments.map((assessment) => (
               <button
                 key={assessment.assessment_id}
                 onClick={() => onSelectAssessment(assessment)}
@@ -321,7 +329,7 @@ export default function GapAnalysis({
             ))}
             
             {/* Empty state - no matching results */}
-            {filteredAssessments.length === 0 && assessments.length > 0 && (
+            {sortedFilteredAssessments.length === 0 && assessments.length > 0 && (
               <div className="p-12 text-center">
                 <Filter className="w-12 h-12 text-slate-300 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-slate-900 mb-2">No matching reports</h3>
