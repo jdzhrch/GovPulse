@@ -1,0 +1,76 @@
+{
+  "assessment_id": "IMPACT-BR-MP-2026-002-20260409013432",
+  "signal_id": "BR-MP-2026-002",
+  "signal_title": "Lei Federal nº 15.211/2025 (ECA Digital or Lei Felca)",
+  "market": "BR",
+  "domain": "minor_protection",
+  "risk_level": "P1",
+  "risk_rationale": "The new Brazilian law introduces a prohibition on self-declaration of age and requires account linking for minors, which are not currently addressed in TikTok's internal baseline. This presents a material compliance gap that requires immediate product changes to ensure compliance with the new legislation.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-BR-MP-2026-002-0",
+      "signal_id": "BR-MP-2026-002",
+      "baseline_policy_id": "1.5",
+      "baseline_requirement": "TikTok states it uses machine learning and safety review to identify likely under-13 users and remove/limit access.",
+      "regulatory_requirement": "Prohibition of self-declaration of age.",
+      "gap_description": "The current baseline allows for self-declaration of age, which is prohibited under the new Brazilian law.",
+      "gap_severity": "major",
+      "is_blocking": true
+    },
+    {
+      "gap_id": "GAP-BR-MP-2026-002-1",
+      "signal_id": "BR-MP-2026-002",
+      "baseline_policy_id": "1.3",
+      "baseline_requirement": "Parent can view teen follower/following context and blocked-account settings.",
+      "regulatory_requirement": "Account linking for minors.",
+      "gap_description": "The current baseline does not require account linking for minors, which is mandated by the new Brazilian law.",
+      "gap_severity": "major",
+      "is_blocking": true
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-BR-MP-2026-002-0",
+      "gap_id": "GAP-BR-MP-2026-002-0",
+      "remediation_type": "product_change",
+      "title": "Implement Age Verification Mechanism",
+      "description": "Develop and implement a robust age verification mechanism that does not rely on self-declaration to comply with Brazilian law.",
+      "affected_features": [
+        "User Registration",
+        "Age Verification"
+      ],
+      "engineering_effort": "L",
+      "pm_owner_recommendation": "Youth Safety PM",
+      "acceptance_criteria": [
+        "Age verification mechanism is implemented and operational.",
+        "Self-declaration of age is disabled for Brazilian users."
+      ]
+    },
+    {
+      "remediation_id": "REM-BR-MP-2026-002-1",
+      "gap_id": "GAP-BR-MP-2026-002-1",
+      "remediation_type": "product_change",
+      "title": "Develop Account Linking Feature for Minors",
+      "description": "Create a feature that requires minors to link their accounts to a parent or guardian account to comply with Brazilian law.",
+      "affected_features": [
+        "User Registration",
+        "Family Pairing"
+      ],
+      "engineering_effort": "XL",
+      "pm_owner_recommendation": "Family Safety PM",
+      "acceptance_criteria": [
+        "Account linking feature is developed and available for Brazilian users.",
+        "Minors are unable to complete registration without linking to a parent or guardian account."
+      ]
+    }
+  ],
+  "deadline": "2026-03-18",
+  "business_impact": "Failure to comply with the new Brazilian law could result in significant fines and potential restrictions on platform operations within Brazil.",
+  "recommended_actions": [
+    "Prioritize development of age verification and account linking features.",
+    "Engage with Brazilian legal counsel to ensure full compliance with Lei Federal nº 15.211/2025.",
+    "Monitor implementation progress and adjust timelines as necessary to meet the effective date."
+  ],
+  "assessed_at": "2026-04-09T01:34:42.113699",
+  "assessed_by": "github_actions"
+}
