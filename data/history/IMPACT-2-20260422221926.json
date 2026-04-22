@@ -1,0 +1,52 @@
+{
+  "assessment_id": "IMPACT-2-20260422221926",
+  "mission_id": "MISSION-US-20260422221831",
+  "signal_id": "2",
+  "signal_title": "Justice Department Settles Lawsuit Alleging State Department’s Social Media Censorship",
+  "market": "US",
+  "domain": "content_moderation",
+  "risk_level": "P1",
+  "risk_rationale": "The settlement and implementation of the Executive Order on ending federal censorship may require TikTok to reassess its content moderation policies to ensure compliance with new federal guidelines, potentially impacting current enforcement practices.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-2-0",
+      "signal_id": "2",
+      "baseline_policy_id": "CM-001",
+      "baseline_requirement": "TikTok's content moderation policies include automated and human review models with proactive removal/flagging.",
+      "regulatory_requirement": "Implementation of Executive Order on ending federal censorship.",
+      "gap_description": "The Executive Order may conflict with TikTok's current moderation practices if they are perceived as suppressing protected speech.",
+      "gap_severity": "major",
+      "is_blocking": true
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-2-0",
+      "gap_id": "GAP-2-0",
+      "remediation_type": "product_change",
+      "title": "Review and Update Content Moderation Policies",
+      "description": "Conduct a comprehensive review of current content moderation policies to ensure they align with the Executive Order on ending federal censorship. Update policies to prevent any potential suppression of protected speech.",
+      "affected_features": [
+        "Content Moderation System",
+        "Automated Flagging",
+        "Human Review Processes"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Content Moderation PM",
+      "acceptance_criteria": [
+        "Updated content moderation policies are reviewed and approved by legal compliance team.",
+        "New policies are implemented without disrupting current moderation workflows.",
+        "Training for moderation staff on updated policies is completed."
+      ]
+    }
+  ],
+  "deadline": "",
+  "business_impact": "Failure to comply with the Executive Order could result in legal challenges and potential fines, affecting TikTok's operations in the US market.",
+  "recommended_actions": [
+    "Initiate a legal review of current content moderation practices.",
+    "Engage with external legal experts to interpret the Executive Order's implications.",
+    "Develop a communication plan to inform users of any changes in content moderation policies."
+  ],
+  "assessed_at": "2026-04-22T22:19:32.420570",
+  "assessed_by": "github_actions"
+}

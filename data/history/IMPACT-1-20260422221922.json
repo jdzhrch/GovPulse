@@ -1,0 +1,51 @@
+{
+  "assessment_id": "IMPACT-1-20260422221922",
+  "mission_id": "MISSION-US-20260422221831",
+  "signal_id": "1",
+  "signal_title": "Justice Department Settles Lawsuits Alleging Social Media Coercion and Deplatforming",
+  "market": "US",
+  "domain": "content_moderation",
+  "risk_level": "P1",
+  "risk_rationale": "The regulatory signal indicates a settlement related to government-induced content suppression, which may require TikTok to reassess its content moderation policies to ensure compliance with First Amendment rights in the US. This poses a material compliance gap that requires immediate attention to avoid potential legal challenges.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-1-0",
+      "signal_id": "1",
+      "baseline_policy_id": "CM-001",
+      "baseline_requirement": "TikTok's content moderation policies include automated and human review models with proactive removal/flagging.",
+      "regulatory_requirement": "Ensure content moderation practices do not suppress speech in violation of First Amendment rights, as per the settlement and Executive Order.",
+      "gap_description": "TikTok's current content moderation practices may need to be adjusted to ensure they are not perceived as suppressing speech due to government influence.",
+      "gap_severity": "major",
+      "is_blocking": true
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-1-0",
+      "gap_id": "GAP-1-0",
+      "remediation_type": "product_change",
+      "title": "Review and Update Content Moderation Policies",
+      "description": "Conduct a comprehensive review of content moderation policies to ensure alignment with First Amendment rights and the recent settlement. Update policies to explicitly prevent government-induced suppression of speech.",
+      "affected_features": [
+        "Content Moderation System",
+        "Reporting and Appeals Process"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Content Moderation PM",
+      "acceptance_criteria": [
+        "Updated policies are reviewed and approved by legal counsel.",
+        "Content moderation practices are adjusted to prevent government-induced suppression.",
+        "Training for moderation teams on new policies is completed."
+      ]
+    }
+  ],
+  "deadline": "",
+  "business_impact": "Failure to comply with the settlement and Executive Order could result in legal challenges and reputational damage, affecting user trust and platform integrity.",
+  "recommended_actions": [
+    "Conduct a legal review of current content moderation policies.",
+    "Engage with external legal experts to ensure compliance with First Amendment rights.",
+    "Implement training for content moderation teams on updated policies."
+  ],
+  "assessed_at": "2026-04-22T22:19:26.740633",
+  "assessed_by": "github_actions"
+}

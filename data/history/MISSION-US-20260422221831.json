@@ -1,0 +1,90 @@
+{
+  "mission_id": "MISSION-US-20260422221831",
+  "market": "US",
+  "domain": "content_moderation",
+  "lookback_days": 180,
+  "created_at": "2026-04-22T22:18:31.634863",
+  "created_by": "github_actions",
+  "status": "completed",
+  "generated_queries": [
+    "Explore legislative developments in content moderation from October 24, 2025, to April 22, 2026, on congress.gov, focusing on platform liability and misinformation.. Published between 2025-10-24 and 2026-04-22.",
+    "Search for regulatory guidance issued by the FTC or FCC regarding harmful content and misinformation between October 24, 2025, and April 22, 2026.. Published between 2025-10-24 and 2026-04-22.",
+    "Identify enforcement actions or penalties imposed by the DOJ or State AGs related to illegal content on digital platforms from October 24, 2025, to April 22, 2026.. Published between 2025-10-24 and 2026-04-22.",
+    "Look for public hearings or consultations on content moderation policies held by US regulatory bodies between October 24, 2025, and April 22, 2026.. Published between 2025-10-24 and 2026-04-22.",
+    "Find court rulings or executive actions addressing content moderation and platform responsibilities from October 24, 2025, to April 22, 2026, on justice.gov and whitehouse.gov.. Published between 2025-10-24 and 2026-04-22."
+  ],
+  "diagnostics": {
+    "query_count": 5,
+    "raw_result_count": 5,
+    "parsed_signal_count": 3,
+    "used_real_search": true,
+    "used_raw_result_fallback": false,
+    "used_simulated_fallback": false,
+    "openai_sdk_available": true,
+    "openai_api_key_present": true,
+    "real_search_ready": true,
+    "real_search_skip_reason": null,
+    "used_llm_queries": true,
+    "used_fallback_queries": false,
+    "rejected_llm_queries": 0,
+    "signals_missing_date": 0,
+    "signals_out_of_window": 0,
+    "signals_kept": 3
+  },
+  "signals": [
+    {
+      "id": "1",
+      "market": "US",
+      "domain": "content_moderation",
+      "source_type": "legislation",
+      "title": "Justice Department Settles Lawsuits Alleging Social Media Coercion and Deplatforming",
+      "summary": "The Department of Justice announced settlements in lawsuits alleging that the Biden administration induced social media companies to suppress certain speech, purportedly violating the First Amendment. These settlements align with President Trump's Executive Order titled 'Restoring Freedom of Speech and Ending Federal Censorship.'",
+      "source_url": "https://www.justice.gov/opa/pr/justice-department-settles-lawsuits-challenging-biden-administrations-alleged-social-media",
+      "published_date": "2026-03-25",
+      "effective_date": "",
+      "key_provisions": [
+        "Settlement of lawsuits alleging government-induced social media suppression.",
+        "Alignment with Executive Order on ending federal censorship."
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "2",
+      "market": "US",
+      "domain": "content_moderation",
+      "source_type": "legislation",
+      "title": "Justice Department Settles Lawsuit Alleging State Department’s Social Media Censorship",
+      "summary": "The Department of Justice settled litigation alleging that the Biden State Department engaged in censorship through its 'Global Engagement Center,' which was accused of funding technologies used by social media companies to suppress protected speech online. This settlement also implements President Trump's Executive Order on ending federal censorship.",
+      "source_url": "https://www.justice.gov/opa/pr/justice-department-settles-lawsuit-challenging-biden-state-departments-alleged-social-1",
+      "published_date": "2026-04-10",
+      "effective_date": "",
+      "key_provisions": [
+        "Settlement of litigation regarding State Department's alleged censorship.",
+        "Implementation of Executive Order on ending federal censorship."
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    },
+    {
+      "id": "3",
+      "market": "US",
+      "domain": "content_moderation",
+      "source_type": "legislation",
+      "title": "Introduction of the Platform Accountability and Transparency Act (S.3292)",
+      "summary": "This bill was introduced to enhance transparency and accountability of online platforms regarding content moderation practices. It defines key terms such as 'engagement,' 'impression,' 'prevalence of violating content,' and 'reach,' aiming to standardize reporting and oversight mechanisms.",
+      "source_url": "https://www.congress.gov/bill/119th-congress/senate-bill/3292/text",
+      "published_date": "2025-12-15",
+      "effective_date": "",
+      "key_provisions": [
+        "Enhancement of transparency and accountability in content moderation.",
+        "Standardization of reporting and oversight mechanisms."
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.95
+    }
+  ]
+}
