@@ -71,6 +71,7 @@ class ScoutMission:
     status: str  # pending, running, completed, failed
     signals: list[RegulatorySignal]
     generated_queries: list[str] = None  # LLM-generated search queries
+    diagnostics: Optional[dict[str, object]] = None
 
 
 # ============================================================================
@@ -151,6 +152,62 @@ DOMAIN_KEYWORDS = {
     ]
 }
 
+TRACKED_DOMAINS = [
+    Domain.MINOR_PROTECTION,
+    Domain.ECOMMERCE,
+    Domain.DATA_SOVEREIGNTY,
+    Domain.CONTENT_MODERATION,
+]
+
+DOMAIN_ABBREVIATIONS = {
+    Domain.MINOR_PROTECTION: "MP",
+    Domain.ECOMMERCE: "EC",
+    Domain.DATA_SOVEREIGNTY: "DS",
+    Domain.CONTENT_MODERATION: "CM",
+    Domain.ALL: "ALL",
+}
+
+
+def compute_date_window(
+    lookback_days: int,
+    reference_time: Optional[datetime] = None,
+) -> tuple[str, str]:
+    """Return an inclusive ISO date window for a mission."""
+    reference = reference_time or datetime.now()
+    end_date = reference.date()
+    start_date = end_date if lookback_days <= 0 else (reference - timedelta(days=lookback_days)).date()
+    return start_date.isoformat(), end_date.isoformat()
+
+
+def build_search_prompt(query: str, market: str, start_date: str, end_date: str) -> str:
+    """Build a search prompt that keeps recall broad but date-bounded."""
+    market_info = MARKET_INFO.get(market, {"name": market})
+    market_name = market_info.get("name", market)
+    gov_sites = market_info.get("government_sites", [])
+    regulators = market_info.get("regulators", [])
+
+    return f"""Search for distinct regulatory developments related to:
+
+Query focus: {query}
+
+Market/Region: {market_name}
+Publication window: {start_date} through {end_date} (inclusive)
+
+Priorities:
+1. Find as many distinct regulatory developments as possible within the exact publication window above.
+2. Prioritize official government, legislative, and regulator sources such as {', '.join(gov_sites[:4]) if gov_sites else 'government and regulatory websites'}.
+3. Use regulator context from {', '.join(regulators[:4]) if regulators else 'relevant regulatory bodies'}.
+4. If official sources are sparse, reputable secondary coverage is acceptable only when it clearly cites an official action inside the same publication window.
+5. Ignore evergreen background laws or commentary published outside the window unless there is a new official action, consultation, enforcement step, guidance update, or court development within the window.
+
+For each development you surface, include:
+- Exact title
+- Exact publication or announcement date when available
+- Source URL
+- What changed
+- Whether the cited source is official or secondary
+"""
+
 
 class QueryGenerator:
     """
@@ -158,34 +215,40 @@ class QueryGenerator:
     Generates precise, market-specific regulatory search queries.
     """
 
-    SYSTEM_PROMPT = """You are a regulatory intelligence analyst specializing in tracking global tech platform regulations.
+    QUERY_COUNT = 5
 
-Your task is to generate 5 precise search queries for a given market and policy domain to search government websites and legal databases for recent regulatory changes.
+    SYSTEM_PROMPT = """You are a regulatory intelligence analyst specializing in global tech platform regulation.
 
-Requirements:
-1. Queries must be precise and specific
-2. Include market-specific regulation names or regulatory bodies
-3. Use official terminology in local language where applicable
-4. Cover: draft bills, enacted laws, regulatory guidance, hearings, court rulings
-5. Focus on recent regulatory developments
+Generate five high-recall search briefs that help a web search model discover recent regulatory developments.
 
-Output format: Return a JSON array containing 5 search query strings.
+Hard rules:
+1. Every query must explicitly mention the exact ISO publication window supplied by the user.
+2. Never use stale years or stale date ranges outside the supplied window.
+3. Never use relative placeholders such as NOW, NOW-90DAYS, last quarter, or recent.
+4. Prefer plain-language search briefs over brittle Boolean syntax.
+5. Cover diverse angles: legislation, regulatory guidance, enforcement, hearings/consultations, and court or executive actions.
+6. When the domain is "all domains", cover minor protection, ecommerce, data sovereignty, content moderation, plus one cross-domain query.
+
+Return a JSON object with a "queries" array containing exactly five strings.
 """
 
-    USER_PROMPT_TEMPLATE = """Generate search queries for the following mission:
+    USER_PROMPT_TEMPLATE = """Generate search briefs for the following mission:
 
 Market: {market} ({market_name})
 Policy Domain: {domain}
 Lookback Period: {lookback_days} days
+Today's Date: {window_end}
+Allowed Publication Window: {window_start} through {window_end} (inclusive)
 Government Websites: {government_sites}
 Regulatory Bodies: {regulators}
 Domain Keywords: {domain_keywords}
 
-Generate 5 precise search queries as a JSON array.
+Return exactly 5 search briefs as JSON: {{"queries": ["...", "..."]}}
 """
 
     def __init__(self):
         self.client = None
+        self.last_generation_metadata: dict[str, object] = {}
         self._init_client()
 
     def _init_client(self):
@@ -208,16 +271,22 @@ Generate 5 precise search queries as a JSON array.
         Falls back to template-based queries if LLM unavailable.
         """
         if not self.client:
-            return self._fallback_queries(market, domain, lookback_days)
+            queries = self._fallback_queries(market, domain, lookback_days)
+            self.last_generation_metadata = {
+                "used_llm_queries": False,
+                "used_fallback_queries": True,
+                "rejected_llm_queries": 0,
+            }
+            return queries
 
         market_info = MARKET_INFO.get(market, {})
         domain_keywords = DOMAIN_KEYWORDS.get(domain, [])
+        window_start, window_end = compute_date_window(lookback_days)
 
         if domain == Domain.ALL:
             # Combine keywords from all domains
             domain_keywords = []
-            for d in [Domain.MINOR_PROTECTION, Domain.ECOMMERCE,
-                      Domain.DATA_SOVEREIGNTY, Domain.CONTENT_MODERATION]:
+            for d in TRACKED_DOMAINS:
                 domain_keywords.extend(DOMAIN_KEYWORDS.get(d, [])[:2])
 
         user_prompt = self.USER_PROMPT_TEMPLATE.format(
@@ -225,6 +294,8 @@ Generate 5 precise search queries as a JSON array.
             market_name=market_info.get("name", market),
             domain=domain.value if domain != Domain.ALL else "all domains",
             lookback_days=lookback_days,
+            window_start=window_start,
+            window_end=window_end,
             government_sites=", ".join(market_info.get("government_sites", [])),
             regulators=", ".join(market_info.get("regulators", [])),
             domain_keywords=", ".join(domain_keywords[:5])
@@ -243,21 +314,129 @@ Generate 5 precise search queries as a JSON array.
 
             content = response.choices[0].message.content
             result = json.loads(content)
-
-            # Handle different JSON formats
-            if isinstance(result, list):
-                queries = result[:5]
-            elif "queries" in result:
-                queries = result["queries"][:5]
-            else:
-                queries = list(result.values())[:5]
-
+            raw_queries = self._extract_queries(result)
+            queries, rejected = self._finalize_queries(raw_queries, market, domain, lookback_days)
+            self.last_generation_metadata = {
+                "used_llm_queries": True,
+                "used_fallback_queries": rejected > 0 or len(raw_queries) != len(queries),
+                "rejected_llm_queries": rejected,
+            }
             print(f"Generated {len(queries)} search queries for {market}/{domain.value}")
             return queries
 
         except Exception as e:
             print(f"LLM query generation failed: {e}")
-            return self._fallback_queries(market, domain, lookback_days)
+            queries = self._fallback_queries(market, domain, lookback_days)
+            self.last_generation_metadata = {
+                "used_llm_queries": False,
+                "used_fallback_queries": True,
+                "rejected_llm_queries": 0,
+            }
+            return queries
+
+    @staticmethod
+    def _collapse_whitespace(value: str) -> str:
+        return re.sub(r"\s+", " ", (value or "")).strip()
+
+    @staticmethod
+    def _extract_queries(result: object) -> list[str]:
+        if isinstance(result, list):
+            return [str(item) for item in result]
+        if isinstance(result, dict):
+            if "queries" in result and isinstance(result["queries"], list):
+                return [str(item) for item in result["queries"]]
+            for value in result.values():
+                if isinstance(value, list):
+                    return [str(item) for item in value]
+        return []
+
+    def _normalize_query_window(
+        self,
+        query: str,
+        window_start: str,
+        window_end: str,
+    ) -> str:
+        normalized = self._collapse_whitespace(query)
+        if not normalized:
+            return ""
+
+        normalized = re.sub(
+            r"date:\[[^\]]+\]",
+            f"published between {window_start} and {window_end}",
+            normalized,
+            flags=re.IGNORECASE,
+        )
+        normalized = re.sub(
+            r"data:\d{4}-\d{2}-\d{2}\.\.\d{4}-\d{2}-\d{2}",
+            f"published between {window_start} and {window_end}",
+            normalized,
+            flags=re.IGNORECASE,
+        )
+        normalized = re.sub(r"NOW-\d+DAYS", window_start, normalized, flags=re.IGNORECASE)
+        normalized = re.sub(r"\bNOW\b", window_end, normalized, flags=re.IGNORECASE)
+
+        allowed_years = {str(year) for year in range(int(window_start[:4]), int(window_end[:4]) + 1)}
+        for year in sorted(set(re.findall(r"\b(20\d{2})\b", normalized))):
+            if year in allowed_years:
+                continue
+            normalized = re.sub(
+                rf"(\bAND\b|\bOR\b)?\s*\(?\"?{year}\"?\)?",
+                "",
+                normalized,
+                flags=re.IGNORECASE,
+            )
+
+        normalized = self._collapse_whitespace(normalized)
+        if not normalized:
+            return ""
+
+        if window_start not in normalized or window_end not in normalized:
+            normalized = self._collapse_whitespace(
+                f"{normalized}. Published between {window_start} and {window_end}."
+            )
+
+        return normalized
+
+    @staticmethod
+    def _query_has_invalid_window(query: str, window_start: str, window_end: str) -> bool:
+        start_date = datetime.strptime(window_start, "%Y-%m-%d").date()
+        end_date = datetime.strptime(window_end, "%Y-%m-%d").date()
+        allowed_years = {str(year) for year in range(start_date.year, end_date.year + 1)}
+
+        for raw_date in re.findall(r"\b20\d{2}-\d{2}-\d{2}\b", query):
+            parsed = datetime.strptime(raw_date, "%Y-%m-%d").date()
+            if parsed < start_date or parsed > end_date:
+                return True
+
+        return any(year not in allowed_years for year in re.findall(r"\b(20\d{2})\b", query))
+
+    def _finalize_queries(
+        self,
+        candidate_queries: list[str],
+        market: str,
+        domain: Domain,
+        lookback_days: int,
+    ) -> tuple[list[str], int]:
+        window_start, window_end = compute_date_window(lookback_days)
+        fallback_queries = self._fallback_queries(market, domain, lookback_days)
+        finalized: list[str] = []
+        rejected = 0
+
+        for query in candidate_queries:
+            normalized = self._normalize_query_window(query, window_start, window_end)
+            if not normalized or self._query_has_invalid_window(normalized, window_start, window_end):
+                rejected += 1
+                continue
+            if normalized not in finalized:
+                finalized.append(normalized)
+
+        for fallback_query in fallback_queries:
+            if len(finalized) >= self.QUERY_COUNT:
+                break
+            if fallback_query not in finalized:
+                finalized.append(fallback_query)
+
+        return finalized[: self.QUERY_COUNT], rejected
 
     def _fallback_queries(
         self,
@@ -265,41 +444,71 @@ Generate 5 precise search queries as a JSON array.
         domain: Domain,
         lookback_days: int
     ) -> list[str]:
-        """Generate template-based queries when LLM is unavailable."""
+        """Generate stable, date-bounded search briefs when LLM output is unavailable or stale."""
         market_info = MARKET_INFO.get(market, {"name": market})
         market_name = market_info.get("name", market)
-        current_year = datetime.now().year
+        regulators = ", ".join(market_info.get("regulators", [])[:4]) or "relevant regulators"
+        priority_sites = ", ".join(market_info.get("government_sites", [])[:4]) or "official government and regulator websites"
+        window_start, window_end = compute_date_window(lookback_days)
 
-        base_queries = []
+        def brief(topic: str) -> str:
+            return (
+                f"{topic}. Published between {window_start} and {window_end}. "
+                f"Prioritize {priority_sites}. Regulator context: {regulators}."
+            )
 
-        if domain == Domain.MINOR_PROTECTION or domain == Domain.ALL:
-            base_queries.extend([
-                f"{market_name} children online safety legislation {current_year}",
-                f"{market_name} minor protection digital platform regulation"
-            ])
+        domain_queries = {
+            Domain.MINOR_PROTECTION: [
+                brief(f"Recent {market_name} bills, draft laws, or official proposals on child and minor online safety, age assurance, or parental controls"),
+                brief(f"Recent {market_name} regulator guidance, consultations, or enforcement on minors, youth safety, or age verification for digital platforms"),
+                brief(f"Recent {market_name} court rulings, settlements, or executive actions affecting child safety or platform duties toward minors"),
+                brief(f"Recent {market_name} hearings, testimonies, or public consultations on youth online safety, addictive design, or parental controls"),
+                brief(f"Recent {market_name} official announcements on teen safety defaults, age-gating requirements, or minor-facing advertising restrictions"),
+            ],
+            Domain.ECOMMERCE: [
+                brief(f"Recent {market_name} laws or draft rules on e-commerce, social commerce, marketplace sellers, or platform consumer protection"),
+                brief(f"Recent {market_name} regulator guidance or enforcement on marketplace transparency, seller verification, or deceptive commerce practices"),
+                brief(f"Recent {market_name} payment, import, or cross-border commerce rules affecting online marketplaces or social commerce platforms"),
+                brief(f"Recent {market_name} hearings, consultations, or policy statements on marketplace liability, product safety, or counterfeit enforcement"),
+                brief(f"Recent {market_name} official actions affecting social shopping, livestream commerce, or marketplace compliance obligations"),
+            ],
+            Domain.DATA_SOVEREIGNTY: [
+                brief(f"Recent {market_name} laws, draft rules, or court actions on data localization, cross-border transfers, or data residency"),
+                brief(f"Recent {market_name} regulator guidance or enforcement on privacy, foreign data access, or platform data governance"),
+                brief(f"Recent {market_name} official consultations or opinions on international data transfer safeguards or local storage mandates"),
+                brief(f"Recent {market_name} judicial or executive actions affecting data brokers, sensitive data handling, or foreign-adversary access"),
+                brief(f"Recent {market_name} official announcements on privacy frameworks, adequacy reviews, or transfer mechanism changes"),
+            ],
+            Domain.CONTENT_MODERATION: [
+                brief(f"Recent {market_name} laws, draft bills, or regulator proposals on content moderation, illegal content, or platform liability"),
+                brief(f"Recent {market_name} regulator guidance, enforcement, or transparency requirements for harmful content, misinformation, or takedowns"),
+                brief(f"Recent {market_name} court rulings, settlements, or executive actions affecting platform speech duties or moderation obligations"),
+                brief(f"Recent {market_name} hearings, consultations, or codes of practice on online harms, recommender transparency, or safety duties"),
+                brief(f"Recent {market_name} official updates on platform investigations, fines, or compliance measures tied to harmful or illegal content"),
+            ],
+        }
 
-        if domain == Domain.ECOMMERCE or domain == Domain.ALL:
-            base_queries.extend([
-                f"{market_name} e-commerce social media regulation {current_year}",
-                f"{market_name} online marketplace seller requirements"
-            ])
+        if domain == Domain.ALL:
+            return [
+                brief(f"Cross-domain {market_name} digital platform regulatory developments affecting child safety, commerce, data governance, or content enforcement"),
+                domain_queries[Domain.MINOR_PROTECTION][0],
+                domain_queries[Domain.ECOMMERCE][0],
+                domain_queries[Domain.DATA_SOVEREIGNTY][0],
+                domain_queries[Domain.CONTENT_MODERATION][0],
+            ]
 
-        if domain == Domain.DATA_SOVEREIGNTY or domain == Domain.ALL:
-            base_queries.extend([
-                f"{market_name} data localization law {current_year}",
-                f"{market_name} cross-border data transfer regulation"
-            ])
-
-        if domain == Domain.CONTENT_MODERATION or domain == Domain.ALL:
-            base_queries.extend([
-                f"{market_name} content moderation platform liability {current_year}",
-                f"{market_name} illegal content takedown requirements"
-            ])
-
-        return base_queries[:5]
+        return domain_queries.get(
+            domain,
+            [brief(f"Recent {market_name} digital platform regulatory developments") for _ in range(self.QUERY_COUNT)],
+        )[: self.QUERY_COUNT]
 
 
-def fetch_real_world_data(queries: list[str], market: str) -> list[dict]:
+def fetch_real_world_data(
+    queries: list[str],
+    market: str,
+    window_start: str,
+    window_end: str,
+) -> list[dict]:
     """
     Fetch real-world regulatory data using OpenAI Responses API web_search tool.
 
@@ -319,43 +528,17 @@ def fetch_real_world_data(queries: list[str], market: str) -> list[dict]:
     results = []
     market_info = MARKET_INFO.get(market, {"name": market})
     market_name = market_info.get("name", market)
-    # Get government website list as reference, without strict restriction
-    gov_sites = market_info.get("government_sites", [])
-    regulators = market_info.get("regulators", [])
 
-    print(f"[WebSearch] Fetching real-world data for {market_name} with {len(queries)} queries...")
+    print(
+        f"[WebSearch] Fetching real-world data for {market_name} with {len(queries)} queries "
+        f"between {window_start} and {window_end}..."
+    )
 
     for i, query in enumerate(queries, 1):
         try:
             print(f"  [{i}/{len(queries)}] Searching: {query[:60]}...")
 
-            # Build a flexible search prompt without restricting to specific websites
-            # This allows finding more relevant results, including news coverage and analysis
-            search_prompt = f"""Search for recent regulatory news and policy updates related to:
-
-Query: {query}
-
-Market/Region: {market_name}
-
-Search broadly for:
-1. Official government announcements and press releases
-2. New legislation, regulations, or bills (proposed or enacted)
-3. Regulatory enforcement actions and guidance
-4. Policy proposals, drafts, and consultations
-5. Reputable news coverage of regulatory developments
-6. Legal analysis and expert commentary
-
-Preferred sources (but not limited to): {', '.join(gov_sites[:3]) if gov_sites else 'government and regulatory websites'}
-Key regulators to watch: {', '.join(regulators[:3]) if regulators else 'relevant regulatory bodies'}
-
-IMPORTANT: Return the most relevant and recent regulatory developments. Include:
-- Specific names of laws, regulations, or bills
-- Exact dates (when available)
-- Official source URLs
-- Key provisions or requirements
-- Affected industries or sectors
-
-If direct government sources aren't indexed, authoritative news sources and legal publications are acceptable."""
+            search_prompt = build_search_prompt(query, market, window_start, window_end)
 
             # Check if Responses API is supported
             if hasattr(client, 'responses'):
@@ -753,6 +936,80 @@ class ScoutEngine:
 
         return source_titles
 
+    @staticmethod
+    def _domain_code(domain: Domain) -> str:
+        return DOMAIN_ABBREVIATIONS.get(domain, domain.value[:2].upper())
+
+    def _build_signal_id(
+        self,
+        mission: ScoutMission,
+        result_index: int,
+        signal_index: Optional[int] = None,
+    ) -> str:
+        suffix = f"{result_index:03d}" if signal_index is None else f"{result_index:03d}-{signal_index}"
+        return f"{mission.market}-{self._domain_code(mission.domain)}-{datetime.now().year}-{suffix}"
+
+    @classmethod
+    def _infer_published_date(cls, *candidates: str) -> str:
+        month_name_pattern = (
+            r"(?:January|February|March|April|May|June|July|August|September|October|November|December|"
+            r"Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)"
+        )
+
+        for candidate in candidates:
+            if not candidate:
+                continue
+
+            normalized = cls._collapse_text(candidate)
+
+            iso_match = re.search(r"\b(20\d{2}-\d{2}-\d{2})\b", normalized)
+            if iso_match:
+                return iso_match.group(1)
+
+            slash_match = re.search(r"\b(20\d{2})/(\d{2})/(\d{2})\b", normalized)
+            if slash_match:
+                return f"{slash_match.group(1)}-{slash_match.group(2)}-{slash_match.group(3)}"
+
+            month_first_match = re.search(
+                rf"\b({month_name_pattern})\s+\d{{1,2}},\s+20\d{{2}}\b",
+                normalized,
+                flags=re.IGNORECASE,
+            )
+            if month_first_match:
+                parsed = cls._parse_human_date(month_first_match.group(0), ("%B %d, %Y", "%b %d, %Y"))
+                if parsed:
+                    return parsed
+
+            day_first_match = re.search(
+                rf"\b\d{{1,2}}\s+({month_name_pattern})\s+20\d{{2}}\b",
+                normalized,
+                flags=re.IGNORECASE,
+            )
+            if day_first_match:
+                parsed = cls._parse_human_date(day_first_match.group(0), ("%d %B %Y", "%d %b %Y"))
+                if parsed:
+                    return parsed
+
+            url_match = re.search(r"/(20\d{2})/(\d{2})/(\d{2})(?:/|$)", normalized)
+            if url_match:
+                return f"{url_match.group(1)}-{url_match.group(2)}-{url_match.group(3)}"
+
+        return ""
+
+    @staticmethod
+    def _collapse_text(value: str) -> str:
+        return re.sub(r"\s+", " ", value or "").strip()
+
+    @staticmethod
+    def _parse_human_date(raw_date: str, formats: tuple[str, ...]) -> str:
+        normalized = raw_date.replace("Sept ", "Sep ")
+        for fmt in formats:
+            try:
+                return datetime.strptime(normalized, fmt).strftime("%Y-%m-%d")
+            except ValueError:
+                continue
+        return ""
+
     def _enrich_signal_metadata(
         self,
         signal: RegulatorySignal,
@@ -813,10 +1070,17 @@ class ScoutEngine:
         self,
         signals: list[RegulatorySignal],
         lookback_days: int
-    ) -> list[RegulatorySignal]:
+    ) -> tuple[list[RegulatorySignal], dict[str, int]]:
         """Keep only signals whose published_date falls within the lookback window."""
+        diagnostics = {
+            "signals_missing_date": 0,
+            "signals_out_of_window": 0,
+            "signals_kept": 0,
+        }
+
         if lookback_days <= 0:
-            return list(signals)
+            diagnostics["signals_kept"] = len(signals)
+            return list(signals), diagnostics
 
         cutoff_date = (datetime.now() - timedelta(days=lookback_days)).date()
         filtered_signals = []
@@ -825,6 +1089,7 @@ class ScoutEngine:
             published_at = self._parse_signal_date(signal.published_date)
             if not published_at:
                 print(f"[Filter] Excluding signal with missing/invalid published date: {signal.title}")
+                diagnostics["signals_missing_date"] += 1
                 continue
 
             if published_at.date() < cutoff_date:
@@ -832,11 +1097,13 @@ class ScoutEngine:
                     f"[Filter] Excluding out-of-window signal: {signal.title} "
                     f"({signal.published_date} < {cutoff_date.isoformat()})"
                 )
+                diagnostics["signals_out_of_window"] += 1
                 continue
 
             filtered_signals.append(signal)
 
-        return filtered_signals
+        diagnostics["signals_kept"] = len(filtered_signals)
+        return filtered_signals, diagnostics
 
     def create_mission(
         self,
@@ -858,7 +1125,8 @@ class ScoutEngine:
             created_by=created_by,
             status="pending",
             signals=[],
-            generated_queries=[]
+            generated_queries=[],
+            diagnostics={}
         )
 
         self.missions[mission_id] = mission
@@ -894,24 +1162,45 @@ class ScoutEngine:
         for i, q in enumerate(queries, 1):
             print(f"  {i}. {q}")
 
+        diagnostics: dict[str, object] = {
+            "query_count": len(queries),
+            "raw_result_count": 0,
+            "parsed_signal_count": 0,
+            "used_real_search": use_real_search,
+            "used_raw_result_fallback": False,
+            "used_simulated_fallback": False,
+        }
+        diagnostics.update(self.query_generator.last_generation_metadata)
+
         # Step 2: Fetch and parse data
         if use_real_search:
-            # Use OpenAI Responses API with web_search
-            raw_results = fetch_real_world_data(queries, mission.market)
+            window_start, window_end = compute_date_window(mission.lookback_days)
+            raw_results = fetch_real_world_data(queries, mission.market, window_start, window_end)
+            diagnostics["raw_result_count"] = len(raw_results)
             if raw_results:
                 parsed_signals = self._parse_web_search_results(raw_results, mission)
-                # If no signals after parsing, fall back to simulated data
                 if not parsed_signals:
-                    print("[Warning] Failed to extract signals from search results, using simulated data")
+                    print("[Warning] Failed to extract signals from search results, trying raw result conversion")
+                    parsed_signals = self._convert_raw_to_signals(raw_results, mission)
+                    diagnostics["used_raw_result_fallback"] = bool(parsed_signals)
+
+                if not parsed_signals:
+                    print("[Warning] Raw result conversion produced no signals, using simulated data")
                     parsed_signals = self._get_simulated_signals(mission)
+                    diagnostics["used_simulated_fallback"] = True
             else:
                 print("[Warning] Web search returned no results, using simulated data")
                 parsed_signals = self._get_simulated_signals(mission)
+                diagnostics["used_simulated_fallback"] = True
         else:
             # Demo mode: use simulated data
             parsed_signals = self._get_simulated_signals(mission)
 
-        mission.signals = self._filter_signals_by_lookback(parsed_signals, mission.lookback_days)
+        diagnostics["parsed_signal_count"] = len(parsed_signals)
+        mission.signals, filter_diagnostics = self._filter_signals_by_lookback(parsed_signals, mission.lookback_days)
+        diagnostics.update(filter_diagnostics)
+        mission.diagnostics = diagnostics
+        print(f"[Diagnostics] {json.dumps(diagnostics, ensure_ascii=False)}")
 
         mission.status = "completed"
         print(f"Mission completed. Found {len(mission.signals)} signals.")
@@ -931,137 +1220,188 @@ class ScoutEngine:
 
         client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
         signals = []
-
-        # Combine all search results
-        combined_content = "\n\n---\n\n".join([
-            (
-                f"Query: {r['query']}\n\n"
-                f"Sources:\n" +
-                ("\n".join(
-                    f"- {source.get('title', 'Untitled source')} ({source.get('url', '')})"
-                    for source in r.get("sources", [])[:10]
-                ) or "- No source metadata captured") +
-                f"\n\nResult:\n{r['content']}"
-            )
-            for r in raw_results
-        ])
-
-        print(f"[Parser] Processing {len(raw_results)} search results, total {len(combined_content)} chars")
         source_titles = self._build_source_title_index(raw_results)
+        window_start, window_end = compute_date_window(mission.lookback_days)
 
-        # Improved parsing prompt
-        parse_prompt = f"""You are a regulatory intelligence analyst. Analyze the following search results about {mission.market} market {mission.domain.value} domain and extract all regulatory signals.
+        print(f"[Parser] Processing {len(raw_results)} search results")
 
-Search Results:
-{combined_content[:20000]}
+        for result_index, raw_result in enumerate(raw_results):
+            parse_prompt = self._build_parse_prompt(raw_result, mission, window_start, window_end)
 
-Task: Extract all regulation-related signals from the above content. Extract as much as possible even if information is incomplete.
+            try:
+                response = client.chat.completions.create(
+                    model="gpt-4o",
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": (
+                                "You extract structured regulatory developments from search output. "
+                                "Return only valid JSON and preserve only real developments supported by the provided text."
+                            ),
+                        },
+                        {"role": "user", "content": parse_prompt},
+                    ],
+                    temperature=0.1,
+                    response_format={"type": "json_object"},
+                )
 
-For each regulatory signal, provide:
-- id: Signal ID in format "{mission.market}-XX-{datetime.now().year}-XXX" where XX is domain abbreviation
-- title: Full title of the regulation or policy
-- summary: 2-3 sentence summary describing what it is and its impact
-- source_url: Source URL (if available)
-- published_date: Publication date in "YYYY-MM-DD" format
-- effective_date: Effective date (optional), "YYYY-MM-DD" or null
-- key_provisions: List of key provisions (string array)
-- source_type: Source type, must be one of: legislation, executive_order, regulatory_guidance, court_ruling, draft_bill
-- confidence_score: Information confidence level, number between 0.0-1.0
+                content = response.choices[0].message.content
+                result_payload = json.loads(content)
+                signal_entries = result_payload.get("signals", []) if isinstance(result_payload, dict) else []
+                if not signal_entries and isinstance(result_payload, list):
+                    signal_entries = result_payload
+                if not signal_entries and isinstance(result_payload, dict):
+                    for value in result_payload.values():
+                        if isinstance(value, list):
+                            signal_entries = value
+                            break
 
-Important:
-1. Return a JSON object with "signals" key containing an array of signals
-2. Extract signals even with partial information
-3. If no regulatory information found, return {{"signals": []}}
-4. Do not fabricate information, but extract as much real content as possible
+                print(
+                    f"[Parser] Result {result_index + 1}/{len(raw_results)} yielded "
+                    f"{len(signal_entries)} candidate signals"
+                )
 
-Example output format:
-{{"signals": [
-  {{
-    "id": "{mission.market}-MP-{datetime.now().year}-001",
-    "title": "Example Regulation Name",
-    "summary": "Brief description of the regulation...",
-    "source_url": "https://example.gov/...",
-    "published_date": "2025-01-15",
-    "effective_date": "2025-07-01",
-    "key_provisions": ["Provision 1", "Provision 2"],
-    "source_type": "legislation",
-    "confidence_score": 0.85
-  }}
-]}}
+                for signal_index, candidate in enumerate(signal_entries):
+                    try:
+                        signal = self._coerce_signal_candidate(
+                            candidate,
+                            raw_result,
+                            mission,
+                            source_titles,
+                            result_index,
+                            signal_index,
+                        )
+                        signals.append(signal)
+                        print(f"[Parser] ✓ Parsed signal: {signal.title[:50]}...")
+                    except Exception as error:
+                        print(f"[Warning] Failed to parse signal {signal_index} from result {result_index}: {error}")
+                        print(f"[Warning] Signal data: {candidate}")
+
+            except Exception as error:
+                print(f"[Error] Failed to parse search result {result_index}: {error}")
+
+        deduped_signals = self._dedupe_signals(signals)
+        print(f"[Parser] Successfully extracted {len(deduped_signals)} unique regulatory signals")
+        return deduped_signals
+
+    def _build_parse_prompt(
+        self,
+        raw_result: dict,
+        mission: ScoutMission,
+        window_start: str,
+        window_end: str,
+    ) -> str:
+        source_block = "\n".join(
+            f"- {source.get('title', 'Untitled source')} ({source.get('url', '')})"
+            for source in raw_result.get("sources", [])[:10]
+        ) or "- No source metadata captured"
+
+        return f"""Analyze the following search result and extract every distinct regulatory development relevant to {mission.market} / {mission.domain.value}.
+
+Allowed publication window: {window_start} through {window_end} (inclusive)
+If a development is outside this publication window, exclude it.
+
+Query:
+{raw_result.get("query", "")}
+
+Sources:
+{source_block}
+
+Search result text:
+{self._collapse_text(raw_result.get("content", ""))[:12000]}
+
+Return JSON in the form {{"signals": [...]}}.
+
+For each signal include:
+- id
+- title
+- summary
+- source_url
+- published_date
+- effective_date
+- key_provisions
+- source_type
+- confidence_score
+
+Rules:
+1. Prefer exact publication dates in YYYY-MM-DD.
+2. If the text hints at a date but does not format it in ISO, infer the ISO date only when the day, month, and year are all explicit in the text or URL.
+3. If no exact date is available, leave published_date empty rather than guessing.
+4. Do not merge unrelated developments into one signal.
+5. Do not fabricate laws, agencies, or URLs.
 """
 
-        try:
-            response = client.chat.completions.create(
-                model="gpt-4o",
-                messages=[
-                    {"role": "system", "content": "You are a professional regulatory intelligence analyst. Your task is to extract structured regulatory information from search results. Extract all relevant signals even with incomplete information. Always return valid JSON format."},
-                    {"role": "user", "content": parse_prompt}
-                ],
-                temperature=0.2,
-                response_format={"type": "json_object"}
-            )
+    def _coerce_signal_candidate(
+        self,
+        candidate: dict,
+        raw_result: dict,
+        mission: ScoutMission,
+        source_titles: dict[str, str],
+        result_index: int,
+        signal_index: int,
+    ) -> RegulatorySignal:
+        source_type_str = (
+            str(candidate.get("source_type", "legislation"))
+            .lower()
+            .replace(" ", "_")
+            .replace("-", "_")
+        )
+        valid_source_types = {
+            "legislation",
+            "executive_order",
+            "regulatory_guidance",
+            "court_ruling",
+            "hearing_transcript",
+            "draft_bill",
+        }
+        if source_type_str not in valid_source_types:
+            source_type_str = "legislation"
 
-            content = response.choices[0].message.content
-            print(f"[Parser] LLM response: {content[:500]}...")
-            
-            result = json.loads(content)
+        source_url = candidate.get("source_url", "")
+        raw_text_excerpt = candidate.get("excerpt", candidate.get("raw_text_excerpt", ""))
+        published_date = candidate.get("published_date") or self._infer_published_date(
+            candidate.get("title", ""),
+            raw_text_excerpt,
+            candidate.get("summary", ""),
+            source_url,
+            raw_result.get("content", ""),
+        )
 
-            # Parse JSON result - support multiple formats
-            signal_list = []
-            if isinstance(result, list):
-                signal_list = result
-            elif "signals" in result:
-                signal_list = result["signals"]
-            elif "data" in result:
-                signal_list = result["data"]
-            else:
-                # Try to find any key containing a list
-                for key, value in result.items():
-                    if isinstance(value, list) and len(value) > 0:
-                        signal_list = value
-                        break
+        signal = RegulatorySignal(
+            id=candidate.get("id", self._build_signal_id(mission, result_index, signal_index)),
+            market=mission.market,
+            domain=mission.domain,
+            source_type=SourceType(source_type_str),
+            title=candidate.get("title", "Unknown"),
+            summary=candidate.get("summary", ""),
+            source_url=source_url,
+            published_date=published_date,
+            effective_date=candidate.get("effective_date"),
+            key_provisions=candidate.get("key_provisions", []),
+            affected_policies=[],
+            raw_text_excerpt=raw_text_excerpt,
+            confidence_score=float(candidate.get("confidence_score", 0.7)),
+        )
+        return self._enrich_signal_metadata(signal, source_titles)
 
-            print(f"[Parser] Found {len(signal_list)} signals in response")
+    def _dedupe_signals(self, signals: list[RegulatorySignal]) -> list[RegulatorySignal]:
+        deduped: dict[str, RegulatorySignal] = {}
+        order: list[str] = []
 
-            for i, s in enumerate(signal_list):
-                try:
-                    # Process source_type, ensure it is a valid enum value
-                    source_type_str = s.get("source_type", "legislation").lower().replace(" ", "_").replace("-", "_")
-                    valid_source_types = ["legislation", "executive_order", "regulatory_guidance", "court_ruling", "hearing_transcript", "draft_bill"]
-                    if source_type_str not in valid_source_types:
-                        source_type_str = "legislation"
-                    
-                    signal = RegulatorySignal(
-                        id=s.get("id", f"{mission.market}-{mission.domain.value[:2].upper()}-{datetime.now().year}-{i:03d}"),
-                        market=mission.market,
-                        domain=mission.domain,
-                        source_type=SourceType(source_type_str),
-                        title=s.get("title", "Unknown"),
-                        summary=s.get("summary", ""),
-                        source_url=s.get("source_url", ""),
-                        published_date=s.get("published_date") or "",
-                        effective_date=s.get("effective_date"),
-                        key_provisions=s.get("key_provisions", []),
-                        affected_policies=[],  # Populated later by impact_analyzer
-                        raw_text_excerpt=s.get("excerpt", s.get("raw_text_excerpt", "")),
-                        confidence_score=float(s.get("confidence_score", 0.7))
-                    )
-                    signal = self._enrich_signal_metadata(signal, source_titles)
-                    signals.append(signal)
-                    print(f"[Parser] ✓ Parsed signal: {signal.title[:50]}...")
-                except Exception as e:
-                    print(f"[Warning] Failed to parse signal {i}: {e}")
-                    print(f"[Warning] Signal data: {s}")
+        for signal in signals:
+            normalized_url = self._normalize_source_url(signal.source_url)
+            normalized_title = self._collapse_text(signal.title).lower()
+            key = normalized_url or f"{normalized_title}|{signal.published_date}"
 
-            print(f"[Parser] Successfully extracted {len(signals)} regulatory signals")
+            if key not in deduped:
+                deduped[key] = signal
+                order.append(key)
+                continue
 
-        except Exception as e:
-            print(f"[Error] Failed to parse search results: {e}")
-            import traceback
-            traceback.print_exc()
-            return self._convert_raw_to_signals(raw_results, mission)
+            if signal.confidence_score > deduped[key].confidence_score:
+                deduped[key] = signal
 
-        return signals
+        return [deduped[key] for key in order]
 
     def _convert_raw_to_signals(
         self,
@@ -1070,6 +1410,7 @@ Example output format:
     ) -> list[RegulatorySignal]:
         """Convert raw search results to signals (when LLM is unavailable)."""
         signals = []
+        source_titles = self._build_source_title_index(raw_results)
         for i, result in enumerate(raw_results):
             sources = result.get("sources", [])
             content = result.get("content", "")
@@ -1078,40 +1419,47 @@ Example output format:
             # If sources exist, create a signal for each source
             if sources:
                 for j, source in enumerate(sources[:3]):
+                    published_date = self._infer_published_date(
+                        source.get("title", ""),
+                        source.get("url", ""),
+                        content,
+                        query,
+                    )
                     signal = RegulatorySignal(
-                        id=f"{mission.market}-{mission.domain.value[:2].upper()}-{datetime.now().year}-{i:03d}-{j}",
+                        id=self._build_signal_id(mission, i, j),
                         market=mission.market,
                         domain=mission.domain,
                         source_type=SourceType.LEGISLATION,
                         title=source.get("title", query),
                         summary=content[:500] if content else "",
                         source_url=source.get("url", ""),
-                        published_date="",
+                        published_date=published_date,
                         effective_date=None,
                         key_provisions=[],
                         affected_policies=[],
                         raw_text_excerpt=content[:1000] if content else "",
                         confidence_score=0.5
                     )
-                    signals.append(signal)
+                    signals.append(self._enrich_signal_metadata(signal, source_titles))
             elif content:
                 # If no sources but content exists, still create a signal
+                published_date = self._infer_published_date(content, query)
                 signal = RegulatorySignal(
-                    id=f"{mission.market}-{mission.domain.value[:2].upper()}-{datetime.now().year}-{i:03d}",
+                    id=self._build_signal_id(mission, i),
                     market=mission.market,
                     domain=mission.domain,
                     source_type=SourceType.LEGISLATION,
                     title=query,
                     summary=content[:500],
                     source_url="",
-                    published_date="",
+                    published_date=published_date,
                     effective_date=None,
                     key_provisions=[],
                     affected_policies=[],
                     raw_text_excerpt=content[:1000],
                     confidence_score=0.4
                 )
-                signals.append(signal)
+                signals.append(self._enrich_signal_metadata(signal, source_titles))
         return signals
 
     def _get_simulated_signals(self, mission: ScoutMission) -> list[RegulatorySignal]:
@@ -1161,7 +1509,7 @@ Example output format:
         for i, data in enumerate(raw_data):
             try:
                 signal = RegulatorySignal(
-                    id=f"{mission.market}-{mission.domain.value[:2].upper()}-LIVE-{i:03d}",
+                    id=f"{mission.market}-{self._domain_code(mission.domain)}-LIVE-{i:03d}",
                     market=mission.market,
                     domain=mission.domain,
                     source_type=SourceType.LEGISLATION,
@@ -1198,6 +1546,7 @@ Example output format:
             "created_by": mission.created_by,
             "status": mission.status,
             "generated_queries": mission.generated_queries,
+            "diagnostics": mission.diagnostics or {},
             "signals": [
                 {
                     **asdict(s),
