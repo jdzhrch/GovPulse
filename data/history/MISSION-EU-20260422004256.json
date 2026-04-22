@@ -1,0 +1,36 @@
+{
+  "mission_id": "MISSION-EU-20260422004256",
+  "market": "EU",
+  "domain": "content_moderation",
+  "lookback_days": 365,
+  "created_at": "2026-04-22T00:42:56.266157",
+  "created_by": "github_actions",
+  "status": "completed",
+  "generated_queries": [
+    "site:eur-lex.europa.eu content moderation \"European Commission\" \"2023\"",
+    "site:ec.europa.eu \"harmful content\" \"draft bill\" \"2023\"",
+    "site:edpb.europa.eu misinformation \"regulatory guidance\" \"2023\"",
+    "site:eur-lex.europa.eu \"platform liability\" \"court ruling\" \"2023\"",
+    "site:ec.europa.eu \"illegal content\" \"hearing\" \"European Commission\" \"2023\""
+  ],
+  "signals": [
+    {
+      "id": "EU-CM-2026-004",
+      "market": "EU",
+      "domain": "content_moderation",
+      "source_type": "executive_order",
+      "title": "European Commission fines X €120 million for transparency violations",
+      "summary": "The European Commission fined X €120 million for violations of the DSA, including misleading verification practices and lack of transparency in advertising.",
+      "source_url": "https://www.lemonde.fr/en/economy/article/2025/12/05/european-commission-fines-x-120-million-for-transparency-violations_6748186_19.html",
+      "published_date": "2025-12-05",
+      "effective_date": null,
+      "key_provisions": [
+        "Fine for misleading verification practices",
+        "Lack of transparency in advertising"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.9
+    }
+  ]
+}
