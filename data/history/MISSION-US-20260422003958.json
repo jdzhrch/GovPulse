@@ -1,0 +1,36 @@
+{
+  "mission_id": "MISSION-US-20260422003958",
+  "market": "US",
+  "domain": "content_moderation",
+  "lookback_days": 90,
+  "created_at": "2026-04-22T00:39:58.232464",
+  "created_by": "github_actions",
+  "status": "completed",
+  "generated_queries": [
+    "site:congress.gov \"content moderation\" OR \"harmful content\" OR \"misinformation\" OR \"platform liability\" OR \"illegal content\" AND (\"draft bill\" OR \"introduced bill\") AND (\"2023\")",
+    "site:ftc.gov \"content moderation\" OR \"harmful content\" OR \"misinformation\" OR \"platform liability\" OR \"illegal content\" AND (\"guidance\" OR \"policy statement\") AND (\"2023\")",
+    "site:justice.gov \"content moderation\" OR \"harmful content\" OR \"misinformation\" OR \"platform liability\" OR \"illegal content\" AND (\"court ruling\" OR \"settlement\") AND (\"2023\")",
+    "site:whitehouse.gov \"content moderation\" OR \"harmful content\" OR \"misinformation\" OR \"platform liability\" OR \"illegal content\" AND (\"executive order\" OR \"presidential memorandum\") AND (\"2023\")",
+    "site:ftc.gov OR site:fcc.gov OR site:justice.gov \"content moderation\" OR \"harmful content\" OR \"misinformation\" OR \"platform liability\" OR \"illegal content\" AND (\"hearing\" OR \"testimony\") AND (\"2023\")"
+  ],
+  "signals": [
+    {
+      "id": "US-CM-2026-008",
+      "market": "US",
+      "domain": "content_moderation",
+      "source_type": "court_ruling",
+      "title": "Justice Department Settlement on Social Media Coercion",
+      "summary": "The DOJ settled litigation alleging that the Biden administration induced social media companies to suppress disfavored speech.",
+      "source_url": "https://www.justice.gov/opa/pr/justice-department-settles-lawsuits-challenging-biden-administrations-alleged-social-media",
+      "published_date": "2026-03-01",
+      "effective_date": null,
+      "key_provisions": [
+        "Implementation of measures to prevent government-induced content suppression",
+        "Acknowledgment of the need to protect free speech rights on online platforms"
+      ],
+      "affected_policies": [],
+      "raw_text_excerpt": "",
+      "confidence_score": 0.85
+    }
+  ]
+}
