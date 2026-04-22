@@ -1,0 +1,31 @@
+{
+  "mission_id": "MISSION-US-20260422220103",
+  "market": "US",
+  "domain": "minor_protection",
+  "lookback_days": 90,
+  "created_at": "2026-04-22T22:01:03.592787",
+  "created_by": "github_actions",
+  "status": "completed",
+  "generated_queries": [
+    "Recent United States bills, draft laws, or official proposals on child and minor online safety, age assurance, or parental controls. Published between 2026-01-22 and 2026-04-22. Prioritize congress.gov, ftc.gov, justice.gov, whitehouse.gov. Regulator context: FTC, FCC, DOJ, State AGs.",
+    "Recent United States regulator guidance, consultations, or enforcement on minors, youth safety, or age verification for digital platforms. Published between 2026-01-22 and 2026-04-22. Prioritize congress.gov, ftc.gov, justice.gov, whitehouse.gov. Regulator context: FTC, FCC, DOJ, State AGs.",
+    "Recent United States court rulings, settlements, or executive actions affecting child safety or platform duties toward minors. Published between 2026-01-22 and 2026-04-22. Prioritize congress.gov, ftc.gov, justice.gov, whitehouse.gov. Regulator context: FTC, FCC, DOJ, State AGs.",
+    "Recent United States hearings, testimonies, or public consultations on youth online safety, addictive design, or parental controls. Published between 2026-01-22 and 2026-04-22. Prioritize congress.gov, ftc.gov, justice.gov, whitehouse.gov. Regulator context: FTC, FCC, DOJ, State AGs.",
+    "Recent United States official announcements on teen safety defaults, age-gating requirements, or minor-facing advertising restrictions. Published between 2026-01-22 and 2026-04-22. Prioritize congress.gov, ftc.gov, justice.gov, whitehouse.gov. Regulator context: FTC, FCC, DOJ, State AGs."
+  ],
+  "diagnostics": {
+    "query_count": 5,
+    "raw_result_count": 0,
+    "parsed_signal_count": 2,
+    "used_real_search": true,
+    "used_raw_result_fallback": false,
+    "used_simulated_fallback": true,
+    "used_llm_queries": false,
+    "used_fallback_queries": true,
+    "rejected_llm_queries": 0,
+    "signals_missing_date": 0,
+    "signals_out_of_window": 2,
+    "signals_kept": 0
+  },
+  "signals": []
+}
