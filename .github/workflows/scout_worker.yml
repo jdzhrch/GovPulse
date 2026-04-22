@@ -41,7 +41,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -51,6 +51,15 @@ jobs:
       - name: Install Python dependencies
         run: |
           pip install -q requests python-dateutil openai
+
+      - name: Validate OpenAI configuration
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "::error::OPENAI_API_KEY secret is missing or empty. Scout missions cannot run real web search until this secret is restored."
+            exit 1
+          fi
 
       - name: Run Scout Mission
         id: scout
@@ -173,7 +182,7 @@ jobs:
           fi
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mission-results
           path: data/history/
@@ -190,7 +199,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           # Fetch the latest commit including the one just pushed by scout-mission
           ref: main
@@ -201,7 +210,7 @@ jobs:
           git pull origin main
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '20'
           cache: 'npm'
@@ -227,13 +236,13 @@ jobs:
           ls -la frontend/dist/data/history/
 
       - name: Setup Pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v6
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: frontend/dist
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

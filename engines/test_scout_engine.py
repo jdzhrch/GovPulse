@@ -4,7 +4,15 @@ from datetime import datetime, timedelta
 from types import SimpleNamespace
 from unittest.mock import patch
 
-from engines.scout_engine import QueryGenerator, ScoutEngine, Domain, ScoutMission, RegulatorySignal, SourceType
+from engines.scout_engine import (
+    OPENAI_AVAILABLE,
+    QueryGenerator,
+    ScoutEngine,
+    Domain,
+    ScoutMission,
+    RegulatorySignal,
+    SourceType,
+)
 
 
 class ScoutEngineLookbackTests(unittest.TestCase):
@@ -38,6 +46,24 @@ class ScoutEngineLookbackTests(unittest.TestCase):
         self.assertEqual(completed.diagnostics["parsed_signal_count"], 2)
         self.assertEqual(completed.diagnostics["signals_out_of_window"], 2)
         self.assertEqual(completed.diagnostics["signals_kept"], 0)
+
+    def test_execute_mission_records_missing_api_key_diagnostic(self):
+        with patch.dict("os.environ", {}, clear=True):
+            engine = ScoutEngine()
+            mission = engine.create_mission(
+                market="US",
+                domain="minor_protection",
+                lookback_days=90,
+                created_by="test"
+            )
+
+            completed = engine.execute_mission(mission.mission_id, use_real_search=True)
+
+        expected_reason = "missing_openai_api_key" if OPENAI_AVAILABLE else "openai_sdk_unavailable"
+
+        self.assertFalse(completed.diagnostics["openai_api_key_present"])
+        self.assertFalse(completed.diagnostics["real_search_ready"])
+        self.assertEqual(completed.diagnostics["real_search_skip_reason"], expected_reason)
 
     @patch("engines.scout_engine.fetch_real_world_data")
     def test_execute_mission_prefers_raw_conversion_before_simulated_fallback(self, fetch_real_world_data_mock):

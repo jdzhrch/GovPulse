@@ -1162,6 +1162,13 @@ class ScoutEngine:
         for i, q in enumerate(queries, 1):
             print(f"  {i}. {q}")
 
+        openai_api_key_present = bool(os.environ.get("OPENAI_API_KEY"))
+        real_search_skip_reason = None
+        if not OPENAI_AVAILABLE:
+            real_search_skip_reason = "openai_sdk_unavailable"
+        elif not openai_api_key_present:
+            real_search_skip_reason = "missing_openai_api_key"
+
         diagnostics: dict[str, object] = {
             "query_count": len(queries),
             "raw_result_count": 0,
@@ -1169,11 +1176,17 @@ class ScoutEngine:
             "used_real_search": use_real_search,
             "used_raw_result_fallback": False,
             "used_simulated_fallback": False,
+            "openai_sdk_available": OPENAI_AVAILABLE,
+            "openai_api_key_present": openai_api_key_present,
+            "real_search_ready": OPENAI_AVAILABLE and openai_api_key_present,
+            "real_search_skip_reason": real_search_skip_reason if use_real_search else None,
         }
         diagnostics.update(self.query_generator.last_generation_metadata)
 
         # Step 2: Fetch and parse data
         if use_real_search:
+            if real_search_skip_reason:
+                print(f"[Warning] Real search unavailable: {real_search_skip_reason}")
             window_start, window_end = compute_date_window(mission.lookback_days)
             raw_results = fetch_real_world_data(queries, mission.market, window_start, window_end)
             diagnostics["raw_result_count"] = len(raw_results)
