@@ -1,0 +1,50 @@
+{
+  "assessment_id": "IMPACT-1-20260422221101",
+  "mission_id": "MISSION-US-20260422220937",
+  "signal_id": 1,
+  "signal_title": "Disney Agrees to $10M Civil Penalty and Injunction for Alleged Violations of Children’s Privacy Laws",
+  "market": "US",
+  "domain": "minor_protection",
+  "risk_level": "P1",
+  "risk_rationale": "The regulatory signal highlights a significant enforcement action under COPPA, which is relevant to TikTok's youth safety and data privacy policies. The settlement with Disney indicates heightened scrutiny and enforcement of children's privacy laws in the US, which could expose TikTok to similar risks if compliance measures are not adequately implemented.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-1-0",
+      "signal_id": 1,
+      "baseline_policy_id": "1.1",
+      "baseline_requirement": "Minimum age for TikTok service is 13+ (or higher where local law requires).",
+      "regulatory_requirement": "COPPA compliance measures to protect children's privacy.",
+      "gap_description": "Potential gap in ensuring robust COPPA compliance measures specifically for users under 13, as highlighted by the Disney settlement.",
+      "gap_severity": "major",
+      "is_blocking": true
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-1-0",
+      "gap_id": "GAP-1-0",
+      "remediation_type": "product_change",
+      "title": "Enhance COPPA Compliance Measures",
+      "description": "Implement additional compliance measures to ensure full adherence to COPPA requirements, including enhanced verification processes for age assurance and privacy protections for users under 13.",
+      "affected_features": [
+        "Age verification",
+        "Privacy settings for minors"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Youth Safety PM",
+      "acceptance_criteria": [
+        "Implementation of enhanced age verification processes for users under 13.",
+        "Regular audits and updates to privacy settings to ensure COPPA compliance."
+      ]
+    }
+  ],
+  "deadline": "",
+  "business_impact": "Failure to address COPPA compliance could result in significant financial penalties and reputational damage, similar to the Disney case.",
+  "recommended_actions": [
+    "Conduct a comprehensive review of current COPPA compliance measures.",
+    "Implement enhanced age verification and privacy protection features.",
+    "Engage with legal and regulatory experts to ensure ongoing compliance with children's privacy laws."
+  ],
+  "assessed_at": "2026-04-22T22:11:06.466228",
+  "assessed_by": "github_actions"
+}

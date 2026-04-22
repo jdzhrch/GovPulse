@@ -1,0 +1,102 @@
+{
+  "assessment_id": "IMPACT-FCC-CIPA-2026-03-20260422221112",
+  "mission_id": "MISSION-US-20260422220937",
+  "signal_id": "FCC-CIPA-2026-03",
+  "signal_title": "Revisions to the Children's Internet Protection Act (CIPA) Rules",
+  "market": "US",
+  "domain": "minor_protection",
+  "risk_level": "P1",
+  "risk_rationale": "The revisions to the CIPA rules introduce new compliance requirements that may impact TikTok's operations, particularly in terms of technology protection measures and internet safety policies. These changes could necessitate immediate updates to ensure compliance with FCC regulations, especially given the platform's significant user base of minors.",
+  "compliance_gaps": [
+    {
+      "gap_id": "GAP-FCC-CIPA-2026-03-0",
+      "signal_id": "FCC-CIPA-2026-03",
+      "baseline_policy_id": "1.1",
+      "baseline_requirement": "TikTok states service is for age 13+ (or higher where local law requires)",
+      "regulatory_requirement": "Incorporation of statutory definitions for 'minor,' 'obscene,' 'child pornography,' and 'harmful to minors'",
+      "gap_description": "The new statutory definitions may require TikTok to reassess its age verification and content moderation policies to ensure alignment with the revised definitions.",
+      "gap_severity": "major",
+      "is_blocking": true
+    },
+    {
+      "gap_id": "GAP-FCC-CIPA-2026-03-1",
+      "signal_id": "FCC-CIPA-2026-03",
+      "baseline_policy_id": "1.4",
+      "baseline_requirement": "TikTok states personalized ads are not allowed for under-18 users",
+      "regulatory_requirement": "Clarification of requirements for technology protection measures",
+      "gap_description": "The clarification may necessitate updates to TikTok's technology protection measures to ensure they meet the revised CIPA standards.",
+      "gap_severity": "major",
+      "is_blocking": true
+    },
+    {
+      "gap_id": "GAP-FCC-CIPA-2026-03-2",
+      "signal_id": "FCC-CIPA-2026-03",
+      "baseline_policy_id": "2.1",
+      "baseline_requirement": "TikTok Privacy Policy (non-US / global page) last updated 2025-07-08",
+      "regulatory_requirement": "Mandate for Internet safety policies to be available to the FCC upon request",
+      "gap_description": "TikTok may need to ensure that its internet safety policies are readily available and compliant with FCC requests.",
+      "gap_severity": "major",
+      "is_blocking": true
+    }
+  ],
+  "remediations": [
+    {
+      "remediation_id": "REM-FCC-CIPA-2026-03-0",
+      "gap_id": "GAP-FCC-CIPA-2026-03-0",
+      "remediation_type": "product_change",
+      "title": "Update Age Verification and Content Moderation Policies",
+      "description": "Reassess and update age verification and content moderation policies to align with the new statutory definitions of 'minor,' 'obscene,' 'child pornography,' and 'harmful to minors.'",
+      "affected_features": [
+        "Age Verification",
+        "Content Moderation"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Youth Safety PM",
+      "acceptance_criteria": [
+        "Policies updated to reflect new statutory definitions",
+        "Compliance with revised CIPA rules verified"
+      ]
+    },
+    {
+      "remediation_id": "REM-FCC-CIPA-2026-03-1",
+      "gap_id": "GAP-FCC-CIPA-2026-03-1",
+      "remediation_type": "product_change",
+      "title": "Enhance Technology Protection Measures",
+      "description": "Review and enhance technology protection measures to ensure compliance with the clarified CIPA requirements.",
+      "affected_features": [
+        "Technology Protection Measures"
+      ],
+      "engineering_effort": "M",
+      "pm_owner_recommendation": "Data Privacy PM",
+      "acceptance_criteria": [
+        "Protection measures updated and tested",
+        "Compliance with CIPA standards confirmed"
+      ]
+    },
+    {
+      "remediation_id": "REM-FCC-CIPA-2026-03-2",
+      "gap_id": "GAP-FCC-CIPA-2026-03-2",
+      "remediation_type": "product_change",
+      "title": "Ensure Internet Safety Policy Availability",
+      "description": "Develop a process to ensure that internet safety policies are readily available to the FCC upon request and compliant with CIPA mandates.",
+      "affected_features": [
+        "Internet Safety Policies"
+      ],
+      "engineering_effort": "S",
+      "pm_owner_recommendation": "Compliance PM",
+      "acceptance_criteria": [
+        "Policies are accessible and compliant",
+        "Process for FCC requests established"
+      ]
+    }
+  ],
+  "deadline": "",
+  "business_impact": "Failure to comply with the revised CIPA rules could result in regulatory penalties and damage to TikTok's reputation, particularly in the US market where the platform has a significant number of minor users.",
+  "recommended_actions": [
+    "Conduct a comprehensive review of current policies against the revised CIPA rules.",
+    "Engage with legal and compliance teams to ensure all updates meet regulatory requirements.",
+    "Implement necessary changes to technology protection measures and ensure internet safety policies are accessible."
+  ],
+  "assessed_at": "2026-04-22T22:11:21.674955",
+  "assessed_by": "github_actions"
+}
